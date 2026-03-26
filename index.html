@@ -20,18 +20,12 @@
             --black-light: #1A1A1A;
         }
         
-        html, body {
-            height: 100%;
-            overflow: hidden;
-        }
-        
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Noto Serif SC", "Source Han Serif SC", serif;
             background: var(--black);
             color: #fff;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior: none;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
         
         /* 背景装饰 */
@@ -83,12 +77,12 @@
         .container {
             position: relative;
             z-index: 1;
-            min-height: 100%;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 60px 20px;
+            padding: 40px 20px;
         }
         
         /* Logo 区域 */
@@ -230,7 +224,8 @@
             font-size: 0.75em;
             color: rgba(255, 255, 255, 0.3);
             letter-spacing: 0.1em;
-            padding-bottom: 20px;
+            padding-bottom: constant(safe-area-inset-bottom);
+            padding-bottom: env(safe-area-inset-bottom);
         }
         
         /* 响应式 */
