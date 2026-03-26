@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>惊棠工作室 | Jingtang Studio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --crimson: #8B1E3F;
+            --crimson-light: #A82D52;
+            --gold: #C9A227;
+            --gold-dark: #9A7B1A;
+            --black: #0D0D0D;
+            --black-light: #1A1A1A;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Noto Serif SC", "Source Han Serif SC", serif;
+            background: var(--black);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* 背景装饰 */
+        .bg-decoration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .leaf-silhouette {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(ellipse at center, rgba(139, 30, 63, 0.15) 0%, transparent 70%);
+            border-radius: 50% 0 50% 50%;
+            transform: rotate(-30deg);
+        }
+        
+        .leaf-silhouette:nth-child(1) {
+            top: -100px;
+            right: -100px;
+            width: 500px;
+            height: 500px;
+        }
+        
+        .leaf-silhouette:nth-child(2) {
+            bottom: -150px;
+            left: -150px;
+            width: 600px;
+            height: 600px;
+            transform: rotate(150deg);
+        }
+        
+        .leaf-silhouette:nth-child(3) {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(ellipse at center, rgba(139, 30, 63, 0.05) 0%, transparent 60%);
+        }
+        
+        /* 主容器 */
+        .container {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        
+        /* Logo 区域 */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .logo-mark {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+        
+        .logo-mark svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .studio-name {
+            font-size: 3.5em;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 50%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 60px rgba(201, 162, 39, 0.3);
+        }
+        
+        .studio-name-en {
+            font-size: 1em;
+            letter-spacing: 0.5em;
+            color: var(--gold);
+            opacity: 0.7;
+            font-weight: 300;
+            font-family: "Cormorant Garamond", "Playfair Display", serif;
+        }
+        
+        /* 分隔线 */
+        .divider {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--crimson), transparent);
+            margin: 40px auto;
+        }
+        
+        /* 标语 */
+        .tagline {
+            font-size: 1.3em;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 0.2em;
+            margin-bottom: 60px;
+            font-weight: 300;
+        }
+        
+        /* 内容区域 */
+        .content {
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .content p {
+            font-size: 1.1em;
+            line-height: 2;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 20px;
+        }
+        
+        /* 状态标签 */
+        .status-badge {
+            display: inline-block;
+            padding: 12px 30px;
+            border: 1px solid var(--crimson);
+            color: var(--crimson-light);
+            font-size: 0.9em;
+            letter-spacing: 0.2em;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .status-badge::before,
+        .status-badge::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border: 1px solid var(--gold);
+        }
+        
+        .status-badge::before {
+            top: -1px;
+            left: -1px;
+            border-right: none;
+            border-bottom: none;
+        }
+        
+        .status-badge::after {
+            bottom: -1px;
+            right: -1px;
+            border-left: none;
+            border-top: none;
+        }
+        
+        /* 联系区域 */
+        .contact {
+            text-align: center;
+        }
+        
+        .contact-label {
+            font-size: 0.8em;
+            color: var(--gold);
+            opacity: 0.6;
+            letter-spacing: 0.3em;
+            margin-bottom: 15px;
+        }
+        
+        .contact-email {
+            font-size: 1em;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 0.1em;
+        }
+        
+        /* 底部 */
+        .footer {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.75em;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 0.1em;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 600px) {
+            .studio-name {
+                font-size: 2.5em;
+                letter-spacing: 0.2em;
+            }
+            
+            .tagline {
+                font-size: 1em;
+            }
+            
+            .content p {
+                font-size: 1em;
+            }
+        }
+        
+        /* 动画 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .logo-section, .tagline, .content, .status-badge, .contact {
+            animation: fadeIn 1s ease-out forwards;
+        }
+        
+        .tagline { animation-delay: 0.2s; opacity: 0; }
+        .content { animation-delay: 0.4s; opacity: 0; }
+        .status-badge { animation-delay: 0.6s; opacity: 0; }
+        .contact { animation-delay: 0.8s; opacity: 0; }
+    </style>
+</head>
+<body>
+    <div class="bg-decoration">
+        <div class="leaf-silhouette"></div>
+        <div class="leaf-silhouette"></div>
+        <div class="leaf-silhouette"></div>
+    </div>
+    
+    <div class="container">
+        <div class="logo-section">
+            <div class="logo-mark">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- 海棠叶轮廓 -->
+                    <path d="M50 10 C30 20, 15 35, 15 55 C15 75, 30 85, 50 95 C70 85, 85 75, 85 55 C85 35, 70 20, 50 10 Z" 
+                          stroke="#8B1E3F" stroke-width="1.5" fill="none" opacity="0.8"/>
+                    <!-- 叶脉 -->
+                    <path d="M50 20 L50 85" stroke="#C9A227" stroke-width="0.8" opacity="0.6"/>
+                    <path d="M50 35 L30 45" stroke="#C9A227" stroke-width="0.5" opacity="0.4"/>
+                    <path d="M50 35 L70 45" stroke="#C9A227" stroke-width="0.5" opacity="0.4"/>
+                    <path d="M50 50 L25 60" stroke="#C9A227" stroke-width="0.5" opacity="0.4"/>
+                    <path d="M50 50 L75 60" stroke="#C9A227" stroke-width="0.5" opacity="0.4"/>
+                    <path d="M50 65 L30 75" stroke="#C9A227" stroke-width="0.5" opacity="0.4"/>
+                    <path d="M50 65 L70 75" stroke="#C9A227" stroke-width="0.5" opacity="0.4"/>
+                    <!-- 中心装饰 -->
+                    <circle cx="50" cy="50" r="8" stroke="#C9A227" stroke-width="1" fill="none" opacity="0.8"/>
+                    <circle cx="50" cy="50" r="3" fill="#8B1E3F" opacity="0.6"/>
+                </svg>
+            </div>
+            <h1 class="studio-name">惊棠</h1>
+            <p class="studio-name-en">JINGTANG STUDIO</p>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <p class="tagline">以匠心 · 铸惊世之作</p>
+        
+        <div class="content">
+            <p>我们是一支专注于独立游戏开发的创意团队</p>
+            <p>从东方美学到现代玩法，探索游戏的无限可能</p>
+            <p>首个项目筹备中，敬请期待</p>
+        </div>
+        
+        <div class="status-badge">即将绽放 COMING SOON</div>
+        
+        <div class="contact">
+            <p class="contact-label">联系我们</p>
+            <p class="contact-email">hello@jaspertint.com</p>
+        </div>
+    </div>
+    
+    <div class="footer">
+        © 2025 惊棠工作室 JINGTANG STUDIO. ALL RIGHTS RESERVED.
+    </div>
+</body>
+</html>
