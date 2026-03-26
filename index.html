@@ -209,16 +209,22 @@
             letter-spacing: 0.1em;
         }
         
+        /* 底部分隔线 */
+        .footer-divider {
+            width: 100%;
+            max-width: 200px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.3), transparent);
+            margin: 60px auto 30px;
+        }
+        
         /* 底部 */
         .footer {
-            position: absolute;
-            bottom: 30px;
-            left: 0;
-            right: 0;
             text-align: center;
             font-size: 0.75em;
             color: rgba(255, 255, 255, 0.3);
             letter-spacing: 0.1em;
+            padding-bottom: 20px;
         }
         
         /* 响应式 */
@@ -306,10 +312,12 @@
             <p class="contact-label">联系我们</p>
             <p class="contact-email">hello@jaspertint.com</p>
         </div>
-    </div>
-    
-    <div class="footer">
-        © 2025 惊棠工作室 JASPERTINT STUDIO. ALL RIGHTS RESERVED.
+        
+        <div class="footer-divider"></div>
+        
+        <div class="footer">
+            © 2025 惊棠工作室 JASPERTINT STUDIO. ALL RIGHTS RESERVED.
+        </div>
     </div>
 </body>
 </html>
