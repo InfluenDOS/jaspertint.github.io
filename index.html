@@ -28,7 +28,69 @@
             overflow-x: hidden;
         }
         
-        /* 背景装饰 */
+        /* 页面加载遮罩 */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--black);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        
+        .page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loader-content {
+            text-align: center;
+        }
+        
+        .loader-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            opacity: 0;
+            animation: loaderFadeIn 0.6s ease forwards;
+        }
+        
+        .loader-logo svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .loader-text {
+            color: var(--gold);
+            letter-spacing: 0.3em;
+            font-size: 0.9em;
+            opacity: 0;
+            animation: loaderFadeIn 0.6s ease 0.3s forwards;
+        }
+        
+        @keyframes loaderFadeIn {
+            to { opacity: 1; }
+        }
+        
+        /* 鼠标跟随光效 */
+        .cursor-glow {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 162, 39, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease;
+        }
+        
+        /* 背景装饰 - 多层视差 */
         .bg-decoration {
             position: fixed;
             top: 0;
@@ -47,6 +109,7 @@
             background: radial-gradient(ellipse at center, rgba(139, 30, 63, 0.15) 0%, transparent 70%);
             border-radius: 50% 0 50% 50%;
             transform: rotate(-30deg);
+            will-change: transform;
         }
         
         .leaf-silhouette:nth-child(1) {
@@ -73,10 +136,39 @@
             background: radial-gradient(ellipse at center, rgba(139, 30, 63, 0.05) 0%, transparent 60%);
         }
         
+        /* 浮动粒子 */
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.6;
+            will-change: transform;
+        }
+        
+        .particle.gold {
+            background: var(--gold);
+            box-shadow: 0 0 6px var(--gold);
+        }
+        
+        .particle.crimson {
+            background: var(--crimson);
+            box-shadow: 0 0 6px var(--crimson);
+        }
+        
         /* 主容器 */
         .container {
             position: relative;
-            z-index: 1;
+            z-index: 2;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -96,11 +188,18 @@
             height: 120px;
             margin: 0 auto 30px;
             position: relative;
+            animation: breathe 4s ease-in-out infinite;
+        }
+        
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
         }
         
         .logo-mark svg {
             width: 100%;
             height: 100%;
+            filter: drop-shadow(0 0 20px rgba(139, 30, 63, 0.4));
         }
         
         .studio-name {
@@ -109,10 +208,16 @@
             letter-spacing: 0.3em;
             margin-bottom: 15px;
             background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 50%, var(--gold) 100%);
+            background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             text-shadow: 0 0 60px rgba(201, 162, 39, 0.3);
+            animation: shimmer 3s linear infinite;
+        }
+        
+        @keyframes shimmer {
+            to { background-position: 200% center; }
         }
         
         .studio-name-en {
@@ -124,12 +229,30 @@
             font-family: "Cormorant Garamond", "Playfair Display", serif;
         }
         
-        /* 分隔线 */
+        /* 分隔线 - 流光效果 */
         .divider {
             width: 60px;
             height: 2px;
             background: linear-gradient(90deg, transparent, var(--crimson), transparent);
             margin: 40px auto;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            animation: flowLight 2s ease-in-out infinite;
+        }
+        
+        @keyframes flowLight {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
         
         /* 标语 */
@@ -165,6 +288,13 @@
             letter-spacing: 0.2em;
             margin-bottom: 60px;
             position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .status-badge:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            box-shadow: 0 0 20px rgba(201, 162, 39, 0.2);
         }
         
         .status-badge::before,
@@ -174,6 +304,7 @@
             width: 6px;
             height: 6px;
             border: 1px solid var(--gold);
+            transition: all 0.3s ease;
         }
         
         .status-badge::before {
@@ -188,6 +319,33 @@
             right: -1px;
             border-left: none;
             border-top: none;
+        }
+        
+        .status-badge:hover::before,
+        .status-badge:hover::after {
+            width: 12px;
+            height: 12px;
+        }
+        
+        /* 团队链接 */
+        .team-link {
+            margin-bottom: 40px;
+        }
+        
+        .team-link a {
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 0.95em;
+            letter-spacing: 0.15em;
+            border-bottom: 1px solid rgba(201, 162, 39, 0.3);
+            padding-bottom: 3px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .team-link a:hover {
+            border-bottom-color: var(--gold);
+            text-shadow: 0 0 10px rgba(201, 162, 39, 0.5);
         }
         
         /* 联系区域 */
@@ -207,18 +365,55 @@
             font-size: 1em;
             color: rgba(255, 255, 255, 0.5);
             letter-spacing: 0.1em;
+            transition: color 0.3s ease;
         }
         
+        .contact:hover .contact-email {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        /* 底部分隔线 */
+        .footer-divider {
+            width: 100%;
+            max-width: 200px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.3), transparent);
+            margin: 40px auto 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .footer-divider::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.6), transparent);
+            animation: flowLight 3s ease-in-out infinite;
+        }
+
         /* 底部 */
         .footer {
-            position: absolute;
-            bottom: 30px;
-            left: 0;
-            right: 0;
             text-align: center;
             font-size: 0.75em;
             color: rgba(255, 255, 255, 0.3);
             letter-spacing: 0.1em;
+            padding-bottom: constant(safe-area-inset-bottom);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        
+        /* 滚动触发动画 */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         /* 响应式 */
@@ -235,13 +430,21 @@
             .content p {
                 font-size: 1em;
             }
+            
+            .cursor-glow {
+                display: none;
+            }
+            
+            .logo-mark {
+                animation: none;
+            }
         }
         
-        /* 动画 */
-        @keyframes fadeIn {
+        /* 初始加载动画 */
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -249,22 +452,47 @@
             }
         }
         
-        .logo-section, .tagline, .content, .status-badge, .contact {
-            animation: fadeIn 1s ease-out forwards;
+        .logo-section, .tagline, .content, .status-badge, .team-link, .contact {
+            opacity: 0;
         }
         
-        .tagline { animation-delay: 0.2s; opacity: 0; }
-        .content { animation-delay: 0.4s; opacity: 0; }
-        .status-badge { animation-delay: 0.6s; opacity: 0; }
-        .contact { animation-delay: 0.8s; opacity: 0; }
+        .page-loaded .logo-section { animation: fadeInUp 1s ease-out 0.2s forwards; }
+        .page-loaded .tagline { animation: fadeInUp 1s ease-out 0.4s forwards; }
+        .page-loaded .content { animation: fadeInUp 1s ease-out 0.6s forwards; }
+        .page-loaded .status-badge { animation: fadeInUp 1s ease-out 0.8s forwards; }
+        .page-loaded .team-link { animation: fadeInUp 1s ease-out 1s forwards; }
+        .page-loaded .contact { animation: fadeInUp 1s ease-out 1.2s forwards; }
     </style>
 </head>
 <body>
-    <div class="bg-decoration">
-        <div class="leaf-silhouette"></div>
-        <div class="leaf-silhouette"></div>
-        <div class="leaf-silhouette"></div>
+    <!-- 页面加载动画 -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-content">
+            <div class="loader-logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 10 C30 20, 15 35, 15 55 C15 75, 30 85, 50 95 C70 85, 85 75, 85 55 C85 35, 70 20, 50 10 Z" 
+                          stroke="#8B1E3F" stroke-width="1.5" fill="none" opacity="0.8"/>
+                    <path d="M50 20 L50 85" stroke="#C9A227" stroke-width="0.8" opacity="0.6"/>
+                    <circle cx="50" cy="50" r="8" stroke="#C9A227" stroke-width="1" fill="none" opacity="0.8"/>
+                    <circle cx="50" cy="50" r="3" fill="#8B1E3F" opacity="0.6"/>
+                </svg>
+            </div>
+            <div class="loader-text">惊棠工作室</div>
+        </div>
     </div>
+
+    <!-- 鼠标跟随光效 -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- 多层视差背景 -->
+    <div class="bg-decoration">
+        <div class="leaf-silhouette" data-speed="0.3"></div>
+        <div class="leaf-silhouette" data-speed="0.5"></div>
+        <div class="leaf-silhouette" data-speed="0.2"></div>
+    </div>
+
+    <!-- 浮动粒子 -->
+    <div class="particles-container" id="particlesContainer"></div>
     
     <div class="container">
         <div class="logo-section">
@@ -287,7 +515,7 @@
                 </svg>
             </div>
             <h1 class="studio-name">惊棠</h1>
-            <p class="studio-name-en">JINGTANG STUDIO</p>
+            <p class="studio-name-en">JASPERTINT STUDIO</p>
         </div>
         
         <div class="divider"></div>
@@ -302,14 +530,157 @@
         
         <div class="status-badge">即将绽放 COMING SOON</div>
         
+        <div class="team-link">
+            <a href="member.html">核心成员 →</a>
+        </div>
+        
         <div class="contact">
             <p class="contact-label">联系我们</p>
             <p class="contact-email">hello@jaspertint.com</p>
         </div>
+        
+        <div class="footer-divider"></div>
+        
+        <div class="footer">
+            © 2025 惊棠工作室 JASPERTINT STUDIO. ALL RIGHTS RESERVED.
+        </div>
     </div>
-    
-    <div class="footer">
-        © 2025 惊棠工作室 JINGTANG STUDIO. ALL RIGHTS RESERVED.
-    </div>
+
+    <script>
+        // 页面加载动画
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('pageLoader').classList.add('hidden');
+                document.body.classList.add('page-loaded');
+            }, 800);
+        });
+
+        // 鼠标跟随光效
+        const cursorGlow = document.getElementById('cursorGlow');
+        let mouseX = 0, mouseY = 0;
+        let glowX = 0, glowY = 0;
+        
+        // 检测是否为触摸设备
+        const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+        
+        if (!isTouchDevice) {
+            document.addEventListener('mousemove', function(e) {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            
+            function animateGlow() {
+                glowX += (mouseX - glowX) * 0.1;
+                glowY += (mouseY - glowY) * 0.1;
+                cursorGlow.style.left = glowX + 'px';
+                cursorGlow.style.top = glowY + 'px';
+                requestAnimationFrame(animateGlow);
+            }
+            animateGlow();
+        } else {
+            cursorGlow.style.display = 'none';
+        }
+
+        // 多层视差滚动
+        const leafSilhouettes = document.querySelectorAll('.leaf-silhouette');
+        let ticking = false;
+        
+        function updateParallax() {
+            const scrolled = window.pageYOffset;
+            leafSilhouettes.forEach((leaf, index) => {
+                const speed = parseFloat(leaf.dataset.speed) || 0.3;
+                const yPos = -(scrolled * speed);
+                const rotation = -30 + (scrolled * speed * 0.05);
+                
+                if (index === 0) {
+                    leaf.style.transform = `translateY(${yPos}px) rotate(${rotation}deg)`;
+                } else if (index === 1) {
+                    leaf.style.transform = `translateY(${yPos}px) rotate(${150 + scrolled * speed * 0.03}deg)`;
+                } else {
+                    leaf.style.transform = `translate(-50%, calc(-50% + ${yPos}px)) rotate(${45 + scrolled * speed * 0.02}deg)`;
+                }
+            });
+            ticking = false;
+        }
+        
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                requestAnimationFrame(updateParallax);
+                ticking = true;
+            }
+        });
+
+        // 浮动粒子系统
+        const particlesContainer = document.getElementById('particlesContainer');
+        const particleCount = isTouchDevice ? 15 : 25;
+        const particles = [];
+        
+        class Particle {
+            constructor() {
+                this.element = document.createElement('div');
+                this.element.className = `particle ${Math.random() > 0.5 ? 'gold' : 'crimson'}`;
+                this.reset();
+                particlesContainer.appendChild(this.element);
+            }
+            
+            reset() {
+                this.x = Math.random() * window.innerWidth;
+                this.y = Math.random() * window.innerHeight;
+                this.size = Math.random() * 3 + 2;
+                this.speedX = (Math.random() - 0.5) * 0.3;
+                this.speedY = -Math.random() * 0.5 - 0.2;
+                this.opacity = Math.random() * 0.4 + 0.3;
+                
+                this.element.style.width = this.size + 'px';
+                this.element.style.height = this.size + 'px';
+                this.element.style.left = this.x + 'px';
+                this.element.style.top = this.y + 'px';
+                this.element.style.opacity = this.opacity;
+            }
+            
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                // 添加轻微的摆动
+                this.x += Math.sin(this.y * 0.01) * 0.2;
+                
+                if (this.y < -10) {
+                    this.y = window.innerHeight + 10;
+                    this.x = Math.random() * window.innerWidth;
+                }
+                
+                if (this.x < -10) this.x = window.innerWidth + 10;
+                if (this.x > window.innerWidth + 10) this.x = -10;
+                
+                this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
+            }
+        }
+        
+        // 创建粒子
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+        
+        // 动画循环
+        let frameCount = 0;
+        function animateParticles() {
+            frameCount++;
+            // 每2帧更新一次，降低性能消耗
+            if (frameCount % 2 === 0) {
+                particles.forEach(p => p.update());
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // 窗口大小改变时重新调整
+        window.addEventListener('resize', function() {
+            particles.forEach(p => {
+                if (p.x > window.innerWidth) p.x = Math.random() * window.innerWidth;
+                if (p.y > window.innerHeight) p.y = Math.random() * window.innerHeight;
+            });
+        });
+    </script>
 </body>
 </html>
