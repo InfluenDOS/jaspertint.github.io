@@ -257,101 +257,105 @@
             100% { left: 100%; }
         }
         
-        /* 标语 */
-        .tagline {
-            font-size: 1.3em;
-            color: rgba(255, 255, 255, 0.7);
-            letter-spacing: 0.2em;
-            margin-bottom: 60px;
-            font-weight: 300;
-        }
-        
-        /* 内容区域 */
-        .content {
-            max-width: 600px;
-            text-align: center;
-            margin-bottom: 60px;
-        }
-        
-        .content p {
-            font-size: 1.1em;
-            line-height: 2;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 20px;
-        }
-        
-        /* 状态标签 */
-        .status-badge {
-            display: inline-block;
-            padding: 12px 30px;
-            border: 1px solid var(--crimson);
-            color: var(--crimson-light);
-            font-size: 0.9em;
-            letter-spacing: 0.2em;
-            margin-bottom: 60px;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-        
-        .status-badge:hover {
-            border-color: var(--gold);
-            color: var(--gold);
-            box-shadow: 0 0 20px rgba(201, 162, 39, 0.2);
-        }
-        
-        .status-badge::before,
-        .status-badge::after {
-            content: '';
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            border: 1px solid var(--gold);
-            transition: all 0.3s ease;
-        }
-        
-        .status-badge::before {
-            top: -1px;
-            left: -1px;
-            border-right: none;
-            border-bottom: none;
-        }
-        
-        .status-badge::after {
-            bottom: -1px;
-            right: -1px;
-            border-left: none;
-            border-top: none;
-        }
-        
-        .status-badge:hover::before,
-        .status-badge:hover::after {
-            width: 12px;
-            height: 12px;
-        }
-        
-        /* 团队链接 */
-        .team-link {
-            margin-bottom: 40px;
-        }
-        
-        .team-link a {
-            color: var(--gold);
-            text-decoration: none;
-            font-size: 0.95em;
-            letter-spacing: 0.15em;
-            border-bottom: 1px solid rgba(201, 162, 39, 0.3);
-            padding-bottom: 3px;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        .team-link a:hover {
-            border-bottom-color: var(--gold);
-            text-shadow: 0 0 10px rgba(201, 162, 39, 0.5);
+        /* 拾垃圾项目 */
+        .junk-section {
+            width: 100%;
+            max-width: 920px;
+            margin: 0 auto 36px;
+            padding: 26px 22px 30px;
+            border: 1px solid rgba(201, 162, 39, 0.38);
+            border-radius: 14px;
+            background: rgba(26, 26, 26, 0.78);
+            box-shadow: 0 0 40px rgba(139, 30, 63, 0.12);
         }
 
-        .play-link {
-            margin-bottom: 20px;
+        .junk-title {
+            font-size: 1.15em;
+            letter-spacing: 0.35em;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 14px;
+            font-weight: 600;
+        }
+
+        .junk-intro {
+            font-size: 0.95em;
+            line-height: 1.85;
+            color: rgba(255, 255, 255, 0.62);
+            text-align: center;
+            max-width: 640px;
+            margin: 0 auto;
+            letter-spacing: 0.06em;
+        }
+
+        .junk-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .junk-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 96px;
+            padding: 10px 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            text-align: center;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .junk-card__num {
+            font-size: 0.72em;
+            letter-spacing: 0.12em;
+            color: rgba(255, 255, 255, 0.45);
+            margin-bottom: 6px;
+        }
+
+        .junk-card__name {
+            font-size: 0.82em;
+            letter-spacing: 0.08em;
+            line-height: 1.35;
+        }
+
+        .junk-card--live {
+            text-decoration: none;
+            color: #fff;
+            background: linear-gradient(160deg, rgba(139, 30, 63, 0.35) 0%, rgba(26, 26, 26, 0.9) 55%);
+            border-color: rgba(201, 162, 39, 0.55);
+            cursor: pointer;
+        }
+
+        .junk-card--live:hover {
+            transform: translateY(-2px);
+            border-color: var(--gold);
+            box-shadow: 0 8px 24px rgba(201, 162, 39, 0.15);
+        }
+
+        .junk-card--live .junk-card__num {
+            color: rgba(201, 162, 39, 0.85);
+        }
+
+        .junk-card--placeholder {
+            opacity: 0.38;
+            background: rgba(0, 0, 0, 0.35);
+            color: rgba(255, 255, 255, 0.35);
+            cursor: not-allowed;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .junk-card--placeholder .junk-card__name {
+            color: rgba(255, 255, 255, 0.28);
+        }
+
+        @media (max-width: 720px) {
+            .junk-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
         
         /* 联系区域 */
@@ -429,14 +433,6 @@
                 letter-spacing: 0.2em;
             }
             
-            .tagline {
-                font-size: 1em;
-            }
-            
-            .content p {
-                font-size: 1em;
-            }
-            
             .cursor-glow {
                 display: none;
             }
@@ -458,16 +454,13 @@
             }
         }
         
-        .logo-section, .tagline, .content, .status-badge, .team-link, .contact {
+        .logo-section, .junk-section, .contact {
             opacity: 0;
         }
         
         .page-loaded .logo-section { animation: fadeInUp 1s ease-out 0.2s forwards; }
-        .page-loaded .tagline { animation: fadeInUp 1s ease-out 0.4s forwards; }
-        .page-loaded .content { animation: fadeInUp 1s ease-out 0.6s forwards; }
-        .page-loaded .status-badge { animation: fadeInUp 1s ease-out 0.8s forwards; }
-        .page-loaded .team-link { animation: fadeInUp 1s ease-out 1s forwards; }
-        .page-loaded .contact { animation: fadeInUp 1s ease-out 1.2s forwards; }
+        .page-loaded .junk-section { animation: fadeInUp 1s ease-out 0.45s forwards; }
+        .page-loaded .contact { animation: fadeInUp 1s ease-out 0.75s forwards; }
     </style>
 </head>
 <body>
@@ -504,20 +497,53 @@
         </div>
         
         <div class="divider"></div>
-        
-        <p class="tagline">以匠心 · 铸惊世之作</p>
-        
-        <div class="content">
-            <p>我们是一支专注于独立游戏开发的创意团队</p>
-            <p>从东方美学到现代玩法，探索游戏的无限可能</p>
-            <p>首个项目筹备中，敬请期待</p>
-        </div>
-        
-        <div class="status-badge">即将绽放 COMING SOON</div>
 
-        <div class="team-link play-link">
-            <a href="game/">开始游戏 →</a>
-        </div>
+        <section class="junk-section" aria-labelledby="junk-title">
+            <h2 id="junk-title" class="junk-title">拾垃圾项目</h2>
+            <p class="junk-intro">它们都很无聊，但仍然希望它们能带给你快乐，哪怕只有一分钟；</p>
+            <div class="junk-grid">
+                <a href="game/" class="junk-card junk-card--live">
+                    <span class="junk-card__num">01</span>
+                    <span class="junk-card__name">地域守护者</span>
+                </a>
+                <div class="junk-card junk-card--placeholder" aria-hidden="true">
+                    <span class="junk-card__num">02</span>
+                    <span class="junk-card__name">占位</span>
+                </div>
+                <div class="junk-card junk-card--placeholder" aria-hidden="true">
+                    <span class="junk-card__num">03</span>
+                    <span class="junk-card__name">占位</span>
+                </div>
+                <div class="junk-card junk-card--placeholder" aria-hidden="true">
+                    <span class="junk-card__num">04</span>
+                    <span class="junk-card__name">占位</span>
+                </div>
+                <div class="junk-card junk-card--placeholder" aria-hidden="true">
+                    <span class="junk-card__num">05</span>
+                    <span class="junk-card__name">占位</span>
+                </div>
+                <div class="junk-card junk-card--placeholder" aria-hidden="true">
+                    <span class="junk-card__num">06</span>
+                    <span class="junk-card__name">占位</span>
+                </div>
+                <div class="junk-card junk-card--placeholder" aria-hidden="true">
+                    <span class="junk-card__num">07</span>
+                    <span class="junk-card__name">占位</span>
+                </div>
+                <div class="junk-card junk-card--placeholder" aria-hidden="true">
+                    <span class="junk-card__num">08</span>
+                    <span class="junk-card__name">占位</span>
+                </div>
+                <div class="junk-card junk-card--placeholder" aria-hidden="true">
+                    <span class="junk-card__num">09</span>
+                    <span class="junk-card__name">占位</span>
+                </div>
+                <div class="junk-card junk-card--placeholder" aria-hidden="true">
+                    <span class="junk-card__num">10</span>
+                    <span class="junk-card__name">占位</span>
+                </div>
+            </div>
+        </section>
         
         <div class="contact">
             <p class="contact-label">联系我们</p>
@@ -527,7 +553,7 @@
         <div class="footer-divider"></div>
         
         <div class="footer">
-            © 2025 惊棠工作室 JASPERTINT STUDIO. ALL RIGHTS RESERVED.
+            © 2026 惊棠工作室 JASPERTINT STUDIO. ALL RIGHTS RESERVED.
         </div>
     </div>
 
