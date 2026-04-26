@@ -60,9 +60,10 @@
             animation: loaderFadeIn 0.6s ease forwards;
         }
         
-        .loader-logo svg {
+        .loader-logo img {
             width: 100%;
             height: 100%;
+            object-fit: contain;
         }
         
         .loader-text {
@@ -196,9 +197,10 @@
             50% { transform: scale(1.03); }
         }
         
-        .logo-mark svg {
+        .logo-mark img {
             width: 100%;
             height: 100%;
+            object-fit: contain;
             filter: drop-shadow(0 0 20px rgba(139, 30, 63, 0.4));
         }
         
@@ -473,13 +475,7 @@
     <div class="page-loader" id="pageLoader">
         <div class="loader-content">
             <div class="loader-logo">
-                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M50 10 C30 20, 15 35, 15 55 C15 75, 30 85, 50 95 C70 85, 85 75, 85 55 C85 35, 70 20, 50 10 Z" 
-                          stroke="#8B1E3F" stroke-width="1.5" fill="none" opacity="0.8"/>
-                    <path d="M50 20 L50 85" stroke="#C9A227" stroke-width="0.8" opacity="0.6"/>
-                    <circle cx="50" cy="50" r="8" stroke="#C9A227" stroke-width="1" fill="none" opacity="0.8"/>
-                    <circle cx="50" cy="50" r="3" fill="#8B1E3F" opacity="0.6"/>
-                </svg>
+                <img src="logo.png" alt="惊棠工作室 Logo">
             </div>
             <div class="loader-text">惊棠工作室</div>
         </div>
@@ -501,22 +497,7 @@
     <div class="container">
         <div class="logo-section">
             <div class="logo-mark">
-                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <!-- 海棠叶轮廓 -->
-                    <path d="M50 10 C30 20, 15 35, 15 55 C15 75, 30 85, 50 95 C70 85, 85 75, 85 55 C85 35, 70 20, 50 10 Z" 
-                          stroke="#8B1E3F" stroke-width="1.5" fill="none" opacity="0.8"/>
-                    <!-- 叶脉 -->
-                    <path d="M50 20 L50 85" stroke="#C9A227" stroke-width="0.8" opacity="0.6"/>
-                    <path d="M50 35 L30 45" stroke="#C9A227" stroke-width="0.5" opacity="0.4"/>
-                    <path d="M50 35 L70 45" stroke="#C9A227" stroke-width="0.5" opacity="0.4"/>
-                    <path d="M50 50 L25 60" stroke="#C9A227" stroke-width="0.5" opacity="0.4"/>
-                    <path d="M50 50 L75 60" stroke="#C9A227" stroke-width="0.5" opacity="0.4"/>
-                    <path d="M50 65 L30 75" stroke="#C9A227" stroke-width="0.5" opacity="0.4"/>
-                    <path d="M50 65 L70 75" stroke="#C9A227" stroke-width="0.5" opacity="0.4"/>
-                    <!-- 中心装饰 -->
-                    <circle cx="50" cy="50" r="8" stroke="#C9A227" stroke-width="1" fill="none" opacity="0.8"/>
-                    <circle cx="50" cy="50" r="3" fill="#8B1E3F" opacity="0.6"/>
-                </svg>
+                <img src="logo.png" alt="惊棠工作室 Logo">
             </div>
             <h1 class="studio-name">惊棠</h1>
             <p class="studio-name-en">JASPERTINT STUDIO</p>
@@ -536,10 +517,6 @@
 
         <div class="team-link play-link">
             <a href="game/">开始游戏 →</a>
-        </div>
-        
-        <div class="team-link">
-            <a href="member.html">核心成员 →</a>
         </div>
         
         <div class="contact">
