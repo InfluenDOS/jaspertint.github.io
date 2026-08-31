@@ -89,7 +89,7 @@
             box-shadow: 0 16px 64px rgba(0, 0, 0, 0.45);
         }
 
-        .hero-shot img {
+        .hero-shot > img {
             display: block;
             width: 100%;
             height: auto;
@@ -117,15 +117,16 @@
         }
 
         .hero-title {
-            font-size: clamp(1.9rem, 6.5vw, 2.6rem);
-            font-weight: 700;
-            letter-spacing: 0.32em;
-            margin-right: -0.32em;
-            margin-bottom: 10px;
-            background: linear-gradient(105deg, var(--paper) 0%, #fff 40%, var(--accent) 85%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            margin-bottom: 6px;
+            line-height: 0;
+        }
+
+        .hero-title img {
+            display: block;
+            width: min(68%, 560px);
+            height: auto;
+            margin: 0 auto;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.72));
         }
 
         .hero-tagline {
@@ -272,6 +273,10 @@
             .hero-copy {
                 padding: 20px 16px 18px;
             }
+
+            .hero-title img {
+                width: min(82%, 440px);
+            }
         }
     </style>
 </head>
@@ -285,10 +290,10 @@
         <a class="back-link" href="../">← 返回惊棠工作室</a>
 
         <div class="hero-shot">
-            <img src="screenshots/village-day.jpg" width="960" height="540" alt="南郊村全景，铁匠铺、医馆与酒馆">
+            <img src="art/hero-cover.jpg" width="1672" height="941" alt="雨中的南郊村岔路，一名剑客与一群打手遥相对峙">
             <div class="hero-shot__fade"></div>
             <div class="hero-copy">
-                <h1 class="hero-title">剑客与权臣</h1>
+                <h1 class="hero-title"><img src="art/title-art-web.png" width="1200" height="500" alt="剑客与权臣"></h1>
                 <p class="hero-tagline">把一个人练强，还是多招几个人？</p>
                 <span class="status-badge">个人开发中</span>
             </div>
