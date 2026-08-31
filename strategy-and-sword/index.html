@@ -96,61 +96,25 @@
             vertical-align: middle;
         }
 
-        .hero-shot__fade {
-            position: absolute;
-            inset: 0;
-            background:
-                linear-gradient(
-                    to bottom,
-                    rgba(28, 29, 34, 0.56) 0%,
-                    rgba(28, 29, 34, 0.18) 42%,
-                    transparent 68%
-                ),
-                linear-gradient(
-                    to top,
-                    rgba(28, 29, 34, 0.34) 0%,
-                    transparent 30%
-                );
-        }
-
         .hero-copy {
             position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            padding: 16px 24px 24px;
-            text-align: center;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            pointer-events: none;
         }
 
         .hero-title {
-            margin-bottom: 6px;
+            width: 100%;
             line-height: 0;
         }
 
         .hero-title img {
             display: block;
-            width: min(56%, 480px);
+            width: min(40%, 360px);
             height: auto;
             margin: 0 auto;
-            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.72));
-        }
-
-        .hero-tagline {
-            font-size: 0.96rem;
-            color: rgba(255, 255, 255, 0.88);
-            letter-spacing: 0.12em;
-            margin-bottom: 14px;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 5px 13px;
-            border-radius: 999px;
-            border: 1px solid rgba(232, 226, 214, 0.25);
-            background: rgba(28, 29, 34, 0.55);
-            font-size: 0.74rem;
-            letter-spacing: 0.16em;
-            color: rgba(232, 226, 214, 0.85);
+            filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.45));
         }
 
         .panel {
@@ -276,12 +240,8 @@
                 grid-column: auto;
             }
 
-            .hero-copy {
-                padding: 8px 12px 12px;
-            }
-
             .hero-title img {
-                width: min(70%, 340px);
+                width: min(56%, 280px);
             }
         }
     </style>
@@ -296,12 +256,9 @@
         <a class="back-link" href="../">← 返回惊棠工作室</a>
 
         <div class="hero-shot">
-            <img src="art/hero-cover-v2.jpg" width="1672" height="941" alt="雨中的南郊村外，一名剑客转身面对沿泥路走来的打手们">
-            <div class="hero-shot__fade"></div>
+            <img src="art/hero-cover-v3.jpg" width="1672" height="941" alt="宣纸上的俯视构图，上方剑客与尸体流下的血水连接下方权臣与士兵的影子">
             <div class="hero-copy">
-                <h1 class="hero-title"><img src="art/title-art-web.png" width="1200" height="500" alt="剑客与权臣"></h1>
-                <p class="hero-tagline">把一个人练强，还是多招几个人？</p>
-                <span class="status-badge">个人开发中</span>
+                <h1 class="hero-title"><img src="art/title-art-dark-web.png" width="1000" height="364" alt="剑客与权臣"></h1>
             </div>
         </div>
 
