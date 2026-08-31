@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="剑客与权臣 —— 惊棠工作室开发的 2D 俯视角武侠 RPG，序章从南郊村的一个故事开始。">
+    <title>剑客与权臣 | 惊棠工作室</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #1C1D22;
+            --surface: #313B44;
+            --mid: #606467;
+            --silver: #AAA8AD;
+            --accent: #E62815;
+            --accent-soft: #8B4944;
+            --glass: rgba(49, 59, 68, 0.42);
+            --glass-border: rgba(170, 168, 173, 0.14);
+            --ink: rgba(255, 255, 255, 0.78);
+        }
+
+        body {
+            font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: var(--bg);
+            color: #fff;
+            min-height: 100vh;
+            line-height: 1.75;
+        }
+
+        a { color: var(--accent); text-decoration: none; transition: color 0.2s ease; }
+        a:hover { color: #ff4a38; }
+
+        .bg-decoration {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .tech-grid {
+            position: absolute;
+            inset: -25% -10%;
+            background-image:
+                linear-gradient(rgba(170, 168, 173, 0.045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(170, 168, 173, 0.045) 1px, transparent 1px);
+            background-size: 56px 56px;
+            mask-image: radial-gradient(ellipse 85% 75% at 50% 20%, #000 20%, transparent 70%);
+            opacity: 0.85;
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+        }
+
+        .glow-orb--1 {
+            width: min(90vw, 480px);
+            height: min(90vw, 480px);
+            top: -10%;
+            right: -5%;
+            background: radial-gradient(circle, rgba(230, 40, 21, 0.32) 0%, transparent 68%);
+        }
+
+        .glow-orb--2 {
+            width: min(100vw, 560px);
+            height: min(100vw, 560px);
+            bottom: -15%;
+            left: -12%;
+            background: radial-gradient(circle, rgba(139, 73, 68, 0.4) 0%, transparent 65%);
+        }
+
+        .wrap {
+            position: relative;
+            z-index: 1;
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 48px 20px 72px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            letter-spacing: 0.12em;
+            color: var(--silver);
+            margin-bottom: 36px;
+        }
+
+        .back-link:hover { color: #fff; }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero-icon {
+            width: 112px;
+            height: 112px;
+            object-fit: cover;
+            border-radius: 18px;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(230, 40, 21, 0.25);
+        }
+
+        .hero-title {
+            font-size: clamp(2rem, 7vw, 2.8rem);
+            font-weight: 700;
+            letter-spacing: 0.28em;
+            margin-right: -0.28em;
+            margin-bottom: 8px;
+            background: linear-gradient(105deg, var(--silver) 0%, #fff 30%, var(--accent) 70%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: 0.78rem;
+            letter-spacing: 0.42em;
+            margin-right: -0.42em;
+            color: var(--silver);
+            font-family: ui-monospace, "SF Mono", Consolas, monospace;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(230, 40, 21, 0.45);
+            background: rgba(230, 40, 21, 0.12);
+            font-size: 0.76rem;
+            letter-spacing: 0.18em;
+            color: rgba(255, 255, 255, 0.88);
+        }
+
+        .panel {
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 28px 26px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 48px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .panel-title {
+            font-size: 0.88rem;
+            letter-spacing: 0.32em;
+            margin-right: -0.32em;
+            color: var(--silver);
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .lead {
+            font-size: 1.02rem;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.04em;
+            margin-bottom: 14px;
+        }
+
+        .body-text {
+            font-size: 0.94rem;
+            color: var(--ink);
+            letter-spacing: 0.03em;
+        }
+
+        .body-text + .body-text { margin-top: 12px; }
+
+        .quote-block {
+            margin-top: 18px;
+            padding: 14px 16px 14px 18px;
+            border-radius: 10px;
+            border-left: 3px solid rgba(230, 40, 21, 0.45);
+            background: rgba(28, 29, 34, 0.35);
+            font-size: 0.88rem;
+            color: var(--silver);
+            font-style: italic;
+        }
+
+        .chapter-list {
+            list-style: none;
+            display: grid;
+            gap: 10px;
+        }
+
+        .chapter-item {
+            display: grid;
+            grid-template-columns: 2.4em 1fr;
+            gap: 12px;
+            align-items: start;
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: rgba(28, 29, 34, 0.35);
+            border: 1px solid rgba(170, 168, 173, 0.08);
+        }
+
+        .chapter-num {
+            font-family: ui-monospace, Consolas, monospace;
+            font-size: 0.82rem;
+            color: var(--accent);
+            letter-spacing: 0.06em;
+            padding-top: 2px;
+        }
+
+        .chapter-name {
+            font-size: 0.92rem;
+            color: rgba(255, 255, 255, 0.92);
+            margin-bottom: 4px;
+            letter-spacing: 0.06em;
+        }
+
+        .chapter-desc {
+            font-size: 0.82rem;
+            color: rgba(170, 168, 173, 0.75);
+            line-height: 1.65;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .feature-card {
+            padding: 14px 14px 16px;
+            border-radius: 10px;
+            background: rgba(28, 29, 34, 0.35);
+            border: 1px solid rgba(170, 168, 173, 0.08);
+        }
+
+        .feature-card h3 {
+            font-size: 0.86rem;
+            letter-spacing: 0.08em;
+            color: rgba(255, 255, 255, 0.92);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            font-size: 0.8rem;
+            color: rgba(170, 168, 173, 0.78);
+            line-height: 1.65;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .meta-item {
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: rgba(28, 29, 34, 0.35);
+            border: 1px solid rgba(170, 168, 173, 0.08);
+        }
+
+        .meta-label {
+            font-size: 0.72rem;
+            letter-spacing: 0.2em;
+            color: rgba(170, 168, 173, 0.55);
+            margin-bottom: 4px;
+        }
+
+        .meta-value {
+            font-size: 0.86rem;
+            color: rgba(255, 255, 255, 0.88);
+            letter-spacing: 0.04em;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 36px;
+            font-size: 0.72rem;
+            color: rgba(170, 168, 173, 0.38);
+            letter-spacing: 0.12em;
+        }
+
+        @media (max-width: 640px) {
+            .feature-grid,
+            .meta-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-decoration" aria-hidden="true">
+        <div class="tech-grid"></div>
+        <div class="glow-orb glow-orb--1"></div>
+        <div class="glow-orb glow-orb--2"></div>
+    </div>
+
+    <div class="wrap">
+        <a class="back-link" href="../">← 返回惊棠工作室</a>
+
+        <header class="hero">
+            <img class="hero-icon" src="../game-sas-icon.png" width="128" height="128" alt="剑客与权臣">
+            <h1 class="hero-title">剑客与权臣</h1>
+            <p class="hero-sub">Strategy and Sword</p>
+            <span class="status-badge">开发中 · 非公开试玩</span>
+        </header>
+
+        <section class="panel">
+            <h2 class="panel-title">项目简介</h2>
+            <p class="lead">2D 俯视角武侠 RPG —— 在南郊村的夜里，你又一次讲起那个剑客的故事。</p>
+            <div class="body-text">
+                <p>《剑客与权臣》是惊棠工作室正在开发的单机项目。玩家在南郊村生活、探索、战斗，从「故事里的英雄」逐渐走进真实的世界。序章以五章结构收束：幻想中的无双、普通的一天、山匪、富庶时光，直至灭村。</p>
+                <p>游戏强调「先点再走近」的交互手感：点选村民与地图入口、砍柴钓鱼做饭等活动点，主角会寻路到位后再触发对白或玩法；战斗支持队伍招募、装备天赋与剧情战。</p>
+            </div>
+            <blockquote class="quote-block">
+                「据说他一人可敌百……刀光所过，山匪如草。」—— 南郊村的夜里，孩子们眼里闪着光。
+            </blockquote>
+        </section>
+
+        <section class="panel">
+            <h2 class="panel-title">序章大纲</h2>
+            <ol class="chapter-list">
+                <li class="chapter-item">
+                    <span class="chapter-num">01</span>
+                    <div>
+                        <div class="chapter-name">故事里的英雄</div>
+                        <div class="chapter-desc">幻想无双教学。百晓生贯口、四面合围，Timeline 过场与围攻战斗。</div>
+                    </div>
+                </li>
+                <li class="chapter-item">
+                    <span class="chapter-num">02</span>
+                    <div>
+                        <div class="chapter-name">普通的一天</div>
+                        <div class="chapter-desc">村庄生活系统教学：砍柴、钓鱼、做饭、训练场等活动点。</div>
+                    </div>
+                </li>
+                <li class="chapter-item">
+                    <span class="chapter-num">03</span>
+                    <div>
+                        <div class="chapter-name">山匪</div>
+                        <div class="chapter-desc">正式战斗与队伍系统，走出教学进入真实威胁。</div>
+                    </div>
+                </li>
+                <li class="chapter-item">
+                    <span class="chapter-num">04</span>
+                    <div>
+                        <div class="chapter-name">富庶时光</div>
+                        <div class="chapter-desc">无主线约束的自由游玩阶段，巩固村庄循环。</div>
+                    </div>
+                </li>
+                <li class="chapter-item">
+                    <span class="chapter-num">05</span>
+                    <div>
+                        <div class="chapter-name">灭村</div>
+                        <div class="chapter-desc">序章收束，为后续主线铺路。</div>
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <section class="panel">
+            <h2 class="panel-title">核心系统</h2>
+            <div class="feature-grid">
+                <article class="feature-card">
+                    <h3>世界交互</h3>
+                    <p>村民对白、地图进出、活动点三套共用走近管道；红怪贴身开战，白怪可点选求饶。</p>
+                </article>
+                <article class="feature-card">
+                    <h3>村庄活动</h3>
+                    <p>砍柴、钓鱼、做饭（节奏小游戏）、训练场；一局结束可再来或离开。</p>
+                </article>
+                <article class="feature-card">
+                    <h3>战斗与队伍</h3>
+                    <p>实时 2D 战斗、招募、装备与天赋；剧情战与野外遭遇分轨导演。</p>
+                </article>
+                <article class="feature-card">
+                    <h3>剧情演出</h3>
+                    <p>章节旗标驱动事件；Unity Timeline 剪辑式过场（对白、刷怪、走位、运镜）。</p>
+                </article>
+                <article class="feature-card">
+                    <h3>地图探索</h3>
+                    <p>南郊村、竹洞、峡谷洞等场景；入口锚点与导表驱动刷怪/NPC。</p>
+                </article>
+                <article class="feature-card">
+                    <h3>墨韵 UI</h3>
+                    <p>IMGUI 水墨风 HUD：对白、背包、确认窗、旅行黑屏等互斥层。</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="panel">
+            <h2 class="panel-title">技术资料</h2>
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <div class="meta-label">引擎</div>
+                    <div class="meta-value">Unity · URP 2D</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">平台</div>
+                    <div class="meta-value">PC（开发目标）</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">数据</div>
+                    <div class="meta-value">Excel 导表 + 场景锚点</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">仓库</div>
+                    <div class="meta-value">私有 · StrategyAndSword</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">当前进度</div>
+                    <div class="meta-value">序章第一章可玩；Timeline 过场迭代中</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">工作室</div>
+                    <div class="meta-value">惊棠 JASPERTINT</div>
+                </div>
+            </div>
+        </section>
+
+        <p class="footer">© 2026 惊棠工作室 · 本页为项目资料展示，暂无公开试玩版</p>
+    </div>
+</body>
+</html>
