@@ -31,6 +31,8 @@
       var progressBarFull = document.querySelector("#unity-progress-bar-full");
       var fullscreenButton = document.querySelector("#unity-fullscreen-button");
       var warningBanner = document.querySelector("#unity-warning");
+      var footer = document.querySelector("#unity-footer");
+      var isEmbedded = new URLSearchParams(window.location.search).get("embed") === "1";
 
       // Shows a temporary message banner/ribbon for a few seconds, or
       // a permanent error message on top of the canvas if type=='error'.
@@ -101,10 +103,21 @@
 
 
       } else {
-        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
+        // Keep the native 9:16 game visible inside both the standalone page and a narrow iframe.
+        function fitDesktopCanvas() {
+          var footerHeight = isEmbedded ? 0 : 38;
+          var availableHeight = Math.max(320, window.innerHeight - footerHeight);
+          var displayWidth = Math.min(window.innerWidth, availableHeight * 9 / 16);
+          var displayHeight = displayWidth * 16 / 9;
+          canvas.style.width = displayWidth + "px";
+          canvas.style.height = displayHeight + "px";
+          container.style.width = displayWidth + "px";
+          container.style.height = (displayHeight + footerHeight) + "px";
+        }
 
-        canvas.style.width = "1080px";
-        canvas.style.height = "1920px";
+        if (isEmbedded) footer.style.display = "none";
+        fitDesktopCanvas();
+        window.addEventListener("resize", fitDesktopCanvas);
       }
 
       loadingBar.style.display = "block";
@@ -129,3 +142,4 @@
     </script>
   </body>
 </html>
+

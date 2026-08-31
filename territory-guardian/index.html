@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="《地域守护者》是惊棠工作室完成的第一款小游戏。选择地区，在包围中守住中央的守护装置，并可直接在网页中竖屏试玩。">
+    <title>地域守护者 | 惊棠工作室</title>
+    <style>
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #f6f1d4;
+            background:
+                radial-gradient(circle at 75% 8%, rgba(240, 224, 0, 0.13), transparent 25rem),
+                radial-gradient(circle at 12% 52%, rgba(45, 196, 153, 0.12), transparent 28rem),
+                #101917;
+            font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            line-height: 1.75;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.16;
+            background-image: radial-gradient(rgba(255,255,255,.28) .7px, transparent .7px);
+            background-size: 5px 5px;
+            mask-image: linear-gradient(to bottom, #000, transparent 75%);
+        }
+        a { color: inherit; }
+        .wrap { position: relative; width: min(1080px, calc(100% - 40px)); margin: 0 auto; padding: 34px 0 80px; }
+        .back {
+            display: inline-flex;
+            color: rgba(246, 241, 212, .62);
+            text-decoration: none;
+            letter-spacing: .08em;
+            font-size: .82rem;
+            margin-bottom: 34px;
+        }
+        .back:hover { color: #f0df00; }
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(280px, 400px);
+            gap: clamp(38px, 7vw, 86px);
+            align-items: center;
+            min-height: 540px;
+            padding: 34px clamp(0px, 2vw, 24px) 70px;
+        }
+        .eyebrow {
+            display: inline-block;
+            margin-bottom: 18px;
+            color: #f0df00;
+            font-size: .76rem;
+            font-weight: 800;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+        }
+        h1 { margin: 0; font-size: clamp(3.2rem, 8vw, 6.8rem); line-height: .98; letter-spacing: -.07em; }
+        .title-en { margin: 15px 0 28px; color: #59d4b0; font-size: .82rem; font-weight: 800; letter-spacing: .28em; }
+        .lead { max-width: 590px; margin: 0; color: rgba(246, 241, 212, .82); font-size: clamp(1rem, 2vw, 1.16rem); }
+        .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 46px;
+            padding: 0 22px;
+            border: 1px solid rgba(240, 223, 0, .42);
+            border-radius: 999px;
+            background: #f0df00;
+            color: #101917;
+            font-weight: 800;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .button--ghost { background: transparent; color: #f6f1d4; border-color: rgba(246, 241, 212, .22); }
+        .cover {
+            position: relative;
+            transform: rotate(2deg);
+            border: 10px solid #f6f1d4;
+            border-radius: 26px;
+            background: #f0df00;
+            box-shadow: 18px 20px 0 #2dc499, 28px 34px 70px rgba(0,0,0,.38);
+            overflow: hidden;
+        }
+        .cover::after {
+            content: "FIRST GAME";
+            position: absolute;
+            right: 13px;
+            bottom: 10px;
+            padding: 5px 9px;
+            background: #101917;
+            color: #f0df00;
+            font: 800 .65rem/1 ui-monospace, monospace;
+            letter-spacing: .13em;
+        }
+        .cover img { display: block; width: 100%; height: auto; }
+        .panel {
+            margin-top: 26px;
+            padding: clamp(25px, 5vw, 48px);
+            border: 1px solid rgba(246, 241, 212, .12);
+            border-radius: 24px;
+            background: rgba(23, 36, 33, .76);
+            box-shadow: inset 0 1px rgba(255,255,255,.04), 0 24px 70px rgba(0,0,0,.2);
+        }
+        .section-kicker { margin: 0 0 7px; color: #59d4b0; font-size: .72rem; font-weight: 800; letter-spacing: .2em; }
+        h2 { margin: 0 0 18px; font-size: clamp(1.65rem, 4vw, 2.45rem); line-height: 1.2; }
+        .about-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 44px; }
+        .about-grid p { margin: 0; color: rgba(246, 241, 212, .74); }
+        .beats { display: grid; gap: 12px; }
+        .beat { padding: 14px 16px; border-left: 3px solid #f0df00; background: rgba(8, 14, 13, .38); }
+        .beat strong { display: block; margin-bottom: 3px; color: #fff9cb; }
+        .beat span { color: rgba(246, 241, 212, .58); font-size: .85rem; }
+        .play-panel { text-align: center; }
+        .play-copy { max-width: 600px; margin: 0 auto 30px; color: rgba(246, 241, 212, .68); }
+        .phone-shell {
+            position: relative;
+            width: min(100%, 430px);
+            margin: 0 auto;
+            padding: 10px;
+            border: 1px solid rgba(246, 241, 212, .18);
+            border-radius: 32px;
+            background: #080c0b;
+            box-shadow: 0 28px 90px rgba(0,0,0,.46);
+        }
+        .phone-shell::before {
+            content: "";
+            position: absolute;
+            z-index: 3;
+            top: 17px;
+            left: 50%;
+            width: 56px;
+            height: 5px;
+            transform: translateX(-50%);
+            border-radius: 99px;
+            background: rgba(255,255,255,.18);
+            pointer-events: none;
+        }
+        .screen { position: relative; aspect-ratio: 9 / 16; overflow: hidden; border-radius: 23px; background: #1c2825; }
+        .screen iframe { display: block; width: 100%; height: 100%; border: 0; background: #231f20; }
+        .load-game {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            display: grid;
+            place-content: center;
+            gap: 16px;
+            padding: 30px;
+            background:
+                linear-gradient(rgba(11, 20, 18, .7), rgba(11, 20, 18, .9)),
+                url('../game-diyu-icon.jpg') center / cover;
+        }
+        .load-game p { margin: 0; color: rgba(255,255,255,.72); font-size: .86rem; }
+        .load-game .button { border: 0; font-size: 1rem; }
+        .load-game[hidden] { display: none; }
+        .play-note { margin: 18px 0 0; color: rgba(246, 241, 212, .46); font-size: .78rem; }
+        footer { margin-top: 42px; text-align: center; color: rgba(246, 241, 212, .34); font-size: .72rem; letter-spacing: .08em; }
+        @media (max-width: 760px) {
+            .wrap { width: min(100% - 28px, 1080px); padding-top: 22px; }
+            .hero { grid-template-columns: 1fr; min-height: 0; padding: 12px 4px 54px; }
+            .hero-copy { order: 2; }
+            .cover { order: 1; width: min(76vw, 330px); justify-self: center; }
+            .about-grid { grid-template-columns: 1fr; gap: 28px; }
+            .panel { border-radius: 19px; }
+        }
+    </style>
+</head>
+<body>
+    <main class="wrap">
+        <a class="back" href="../">← 返回惊棠工作室</a>
+
+        <section class="hero" aria-labelledby="page-title">
+            <div class="hero-copy">
+                <span class="eyebrow">我的第一个游戏 · WebGL</span>
+                <h1 id="page-title">地域<br>守护者</h1>
+                <p class="title-en">TERRITORY GUARDIAN</p>
+                <p class="lead">选择一处地域，在敌人的包围中守住中央装置。这是我第一次把一个游戏从想法做到可以打开、可以游玩的成品。</p>
+                <div class="actions">
+                    <a class="button" href="#play">开始试玩</a>
+                    <a class="button button--ghost" href="../game/" target="_blank" rel="noopener">单独打开游戏</a>
+                </div>
+            </div>
+            <figure class="cover">
+                <img src="../game-diyu-icon.jpg" width="1024" height="1024" alt="地域守护者的机械守护装置与四散的小人">
+            </figure>
+        </section>
+
+        <section class="panel about-grid" aria-labelledby="about-title">
+            <div>
+                <p class="section-kicker">ABOUT</p>
+                <h2 id="about-title">先选地方，然后守住它</h2>
+                <p>进入一局前，你会先选择要守护的地域。战斗开始后，敌人从四周靠近，中央的守护装置就是这局游戏的核心。它很小，也很直接：看清威胁，做出反应，尽量多撑一会儿。</p>
+            </div>
+            <div class="beats" aria-label="游戏流程">
+                <div class="beat"><strong>选择地域</strong><span>从不同地点进入一局战斗。</span></div>
+                <div class="beat"><strong>面对包围</strong><span>留意四周靠近的敌人。</span></div>
+                <div class="beat"><strong>守住中央</strong><span>保护你的守护装置，坚持下去。</span></div>
+            </div>
+        </section>
+
+        <section class="panel play-panel" id="play" aria-labelledby="play-title">
+            <p class="section-kicker">PLAY IN BROWSER</p>
+            <h2 id="play-title">竖屏试玩</h2>
+            <p class="play-copy">游戏原生分辨率为 1080 × 1920，下面的游玩框始终保持 9:16。首次加载 WebGL 文件需要一点时间。</p>
+            <div class="phone-shell">
+                <div class="screen">
+                    <div class="load-game" id="load-game">
+                        <button class="button" id="load-button" type="button">加载并开始游戏</button>
+                        <p>点击后才会加载游戏内容</p>
+                    </div>
+                    <iframe id="game-frame" title="地域守护者竖屏试玩" allow="fullscreen" allowfullscreen></iframe>
+                </div>
+            </div>
+            <p class="play-note">建议使用较新的桌面或手机浏览器；移动设备横竖屏切换时，游戏会自动重新适配。</p>
+        </section>
+
+        <footer>© 2026 惊棠工作室 · 个人开发项目 · 地域守护者 v1.0.0</footer>
+    </main>
+    <script>
+        const button = document.getElementById('load-button');
+        const overlay = document.getElementById('load-game');
+        const frame = document.getElementById('game-frame');
+        button.addEventListener('click', () => {
+            button.disabled = true;
+            button.textContent = '正在加载…';
+            frame.src = '../game/?embed=1';
+            frame.addEventListener('load', () => overlay.hidden = true, { once: true });
+        });
+    </script>
+</body>
+</html>
+
