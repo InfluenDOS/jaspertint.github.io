@@ -2,143 +2,229 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="《地域守护者》是惊棠工作室完成的第一款小游戏。选择地区，在包围中守住中央的守护装置，并可直接在网页中竖屏试玩。">
+    <meta name="theme-color" content="#111316">
     <title>地域守护者 | 惊棠工作室</title>
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../assets/site.css">
+    <script>document.documentElement.classList.add('js');</script>
     <style>
-        * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body {
-            margin: 0;
-            min-height: 100vh;
-            overflow-x: hidden;
-            color: #f6f1d4;
-            background:
-                radial-gradient(circle at 75% 8%, rgba(240, 224, 0, 0.13), transparent 25rem),
-                radial-gradient(circle at 12% 52%, rgba(45, 196, 153, 0.12), transparent 28rem),
-                #101917;
-            font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-            line-height: 1.75;
-        }
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            opacity: 0.16;
-            background-image: radial-gradient(rgba(255,255,255,.28) .7px, transparent .7px);
-            background-size: 5px 5px;
-            mask-image: linear-gradient(to bottom, #000, transparent 75%);
-        }
-        a { color: inherit; }
-        .wrap { position: relative; width: min(1080px, calc(100% - 40px)); margin: 0 auto; padding: 34px 0 80px; }
-        .back {
-            display: inline-flex;
-            color: rgba(246, 241, 212, .62);
-            text-decoration: none;
-            letter-spacing: .08em;
-            font-size: .82rem;
-            margin-bottom: 34px;
-        }
-        .back:hover { color: #f0df00; }
+        :root { --accent: #f0df00; --teal: #2dc499; }
+
+        /* ---------- hero ---------- */
         .hero {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(280px, 400px);
-            gap: clamp(38px, 7vw, 86px);
-            align-items: center;
-            min-height: 540px;
-            padding: 34px clamp(0px, 2vw, 24px) 70px;
-        }
-        .eyebrow {
-            display: inline-block;
-            margin-bottom: 18px;
-            color: #f0df00;
-            font-size: .76rem;
-            font-weight: 800;
-            letter-spacing: .22em;
-            text-transform: uppercase;
-        }
-        h1 { margin: 0; font-size: clamp(3.2rem, 8vw, 6.8rem); line-height: .98; letter-spacing: -.07em; }
-        .title-en { margin: 15px 0 28px; color: #59d4b0; font-size: .82rem; font-weight: 800; letter-spacing: .28em; }
-        .lead { max-width: 590px; margin: 0; color: rgba(246, 241, 212, .82); font-size: clamp(1rem, 2vw, 1.16rem); }
-        .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
-        .button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 46px;
-            padding: 0 22px;
-            border: 1px solid rgba(240, 223, 0, .42);
-            border-radius: 999px;
-            background: #f0df00;
-            color: #101917;
-            font-weight: 800;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .cover {
             position: relative;
-            transform: rotate(2deg);
-            border: 10px solid #f6f1d4;
-            border-radius: 26px;
-            background: #f0df00;
-            box-shadow: 18px 20px 0 #2dc499, 28px 34px 70px rgba(0,0,0,.38);
+            padding: calc(var(--topbar-h) + clamp(40px, 7vw, 96px)) 0 clamp(56px, 8vw, 110px);
             overflow: hidden;
+            isolation: isolate;
         }
-        .cover::after {
-            content: "FIRST GAME";
+        .hero__bgword {
             position: absolute;
-            right: 13px;
-            bottom: 10px;
-            padding: 5px 9px;
-            background: #101917;
-            color: #f0df00;
-            font: 800 .65rem/1 ui-monospace, monospace;
-            letter-spacing: .13em;
+            right: -0.06em;
+            top: calc(var(--topbar-h) + 10px);
+            z-index: -1;
+            font-family: var(--f-display);
+            font-weight: 800;
+            font-size: clamp(7rem, 20vw, 20rem);
+            line-height: 0.8;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(236, 235, 230, 0.07);
+            white-space: nowrap;
+            pointer-events: none;
+            user-select: none;
         }
-        .cover img { display: block; width: 100%; height: auto; }
-        .panel {
-            margin-top: 26px;
-            padding: clamp(25px, 5vw, 48px);
-            border: 1px solid rgba(246, 241, 212, .12);
-            border-radius: 24px;
-            background: rgba(23, 36, 33, .76);
-            box-shadow: inset 0 1px rgba(255,255,255,.04), 0 24px 70px rgba(0,0,0,.2);
+        .hero__grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+            align-items: center;
+            gap: clamp(40px, 7vw, 100px);
         }
-        .section-kicker { margin: 0 0 7px; color: #59d4b0; font-size: .72rem; font-weight: 800; letter-spacing: .2em; }
-        h2 { margin: 0 0 18px; font-size: clamp(1.65rem, 4vw, 2.45rem); line-height: 1.2; }
-        .about-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 44px; }
-        .about-grid p { margin: 0; color: rgba(246, 241, 212, .74); }
-        .beats { display: grid; gap: 12px; }
-        .beat { padding: 14px 16px; border-left: 3px solid #f0df00; background: rgba(8, 14, 13, .38); }
-        .beat strong { display: block; margin-bottom: 3px; color: #fff9cb; }
-        .beat span { color: rgba(246, 241, 212, .58); font-size: .85rem; }
-        .play-panel { text-align: center; }
-        .play-copy { max-width: 600px; margin: 0 auto 30px; color: rgba(246, 241, 212, .68); }
-        .phone-shell {
+        .hero__file {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 26px;
+            color: var(--fg-3);
+        }
+        .hero__title {
+            font-family: var(--f-heavy);
+            font-weight: 900;
+            font-size: clamp(3.6rem, 9vw, 7.4rem);
+            line-height: 0.98;
+            letter-spacing: 0.02em;
+        }
+        .hero__title span { display: block; }
+        .hero__title span:last-child { color: var(--accent); }
+        .hero__en {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 22px 0 28px;
+            font-family: var(--f-display);
+            font-weight: 700;
+            font-size: clamp(1rem, 1.8vw, 1.3rem);
+            letter-spacing: 0.4em;
+            color: var(--teal);
+        }
+        .hero__en::before { content: ""; width: 32px; height: 3px; background: var(--teal); flex: none; }
+        .hero__lead {
+            max-width: 32em;
+            color: var(--fg-2);
+            font-size: clamp(1rem, 1.5vw, 1.1rem);
+            letter-spacing: 0.03em;
+        }
+        .hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+
+        .cover { position: relative; justify-self: end; width: min(100%, 440px); }
+        .cover__frame {
             position: relative;
-            width: min(100%, 430px);
-            margin: 0 auto;
-            padding: 10px;
-            border: 1px solid rgba(246, 241, 212, .18);
-            border-radius: 32px;
-            background: #080c0b;
-            box-shadow: 0 28px 90px rgba(0,0,0,.46);
+            z-index: 1;
+            clip-path: polygon(0 0, calc(100% - 40px) 0, 100% 40px, 100% 100%, 40px 100%, 0 calc(100% - 40px));
+            background: var(--accent);
         }
-        .phone-shell::before {
+        .cover__frame img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+        .cover__shadow {
+            position: absolute;
+            inset: 0;
+            transform: translate(18px, 18px);
+            background: var(--teal);
+            clip-path: polygon(0 0, calc(100% - 40px) 0, 100% 40px, 100% 100%, 40px 100%, 0 calc(100% - 40px));
+        }
+        .cover__sticker {
+            position: absolute;
+            z-index: 2;
+            left: -14px;
+            bottom: 44px;
+            padding: 8px 12px;
+            background: var(--ink-0);
+            color: var(--accent);
+            font-family: var(--f-mono);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+        }
+        .cover__cap {
+            position: absolute;
+            right: 0;
+            top: -30px;
+            color: var(--fg-3);
+            font-size: 0.62rem;
+        }
+
+        @media (max-width: 860px) {
+            .hero__grid { grid-template-columns: 1fr; }
+            .cover { order: -1; justify-self: center; width: min(78vw, 360px); margin-bottom: 12px; }
+            .cover__sticker { left: -8px; }
+        }
+
+        /* ---------- about ---------- */
+        .about {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+            gap: 32px clamp(32px, 6vw, 80px);
+            align-items: start;
+        }
+        .about__text h3 {
+            font-family: var(--f-heavy);
+            font-weight: 900;
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            letter-spacing: 0.04em;
+            line-height: 1.3;
+            margin-bottom: 18px;
+        }
+        .about__text p { color: var(--fg-2); letter-spacing: 0.03em; }
+        .steps {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: clamp(40px, 6vw, 64px);
+            counter-reset: step;
+        }
+        .step {
+            position: relative;
+            padding: 22px 22px 24px;
+            background: var(--ink-2);
+            border-top: 3px solid var(--accent);
+        }
+        .step::before {
+            counter-increment: step;
+            content: "STEP 0" counter(step);
+            display: block;
+            margin-bottom: 26px;
+            font-family: var(--f-mono);
+            font-size: 0.64rem;
+            letter-spacing: 0.18em;
+            color: var(--accent);
+        }
+        .step::after {
             content: "";
             position: absolute;
-            z-index: 3;
-            top: 17px;
-            left: 50%;
-            width: 56px;
-            height: 5px;
-            transform: translateX(-50%);
-            border-radius: 99px;
-            background: rgba(255,255,255,.18);
-            pointer-events: none;
+            top: 18px; right: 18px;
+            width: 22px; height: 22px;
+            border-top: 1px solid var(--line-2);
+            border-right: 1px solid var(--line-2);
         }
-        .screen { position: relative; aspect-ratio: 9 / 16; overflow: hidden; border-radius: 23px; background: #1c2825; }
+        .step strong {
+            display: block;
+            font-family: var(--f-heavy);
+            font-weight: 900;
+            font-size: 1.35rem;
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+        }
+        .step span { color: var(--fg-2); font-size: 0.9rem; }
+
+        @media (max-width: 860px) {
+            .about { grid-template-columns: 1fr; }
+            .steps { grid-template-columns: 1fr; }
+        }
+
+        /* ---------- play ---------- */
+        .play {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 40px clamp(32px, 6vw, 80px);
+            align-items: start;
+        }
+        .play__ratio {
+            font-family: var(--f-display);
+            font-weight: 800;
+            font-size: clamp(6rem, 16vw, 14rem);
+            line-height: 0.85;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--line-2);
+            margin-bottom: 28px;
+        }
+        .play__ratio span { color: var(--accent); -webkit-text-stroke: 0; }
+        .play__hazard { height: 12px; max-width: 240px; margin-top: 36px; }
+        .play__copy p { color: var(--fg-2); letter-spacing: 0.03em; }
+        .play__copy .sheet { margin-top: 28px; }
+        .play__note { margin-top: 20px; font-size: 0.84rem; color: var(--fg-3) !important; }
+
+        .device {
+            position: relative;
+            width: min(100%, 420px);
+            padding: 34px 12px 12px;
+            background: var(--ink-0);
+            border: 1px solid var(--line-2);
+            clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
+        }
+        .device__bar {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px 0 14px;
+            color: var(--fg-3);
+            font-size: 0.6rem;
+        }
+        .device__bar b { color: var(--accent); font-weight: 600; }
+        .screen { position: relative; aspect-ratio: 9 / 16; overflow: hidden; background: #1c2825; }
         .screen iframe { display: block; width: 100%; height: 100%; border: 0; background: #231f20; }
         .load-game {
             position: absolute;
@@ -146,88 +232,182 @@
             z-index: 2;
             display: grid;
             place-content: center;
+            justify-items: center;
             gap: 16px;
             padding: 30px;
+            text-align: center;
             background:
-                linear-gradient(rgba(11, 20, 18, .7), rgba(11, 20, 18, .9)),
+                linear-gradient(rgba(10, 14, 13, .72), rgba(10, 14, 13, .92)),
                 url('../game-diyu-icon.jpg') center / cover;
         }
-        .load-game p { margin: 0; color: rgba(255,255,255,.72); font-size: .86rem; }
-        .load-game .button { border: 0; font-size: 1rem; }
+        .load-game::before, .load-game::after {
+            content: "";
+            position: absolute;
+            left: 16px; right: 16px;
+            height: 10px;
+        }
+        .load-game::before { top: 16px; background: repeating-linear-gradient(-45deg, var(--accent) 0 6px, transparent 6px 12px); opacity: .7; }
+        .load-game::after { bottom: 16px; background: repeating-linear-gradient(-45deg, var(--accent) 0 6px, transparent 6px 12px); opacity: .7; }
+        .load-game p { color: rgba(255,255,255,.7); font-size: 0.84rem; }
+        .load-game p.mono { color: var(--accent); font-size: 0.62rem; }
         .load-game[hidden] { display: none; }
-        .play-note { margin: 18px 0 0; color: rgba(246, 241, 212, .46); font-size: .78rem; }
-        footer { margin-top: 42px; text-align: center; color: rgba(246, 241, 212, .34); font-size: .72rem; letter-spacing: .08em; }
-        @media (max-width: 760px) {
-            .wrap { width: min(100% - 28px, 1080px); padding-top: 22px; }
-            .hero { grid-template-columns: 1fr; min-height: 0; padding: 12px 4px 54px; }
-            .hero-copy { order: 2; }
-            .cover { order: 1; width: min(76vw, 330px); justify-self: center; }
-            .about-grid { grid-template-columns: 1fr; gap: 28px; }
-            .panel { border-radius: 19px; }
+
+        @media (max-width: 860px) {
+            .play { grid-template-columns: 1fr; }
+            .device { justify-self: center; }
         }
     </style>
 </head>
 <body>
-    <main class="wrap">
-        <a class="back" href="../">← 返回惊棠工作室</a>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <symbol id="jt-mark" viewBox="425 150 712 755">
+            <g style="fill: var(--mark-j, #fff)">
+                <rect x="648" y="163" width="189" height="164" rx="14"/>
+                <rect x="648" y="345" width="189" height="160" rx="14"/>
+                <rect x="437" y="498" width="264" height="159" rx="14"/>
+            </g>
+            <g style="fill: var(--mark-t, #111)">
+                <rect x="705" y="490" width="418" height="161" rx="14"/>
+                <rect x="833" y="640" width="134" height="252" rx="14"/>
+            </g>
+        </symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></symbol>
+        <symbol id="i-back" viewBox="0 0 24 24"><path d="M20 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></symbol>
+    </svg>
 
-        <section class="hero" aria-labelledby="page-title">
-            <div class="hero-copy">
-                <span class="eyebrow">我的第一个游戏 · WebGL</span>
-                <h1 id="page-title">地域<br>守护者</h1>
-                <p class="title-en">TERRITORY GUARDIAN</p>
-                <p class="lead">选择一处地域，在敌人的包围中守住中央装置。这是我第一次把一个游戏从想法做到可以打开、可以游玩的成品。</p>
-                <div class="actions">
-                    <a class="button" href="#play">开始试玩</a>
-                </div>
-            </div>
-            <figure class="cover">
-                <img src="../game-diyu-icon.jpg" width="1024" height="1024" alt="地域守护者的机械守护装置与四散的小人">
-            </figure>
-        </section>
+    <div class="backdrop" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
 
-        <section class="panel about-grid" aria-labelledby="about-title">
-            <div>
-                <p class="section-kicker">ABOUT</p>
-                <h2 id="about-title">先选地方，然后守住它</h2>
-                <p>进入一局前，你会先选择要守护的地域。战斗开始后，敌人从四周靠近，中央的守护装置就是这局游戏的核心。它很小，也很直接：看清威胁，做出反应，尽量多撑一会儿。</p>
-            </div>
-            <div class="beats" aria-label="游戏流程">
-                <div class="beat"><strong>选择地域</strong><span>从不同地点进入一局战斗。</span></div>
-                <div class="beat"><strong>面对包围</strong><span>留意四周靠近的敌人。</span></div>
-                <div class="beat"><strong>守住中央</strong><span>保护你的守护装置，坚持下去。</span></div>
-            </div>
-        </section>
+    <nav class="topbar" aria-label="页面导航">
+        <a class="brand" href="../" aria-label="返回惊棠工作室首页">
+            <svg class="brand__mark" aria-hidden="true"><use href="#jt-mark"/></svg>
+            <span class="brand__text">
+                <span class="brand__cn">惊棠</span>
+                <span class="brand__en">JASPERTINT STUDIO</span>
+            </span>
+        </a>
+        <p class="crumbs">/ PROJECT FILES / <b>TG-01 地域守护者</b></p>
+        <a class="backlink" href="../"><svg aria-hidden="true"><use href="#i-back"/></svg>返回</a>
+    </nav>
 
-        <section class="panel play-panel" id="play" aria-labelledby="play-title">
-            <p class="section-kicker">PLAY IN BROWSER</p>
-            <h2 id="play-title">竖屏试玩</h2>
-            <p class="play-copy">游戏原生分辨率为 1080 × 1920，下面的游玩框始终保持 9:16。首次加载 WebGL 文件需要一点时间。</p>
-            <div class="phone-shell">
-                <div class="screen">
-                    <div class="load-game" id="load-game">
-                        <button class="button" id="load-button" type="button">加载并开始游戏</button>
-                        <p>点击后才会加载游戏内容</p>
+    <main>
+        <header class="hero">
+            <div class="hero__bgword" aria-hidden="true">GUARDIAN</div>
+            <div class="shell hero__grid">
+                <div class="hero__copy">
+                    <p class="hero__file mono rv"><span class="tag tag--solid">FILE No.01</span><span class="tag tag--ok">PLAYABLE · 可试玩</span>我的第一个游戏 · WEBGL</p>
+                    <h1 class="hero__title rv" style="--d:.08s"><span>地域</span><span>守护者</span></h1>
+                    <p class="hero__en rv" style="--d:.16s">TERRITORY GUARDIAN</p>
+                    <p class="hero__lead rv" style="--d:.22s">选择一处地域，在敌人的包围中守住中央装置。这是我第一次把一个游戏从想法做到可以打开、可以游玩的成品。</p>
+                    <div class="hero__actions rv" style="--d:.28s">
+                        <a class="btn" href="#play">开始试玩 <span class="btn__en">PLAY</span><svg class="btn__arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+                        <a class="btn btn--ghost" href="#about">游戏档案 <span class="btn__en">ABOUT</span></a>
                     </div>
-                    <iframe id="game-frame" title="地域守护者竖屏试玩" allow="fullscreen" allowfullscreen></iframe>
                 </div>
+                <figure class="cover rv" style="--d:.12s">
+                    <figcaption class="cover__cap mono">IMG // TG-COVER-01</figcaption>
+                    <div class="cover__shadow" aria-hidden="true"></div>
+                    <div class="cover__frame rv-wipe">
+                        <img src="../game-diyu-icon.jpg" width="1024" height="1024" alt="地域守护者的机械守护装置与四散的小人">
+                    </div>
+                    <span class="cover__sticker">FIRST GAME</span>
+                </figure>
             </div>
-            <p class="play-note">建议使用较新的桌面或手机浏览器；移动设备横竖屏切换时，游戏会自动重新适配。</p>
+        </header>
+
+        <div class="ticker" aria-hidden="true">
+            <div class="ticker__track">
+                <span>TERRITORY GUARDIAN</span><span>地域守护者</span><span>选择地域</span><span>面对包围</span><span>守住中央</span><span>PLAY IN BROWSER</span>
+                <span>TERRITORY GUARDIAN</span><span>地域守护者</span><span>选择地域</span><span>面对包围</span><span>守住中央</span><span>PLAY IN BROWSER</span>
+            </div>
+        </div>
+
+        <section class="section" id="about" aria-labelledby="about-title">
+            <div class="shell">
+                <div class="sec-head rv">
+                    <span class="sec-head__num" aria-hidden="true">01</span>
+                    <p class="sec-head__label mono">ABOUT // 游戏档案</p>
+                    <h2 class="sec-head__title" id="about-title">先选地方，然后守住它</h2>
+                </div>
+
+                <div class="about">
+                    <div class="about__text rv">
+                        <p>进入一局前，你会先选择要守护的地域。战斗开始后，敌人从四周靠近，中央的守护装置就是这局游戏的核心。它很小，也很直接：看清威胁，做出反应，尽量多撑一会儿。</p>
+                    </div>
+                    <dl class="sheet rv" style="--d:.1s">
+                        <div class="sheet__row"><dt>TITLE</dt><dd>地域守护者 / Territory Guardian</dd></div>
+                        <div class="sheet__row"><dt>OBJECTIVE</dt><dd>守住中央的守护装置</dd></div>
+                        <div class="sheet__row"><dt>PLATFORM</dt><dd>网页浏览器 · WebGL</dd></div>
+                        <div class="sheet__row"><dt>DISPLAY</dt><dd>竖屏 9:16 · 1080 × 1920</dd></div>
+                        <div class="sheet__row"><dt>VERSION</dt><dd>v1.0.0</dd></div>
+                    </dl>
+                </div>
+
+                <ol class="steps" aria-label="游戏流程">
+                    <li class="step rv"><strong>选择地域</strong><span>从不同地点进入一局战斗。</span></li>
+                    <li class="step rv" style="--d:.08s"><strong>面对包围</strong><span>留意四周靠近的敌人。</span></li>
+                    <li class="step rv" style="--d:.16s"><strong>守住中央</strong><span>保护你的守护装置，坚持下去。</span></li>
+                </ol>
+            </div>
         </section>
 
-        <footer>© 2026 惊棠工作室 · 个人开发项目 · 地域守护者 v1.0.0</footer>
+        <section class="section" id="play" aria-labelledby="play-title" style="padding-top: 0;">
+            <div class="shell">
+                <div class="sec-head rv">
+                    <span class="sec-head__num" aria-hidden="true">02</span>
+                    <p class="sec-head__label mono">PLAY IN BROWSER // 试玩</p>
+                    <h2 class="sec-head__title" id="play-title">竖屏试玩</h2>
+                </div>
+
+                <div class="play">
+                    <div class="play__copy rv">
+                        <p class="play__ratio" aria-hidden="true">9<span>:</span>16</p>
+                        <p>游戏原生分辨率为 1080 × 1920，右侧的游玩框始终保持 9:16。首次加载 WebGL 文件需要一点时间。</p>
+                        <p class="play__note">建议使用较新的桌面或手机浏览器；移动设备横竖屏切换时，游戏会自动重新适配。</p>
+                        <div class="play__hazard hazard" aria-hidden="true"></div>
+                    </div>
+                    <div class="device brackets rv" style="--d:.1s">
+                        <div class="device__bar mono"><span>TG-01 // WEBGL SESSION</span><b id="session-state">STANDBY</b></div>
+                        <div class="screen">
+                            <div class="load-game" id="load-game">
+                                <p class="mono">READY TO DEPLOY</p>
+                                <button class="btn" id="load-button" type="button">加载并开始游戏</button>
+                                <p>点击后才会加载游戏内容</p>
+                            </div>
+                            <iframe id="game-frame" title="地域守护者竖屏试玩" allow="fullscreen" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
+
+    <footer class="footer">
+        <div class="shell footer__inner">
+            <div class="footer__brand">
+                <svg class="brand__mark" aria-hidden="true"><use href="#jt-mark"/></svg>
+                <p class="footer__copy">© 2026 惊棠工作室 · 个人开发项目<br>地域守护者 v1.0.0</p>
+            </div>
+            <a class="footer__top" href="../">BACK TO STUDIO <span aria-hidden="true">←</span></a>
+        </div>
+    </footer>
+
+    <script src="../assets/site.js" defer></script>
     <script>
         const button = document.getElementById('load-button');
         const overlay = document.getElementById('load-game');
         const frame = document.getElementById('game-frame');
+        const state = document.getElementById('session-state');
         button.addEventListener('click', () => {
             button.disabled = true;
             button.textContent = '正在加载…';
+            state.textContent = 'LOADING';
             frame.src = '../game/?embed=1';
-            frame.addEventListener('load', () => overlay.hidden = true, { once: true });
+            frame.addEventListener('load', () => {
+                overlay.hidden = true;
+                state.textContent = 'ONLINE';
+            }, { once: true });
         });
     </script>
 </body>
 </html>
-

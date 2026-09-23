@@ -2,742 +2,849 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>惊棠工作室 | Jingtang Studio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="惊棠工作室（JASPERTINT STUDIO）是一个个人独立游戏工作室。这里收录我们做完的与正在做的小游戏。">
+    <meta name="theme-color" content="#111316">
+    <title>惊棠工作室 | Jaspertint Studio</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preload" href="assets/fonts/barlow-condensed-800.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="assets/site.css">
+    <script>document.documentElement.classList.add('js');</script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg: #1C1D22;
-            --surface: #313B44;
-            --mid: #606467;
-            --silver: #AAA8AD;
-            --accent: #E62815;
-            --accent-soft: #8B4944;
-            --glass: rgba(49, 59, 68, 0.42);
-            --glass-border: rgba(170, 168, 173, 0.14);
-        }
-
-        body {
-            font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-            background: var(--bg);
-            color: #fff;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .page-loader {
+        /* ---------- boot screen ---------- */
+        .boot { display: none; }
+        .js .boot {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg);
-            z-index: 9999;
+            inset: 0;
+            z-index: 100;
+            display: grid;
+            place-items: center;
+            background: var(--ink-0);
+            transition: clip-path 0.7s var(--ease), visibility 0s linear 0.7s;
+            clip-path: inset(0 0 0 0);
+        }
+        .js .boot.done { clip-path: inset(0 0 100% 0); visibility: hidden; }
+        .boot__inner { width: min(320px, 72vw); display: grid; gap: 18px; justify-items: center; }
+        .boot__mark { width: 72px; height: 72px; --mark-j: var(--fg); --mark-t: var(--accent); }
+        .boot__bar { width: 100%; height: 3px; background: var(--ink-3); overflow: hidden; }
+        .boot__bar i { display: block; height: 100%; width: 100%; background: var(--accent); transform: scaleX(var(--p, 0)); transform-origin: left; }
+        .boot__line { width: 100%; display: flex; justify-content: space-between; color: var(--fg-3); font-size: 0.64rem; }
+        .boot__line b { color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+        /* ---------- hero ---------- */
+        .hero {
+            position: relative;
+            min-height: max(640px, 100svh);
+            padding-top: var(--topbar-h);
             display: flex;
             align-items: center;
-            justify-content: center;
-            transition: opacity 0.8s ease, visibility 0.8s ease;
+            overflow: hidden;
+            isolation: isolate;
         }
-
-        .page-loader.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .loader-content {
-            text-align: center;
-        }
-
-        .loader-logo {
-            width: 160px;
-            height: 160px;
-            margin: 0 auto 20px;
-            opacity: 0;
-            animation: loaderFadeIn 0.6s ease forwards;
-        }
-
-        .loader-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            /* PNG 自带纯黑底：与 --bg 融合，避免「黑方块」 */
-            mix-blend-mode: lighten;
-            filter: drop-shadow(0 0 24px rgba(230, 40, 21, 0.35));
-        }
-
-        .loader-text {
-            color: var(--silver);
-            letter-spacing: 0.35em;
-            font-size: 0.82em;
-            font-weight: 500;
-            opacity: 0;
-            animation: loaderFadeIn 0.6s ease 0.3s forwards;
-        }
-
-        @keyframes loaderFadeIn {
-            to { opacity: 1; }
-        }
-
-        .cursor-glow {
-            position: fixed;
-            width: 420px;
-            height: 420px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(230, 40, 21, 0.07) 0%, rgba(139, 73, 68, 0.04) 35%, transparent 65%);
+        .hero__giant {
+            position: absolute;
+            left: -0.04em;
+            bottom: -0.2em;
+            z-index: -1;
+            font-family: var(--f-display);
+            font-weight: 800;
+            font-size: clamp(8rem, 24vw, 26rem);
+            line-height: 1;
+            letter-spacing: -0.01em;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(236, 235, 230, 0.09);
+            white-space: nowrap;
+            mask-image: linear-gradient(to bottom, transparent 10%, #000 70%);
+            -webkit-mask-image: linear-gradient(to bottom, transparent 10%, #000 70%);
+            user-select: none;
             pointer-events: none;
-            z-index: 0;
-            transform: translate(-50%, -50%);
-            transition: opacity 0.3s ease;
         }
 
-        .bg-decoration {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
+        .hero__slab {
+            position: absolute;
+            top: 0; right: 0; bottom: 0;
+            width: 50%;
+            z-index: -1;
+            background:
+                radial-gradient(ellipse at 60% 45%, #ecece7 0%, var(--slab) 55%, var(--slab-2) 100%);
+            clip-path: polygon(22% 0, 100% 0, 100% 100%, 0 100%);
+            color: var(--slab-ink);
             overflow: hidden;
         }
-
-        .tech-grid {
-            position: absolute;
-            inset: -25% -10%;
-            background-image:
-                linear-gradient(rgba(170, 168, 173, 0.055) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(170, 168, 173, 0.055) 1px, transparent 1px);
-            background-size: 56px 56px;
-            mask-image: radial-gradient(ellipse 85% 75% at 50% 35%, #000 20%, transparent 70%);
-            opacity: 0.85;
-            will-change: transform;
-        }
-
-        .glow-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.55;
-            will-change: transform;
-        }
-
-        .glow-orb--1 {
-            width: min(90vw, 520px);
-            height: min(90vw, 520px);
-            top: -12%;
-            right: -8%;
-            background: radial-gradient(circle, rgba(230, 40, 21, 0.35) 0%, transparent 68%);
-        }
-
-        .glow-orb--2 {
-            width: min(100vw, 640px);
-            height: min(100vw, 640px);
-            bottom: -18%;
-            left: -15%;
-            background: radial-gradient(circle, rgba(139, 73, 68, 0.45) 0%, transparent 65%);
-        }
-
-        .glow-orb--3 {
-            width: 420px;
-            height: 420px;
-            top: 42%;
-            left: 50%;
-            margin-left: -210px;
-            background: radial-gradient(circle, rgba(49, 59, 68, 0.9) 0%, transparent 70%);
-            opacity: 0.35;
-            filter: blur(64px);
-        }
-
-        .scan-line {
+        .slab-grid {
             position: absolute;
             inset: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(28, 29, 34, 0.12) 2px,
-                rgba(28, 29, 34, 0.12) 4px
-            );
-            pointer-events: none;
-            opacity: 0.35;
-            mix-blend-mode: multiply;
+            background:
+                linear-gradient(rgba(0,0,0,.07) 1px, transparent 1px) 0 0 / 40px 40px,
+                linear-gradient(90deg, rgba(0,0,0,.07) 1px, transparent 1px) 0 0 / 40px 40px;
+            mask-image: radial-gradient(circle at 58% 48%, #000 0%, transparent 62%);
+            -webkit-mask-image: radial-gradient(circle at 58% 48%, #000 0%, transparent 62%);
         }
-
-        .particles-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            overflow: hidden;
-            will-change: transform;
-        }
-
-        .particle {
+        .emblem {
             position: absolute;
-            border-radius: 50%;
-            opacity: 0.55;
-            will-change: transform;
-        }
-
-        .particle.accent {
-            background: var(--accent);
-            box-shadow: 0 0 8px rgba(230, 40, 21, 0.45);
-        }
-
-        .particle.muted {
-            background: var(--mid);
-            box-shadow: 0 0 4px rgba(96, 100, 103, 0.4);
-        }
-
-        .container {
-            position: relative;
-            z-index: 2;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 72px 20px 80px;
-        }
-
-        [data-parallax] {
-            will-change: transform;
-        }
-
-        .logo-section {
-            text-align: center;
-            margin-bottom: 48px;
-        }
-
-        .logo-mark {
-            width: 240px;
-            height: 240px;
-            margin: 0 auto 28px;
-            position: relative;
-            animation: breathe 5s ease-in-out infinite;
-        }
-
-        @keyframes breathe {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-        }
-
-        .logo-mark img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            mix-blend-mode: lighten;
-            filter: drop-shadow(0 0 28px rgba(230, 40, 21, 0.28));
-        }
-
-        .studio-name {
-            font-size: clamp(2.2rem, 8vw, 3.5rem);
-            font-weight: 700;
-            letter-spacing: 0.42em;
-            margin-bottom: 14px;
-            margin-right: -0.42em;
-            background: linear-gradient(105deg, var(--silver) 0%, #fff 22%, var(--accent) 55%, var(--accent-soft) 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: shimmer 8s ease-in-out infinite;
-        }
-
-        @keyframes shimmer {
-            0%, 100% { background-position: 0% center; }
-            50% { background-position: 100% center; }
-        }
-
-        .studio-name-en {
-            font-size: 0.78rem;
-            letter-spacing: 0.55em;
-            margin-right: -0.55em;
-            color: var(--silver);
-            opacity: 0.85;
-            font-weight: 500;
-            font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
-            text-transform: uppercase;
-        }
-
-        .divider {
-            width: 120px;
-            height: 1px;
-            margin: 32px auto 40px;
-            position: relative;
-            background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
-            overflow: visible;
-        }
-
-        .divider::before {
-            content: '';
-            position: absolute;
-            left: 50%;
+            left: 58%;
             top: 50%;
-            width: 6px;
-            height: 6px;
-            background: var(--accent);
-            box-shadow: 0 0 14px rgba(230, 40, 21, 0.65);
-            border-radius: 1px;
-            transform: translate(-50%, -50%) rotate(45deg);
+            width: min(40vw, 600px);
+            aspect-ratio: 1;
+            transform: translate(-50%, -50%) translate(var(--px, 0px), var(--py, 0px));
+            transition: transform 0.6s var(--ease);
+        }
+        .emblem__rings { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+        .emblem__rings .spin { transform-origin: 300px 300px; animation: spin 60s linear infinite; }
+        .emblem__rings .spin-rev { transform-origin: 300px 300px; animation: spin 90s linear infinite reverse; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .emblem__mark {
+            position: absolute;
+            left: 50%; top: 50%;
+            width: 46%;
+            height: 46%;
+            transform: translate(-50%, -50%);
+            --mark-j: #fbfbf8;
+            --mark-t: #141518;
+            filter: drop-shadow(0 18px 24px rgba(0,0,0,.18)) drop-shadow(0 0 30px rgba(255,255,255,.7));
+        }
+        .slab-note {
+            position: absolute;
+            font-family: var(--f-mono);
+            font-size: 0.62rem;
+            letter-spacing: 0.16em;
+            line-height: 1.8;
+            color: rgba(18,19,22,.62);
+        }
+        .slab-note b { color: var(--slab-ink); font-weight: 600; }
+        .slab-note--tl { top: calc(var(--topbar-h) + 32px); right: 40px; text-align: right; }
+        .slab-note--bl { bottom: 72px; left: 30%; }
+        .slab-vert {
+            position: absolute;
+            right: 22px;
+            top: 50%;
+            transform: translateY(-50%);
+            writing-mode: vertical-rl;
+            font-family: var(--f-mono);
+            font-size: 0.62rem;
+            letter-spacing: 0.4em;
+            color: rgba(18,19,22,.5);
+        }
+        .barcode {
+            position: absolute;
+            right: 40px;
+            bottom: 72px;
+            width: 132px;
+            height: 34px;
+            background: repeating-linear-gradient(90deg,
+                #141518 0 2px, transparent 2px 4px, #141518 4px 5px, transparent 5px 8px,
+                #141518 8px 11px, transparent 11px 12px, #141518 12px 13px, transparent 13px 17px);
+            opacity: 0.8;
+        }
+        .slab-hazard {
+            position: absolute;
+            right: 0; bottom: 0;
+            width: 46%;
+            height: 14px;
         }
 
-        .junk-section {
-            width: 100%;
-            max-width: 920px;
-            margin: 0 auto 40px;
-            padding: 28px 24px 32px;
-            border-radius: 16px;
-            border: 1px solid var(--glass-border);
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow:
-                0 4px 48px rgba(0, 0, 0, 0.35),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
-        }
-
-        .junk-title {
-            font-size: 0.95rem;
-            letter-spacing: 0.42em;
-            margin-right: -0.42em;
-            color: var(--silver);
-            text-align: center;
-            margin-bottom: 16px;
-            font-weight: 600;
-        }
-
-        .junk-intro-block {
-            max-width: 640px;
-            margin: 0 auto;
-        }
-
-        .junk-intro {
-            font-size: 0.94rem;
-            line-height: 1.85;
-            color: rgba(255, 255, 255, 0.78);
-            text-align: center;
-            margin: 0 0 20px;
-            letter-spacing: 0.04em;
-        }
-
-        .junk-quote {
-            margin: 0;
-            padding: 14px 16px 14px 18px;
-            border-radius: 10px;
-            border-left: 3px solid rgba(230, 40, 21, 0.45);
-            background: rgba(28, 29, 34, 0.35);
-            font-size: 0.76rem;
-            line-height: 1.72;
-            font-style: italic;
-            color: var(--silver);
-            opacity: 0.92;
-            text-align: left;
-            letter-spacing: 0.02em;
-        }
-
-        .junk-quote p {
-            margin: 0 0 0.55em;
-        }
-
-        .junk-quote cite {
-            display: block;
-            font-style: italic;
-            font-size: 0.9em;
-            color: rgba(170, 168, 173, 0.65);
-            letter-spacing: 0.04em;
-        }
-
-        .junk-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
+        .hero__inner { position: relative; width: 100%; }
+        .hero__copy { max-width: min(560px, 46%); padding: 48px 0 96px; }
+        .hero__kicker {
+            display: flex;
+            align-items: center;
             gap: 12px;
-            margin-top: 24px;
+            color: var(--fg-2);
+            margin-bottom: 26px;
+        }
+        .hero__title { display: grid; gap: 10px; margin-bottom: 28px; }
+        .hero__cn {
+            font-family: var(--f-heavy);
+            font-weight: 900;
+            font-size: clamp(5.5rem, 13vw, 11rem);
+            line-height: 0.9;
+            letter-spacing: 0.04em;
+        }
+        .hero__en {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-family: var(--f-display);
+            font-weight: 700;
+            font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+            letter-spacing: 0.42em;
+            color: var(--fg-2);
+        }
+        .hero__en::before { content: ""; width: 36px; height: 3px; background: var(--accent); flex: none; }
+        .hero__lead {
+            max-width: 30em;
+            color: var(--fg-2);
+            font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+            letter-spacing: 0.04em;
+            margin-bottom: 36px;
+        }
+        .hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 48px; }
+        .hero__stats {
+            display: grid;
+            grid-template-columns: repeat(3, auto);
+            justify-content: start;
+            border-top: 1px solid var(--line-2);
+        }
+        .hero__stats div { padding: 14px 32px 0 0; margin-right: 32px; border-right: 1px solid var(--line); }
+        .hero__stats div:last-child { border-right: 0; }
+        .hero__stats dt { font-family: var(--f-mono); font-size: 0.62rem; letter-spacing: 0.16em; color: var(--fg-3); }
+        .hero__stats dd {
+            font-family: var(--f-display);
+            font-weight: 800;
+            font-size: 2.4rem;
+            line-height: 1.1;
+        }
+        .hero__stats dd small { font-size: 0.9rem; color: var(--fg-3); font-weight: 500; margin-left: 4px; }
+
+        .hero__scroll {
+            position: absolute;
+            left: var(--gutter);
+            bottom: 26px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--fg-3);
+            font-size: 0.62rem;
+        }
+        .hero__scroll i {
+            width: 1px; height: 32px;
+            background: linear-gradient(var(--accent), transparent);
+            animation: drip 2s var(--ease) infinite;
+            transform-origin: top;
+        }
+        @keyframes drip { 0% { transform: scaleY(0); } 60% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+
+        /* hero intro choreography */
+        .js .intro { opacity: 0; transform: translateY(24px); }
+        .js .ready .intro { animation: rise 0.9s var(--ease) forwards; animation-delay: var(--d, 0s); }
+        .js .hero__slab { clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%); transition: clip-path 1.1s var(--ease) 0.05s; }
+        .js .ready .hero__slab { clip-path: polygon(22% 0, 100% 0, 100% 100%, 0 100%); }
+        @keyframes rise { to { opacity: 1; transform: none; } }
+
+        @media (max-width: 900px) {
+            .hero { flex-direction: column; align-items: stretch; min-height: 0; }
+            .hero__slab {
+                position: relative;
+                width: 100%;
+                height: min(96vw, 520px);
+                clip-path: polygon(0 0, 100% 0, 100% 86%, 0 100%);
+            }
+            .js .hero__slab { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }
+            .js .ready .hero__slab { clip-path: polygon(0 0, 100% 0, 100% 86%, 0 100%); }
+            .emblem { left: 50%; top: 50%; width: min(78vw, 400px); }
+            .slab-note--tl { top: 18px; right: 18px; }
+            .slab-note--bl { display: none; }
+            .slab-vert { display: none; }
+            .barcode { right: 18px; bottom: 17%; width: 72px; height: 20px; }
+            .slab-hazard { display: none; }
+            .hero__copy { max-width: none; padding: 16px 0 80px; }
+            .hero__giant { font-size: 34vw; bottom: -0.1em; }
+            .hero__scroll { display: none; }
+        }
+        @media (max-width: 520px) {
+            .hero__stats div { padding-right: 18px; margin-right: 18px; }
+            .hero__stats dd { font-size: 2rem; }
+            .hero__en { letter-spacing: 0.3em; }
         }
 
-        .junk-card {
+        /* ---------- project files ---------- */
+        .works-intro {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: end;
+            gap: 24px 48px;
+            margin-bottom: 40px;
+        }
+        .works-lead {
+            max-width: 34em;
+            font-size: clamp(1rem, 1.7vw, 1.2rem);
+            color: var(--fg-2);
+            letter-spacing: 0.04em;
+            border-left: 3px solid var(--accent);
+            padding-left: 18px;
+        }
+        .works-count { color: var(--fg-3); text-align: right; line-height: 1.9; }
+        .works-count b { color: var(--accent); font-weight: 600; }
+
+        .files {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+        .file {
+            position: relative;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100px;
-            padding: 12px 8px;
-            border-radius: 12px;
-            border: 1px solid var(--glass-border);
-            text-align: center;
-            transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
-            background: rgba(28, 29, 34, 0.35);
+            text-decoration: none;
+            background: var(--ink-2);
+            clip-path: polygon(0 0, calc(100% - 32px) 0, 100% 32px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+            transition: background 0.3s ease;
         }
-
-        .junk-card__icon {
+        .file:hover { background: var(--ink-3); }
+        .file__media {
+            position: relative;
+            aspect-ratio: 16 / 10;
+            overflow: hidden;
+            background: var(--ink-3);
+        }
+        .file__media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.9s var(--ease), filter 0.5s ease;
+            filter: saturate(0.92);
+        }
+        .file:hover .file__media img { transform: scale(1.05); filter: saturate(1.05); }
+        .file__media::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                repeating-linear-gradient(0deg, rgba(0,0,0,.12) 0 1px, transparent 1px 3px),
+                linear-gradient(to top, rgba(17,19,22,.75), transparent 45%);
+            pointer-events: none;
+        }
+        .file__top {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            z-index: 2;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 16px 44px 0 0;
+        }
+        .file__no {
+            display: grid;
+            place-items: center;
+            min-width: 64px;
+            height: 56px;
+            padding: 0 12px;
+            background: var(--accent);
+            color: var(--accent-ink);
+            font-family: var(--f-display);
+            font-weight: 800;
+            font-size: 2.2rem;
+            line-height: 1;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+        }
+        .file__top .tag { background: rgba(10,11,13,.78); color: #ecebe6; border-color: rgba(236,235,230,.24); backdrop-filter: blur(6px); }
+        .file__body {
+            position: relative;
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-content: start;
+            gap: 4px 20px;
+            padding: 22px 26px 26px;
+        }
+        .file__class { grid-column: 1 / -1; color: var(--accent); font-size: 0.64rem; margin-bottom: 4px; }
+        .file__name {
+            font-family: var(--f-heavy);
+            font-weight: 900;
+            font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+            line-height: 1.1;
+            letter-spacing: 0.08em;
+            color: var(--fg);
+        }
+        .file__en {
+            grid-column: 1;
+            font-family: var(--f-display);
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.3em;
+            color: var(--fg-3);
+        }
+        .file__desc {
+            grid-column: 1 / -1;
+            margin-top: 12px;
+            font-size: 0.92rem;
+            color: var(--fg-2);
+            letter-spacing: 0.03em;
+        }
+        .file__cta {
+            grid-column: 2;
+            grid-row: 2 / span 2;
+            align-self: center;
+            display: grid;
+            place-items: center;
             width: 52px;
             height: 52px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 8px;
-            flex-shrink: 0;
-            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
+            border: 1px solid var(--line-2);
+            color: var(--fg);
+            transition: background 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s;
         }
-
-        .junk-card__name {
-            font-size: 0.8rem;
-            letter-spacing: 0.06em;
-            line-height: 1.35;
-            color: rgba(255, 255, 255, 0.92);
+        .file__cta svg { width: 20px; height: 20px; transition: transform 0.3s var(--ease); }
+        .file:hover .file__cta { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+        .file:hover .file__cta svg { transform: translateX(3px); }
+        .file__tags { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+        .file__edge {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: var(--accent);
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.45s var(--ease);
+            z-index: 3;
         }
+        .file:hover .file__edge { transform: scaleY(1); }
 
-        .junk-card--live {
-            text-decoration: none;
-            color: #fff;
-            background: rgba(49, 59, 68, 0.55);
-            border-color: rgba(230, 40, 21, 0.35);
-            cursor: pointer;
+        .file--sas .file__media img { object-position: 50% 30%; }
+
+        .slots-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 44px 0 14px;
+            color: var(--fg-3);
         }
-
-        .junk-card--live:hover {
-            transform: translateY(-3px);
-            border-color: rgba(230, 40, 21, 0.75);
-            box-shadow: 0 12px 36px rgba(230, 40, 21, 0.12);
-            background: rgba(49, 59, 68, 0.72);
+        .slots-head::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+        .slots {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(8, minmax(0, 1fr));
+            gap: 8px;
         }
-
-        .junk-card--placeholder {
-            opacity: 0.42;
-            background: rgba(28, 29, 34, 0.25);
-            color: rgba(170, 168, 173, 0.45);
-            cursor: not-allowed;
-            pointer-events: none;
+        .slot {
+            position: relative;
+            display: grid;
+            align-content: space-between;
+            height: 104px;
+            padding: 12px;
+            border: 1px dashed var(--line-2);
+            background: repeating-linear-gradient(-45deg, rgba(236,235,230,.035) 0 6px, transparent 6px 12px);
+            color: var(--fg-3);
             user-select: none;
         }
+        .slot__no {
+            font-family: var(--f-display);
+            font-weight: 800;
+            font-size: 1.9rem;
+            line-height: 1;
+            color: var(--fg-4);
+        }
+        .slot__meta { display: flex; justify-content: space-between; align-items: end; gap: 6px; }
+        .slot__meta span:first-child { font-size: 0.74rem; letter-spacing: 0.12em; }
+        .slot svg { width: 14px; height: 14px; opacity: 0.6; flex: none; }
 
-        .junk-card__pending {
-            font-size: 0.78rem;
-            letter-spacing: 0.14em;
-            color: rgba(170, 168, 173, 0.38);
+        @media (max-width: 900px) {
+            .files { grid-template-columns: 1fr; }
+            .works-intro { grid-template-columns: 1fr; }
+            .works-count { text-align: left; }
+            .slots { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+            .slot { height: 84px; }
+        }
+        @media (max-width: 520px) {
+            .file__body { padding: 20px 18px 22px; }
+            .slot__meta span:first-child { display: none; }
         }
 
-        @media (max-width: 720px) {
-            .junk-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        /* ---------- creed band ---------- */
+        .creed {
+            position: relative;
+            background: var(--slab);
+            color: var(--slab-ink);
+            overflow: hidden;
+            isolation: isolate;
         }
-
-        .contact {
-            text-align: center;
-            padding: 22px 28px;
-            border-radius: 14px;
-            border: 1px solid var(--glass-border);
-            background: var(--glass);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            max-width: 420px;
-            width: 100%;
+        .creed::before {
+            content: "“";
+            position: absolute;
+            right: 0.04em;
+            top: 0.02em;
+            z-index: -1;
+            font-family: var(--f-display);
+            font-weight: 800;
+            font-size: clamp(14rem, 30vw, 30rem);
+            line-height: 0.8;
+            color: rgba(18,19,22,.07);
         }
-
-        .contact-label {
-            font-size: 0.72rem;
-            color: var(--silver);
-            opacity: 0.75;
-            letter-spacing: 0.36em;
-            margin-right: -0.36em;
-            margin-bottom: 12px;
+        .creed__inner {
+            display: grid;
+            grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
+            gap: 32px clamp(32px, 6vw, 96px);
+            padding-top: clamp(64px, 9vw, 120px);
+            padding-bottom: clamp(64px, 9vw, 120px);
+        }
+        .creed__side { display: grid; align-content: start; gap: 16px; }
+        .creed__label {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
             font-weight: 600;
         }
+        .creed__label::before { content: ""; width: 12px; height: 12px; background: var(--slab-ink); }
+        .creed__side p { font-family: var(--f-mono); font-size: 0.64rem; letter-spacing: 0.14em; color: rgba(18,19,22,.55); line-height: 1.9; }
+        .creed__quote p {
+            font-family: var(--f-heavy);
+            font-weight: 900;
+            font-size: clamp(1.6rem, 3.6vw, 3rem);
+            line-height: 1.45;
+            letter-spacing: 0.04em;
+            text-wrap: balance;
+        }
+        .creed__quote mark {
+            background: linear-gradient(transparent 58%, var(--signal) 58%, var(--signal) 92%, transparent 92%);
+            color: inherit;
+            padding: 0 0.05em;
+        }
+        .creed__quote footer {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 28px;
+            font-family: var(--f-mono);
+            font-size: 0.74rem;
+            letter-spacing: 0.2em;
+        }
+        .creed__quote footer::before { content: ""; width: 40px; height: 2px; background: var(--slab-ink); }
 
-        .contact-email {
-            font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.62);
-            letter-spacing: 0.08em;
-            transition: color 0.25s ease;
+        .meter { margin-top: 44px; max-width: 560px; }
+        .meter__head { display: flex; justify-content: space-between; font-family: var(--f-mono); font-size: 0.64rem; letter-spacing: 0.16em; margin-bottom: 10px; color: rgba(18,19,22,.6); }
+        .meter__head b { color: var(--slab-ink); font-weight: 600; }
+        .meter__cells { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; }
+        .meter__cells i {
+            height: 14px;
+            background: rgba(18,19,22,.12);
+            clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+        }
+        .meter__cells i.on { background: var(--slab-ink); }
+        .meter__cells i.wip { background: repeating-linear-gradient(-45deg, var(--slab-ink) 0 3px, transparent 3px 6px); }
+
+        .creed__hazard { height: 12px; }
+
+        @media (max-width: 760px) {
+            .creed__inner { grid-template-columns: 1fr; }
         }
 
-        .contact:hover .contact-email {
-            color: var(--accent);
+        /* ---------- contact ---------- */
+        .contact {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: end;
+            gap: 32px 48px;
+            padding: clamp(24px, 5vw, 52px);
         }
-
-        .footer-divider {
-            width: 100%;
-            max-width: 200px;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
-            margin: 36px auto 28px;
+        .contact__meta { display: flex; flex-wrap: wrap; gap: 8px 24px; color: var(--fg-3); margin-bottom: 18px; }
+        .contact__meta b { color: var(--fg); font-weight: 600; }
+        .contact__meta .on { color: var(--ok); }
+        .contact__mail {
+            display: inline-block;
+            max-width: 100%;
+            font-family: var(--f-display);
+            font-weight: 700;
+            font-size: clamp(1.5rem, 5.2vw, 4rem);
+            line-height: 1.1;
+            letter-spacing: 0.02em;
+            text-decoration: none;
+            overflow-wrap: anywhere;
+            background: linear-gradient(var(--accent), var(--accent)) 0 100% / 0 3px no-repeat;
+            transition: background-size 0.5s var(--ease), color 0.3s;
         }
+        .contact__mail:hover { background-size: 100% 3px; color: var(--accent); }
+        .contact__note { margin-top: 14px; color: var(--fg-2); font-size: 0.92rem; letter-spacing: 0.04em; }
+        .contact__actions { display: flex; flex-wrap: wrap; gap: 10px; }
 
-        .footer {
-            text-align: center;
-            font-size: 0.72rem;
-            color: rgba(170, 168, 173, 0.38);
-            letter-spacing: 0.12em;
-            padding-bottom: constant(safe-area-inset-bottom);
-            padding-bottom: env(safe-area-inset-bottom);
+        @media (max-width: 760px) {
+            .contact { grid-template-columns: 1fr; }
         }
-
-        @media (max-width: 600px) {
-            .cursor-glow {
-                display: none;
-            }
-
-            .logo-mark {
-                animation: none;
-            }
-
-            .glow-orb {
-                filter: blur(64px);
-            }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .logo-section, .junk-section, .contact, .divider, .footer-divider, .footer {
-            opacity: 0;
-        }
-
-        .page-loaded .logo-section { animation: fadeIn 0.9s ease-out 0.15s forwards; }
-        .page-loaded .divider { animation: fadeIn 0.8s ease-out 0.3s forwards; }
-        .page-loaded .junk-section { animation: fadeIn 0.95s ease-out 0.4s forwards; }
-        .page-loaded .contact { animation: fadeIn 0.9s ease-out 0.55s forwards; }
-        .page-loaded .footer-divider { animation: fadeIn 0.8s ease-out 0.65s forwards; }
-        .page-loaded .footer { animation: fadeIn 0.85s ease-out 0.72s forwards; }
     </style>
 </head>
 <body>
-    <div class="page-loader" id="pageLoader">
-        <div class="loader-content">
-            <div class="loader-logo">
-                <img src="logo.png?v=3" alt="惊棠工作室 Logo">
-            </div>
-            <div class="loader-text">惊棠工作室</div>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <symbol id="jt-mark" viewBox="425 150 712 755">
+            <g style="fill: var(--mark-j, #fff)">
+                <rect x="648" y="163" width="189" height="164" rx="14"/>
+                <rect x="648" y="345" width="189" height="160" rx="14"/>
+                <rect x="437" y="498" width="264" height="159" rx="14"/>
+            </g>
+            <g style="fill: var(--mark-t, #111)">
+                <rect x="705" y="490" width="418" height="161" rx="14"/>
+                <rect x="833" y="640" width="134" height="252" rx="14"/>
+            </g>
+        </symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></symbol>
+        <symbol id="i-lock" viewBox="0 0 24 24"><path d="M6 11h12v10H6zM9 11V7a3 3 0 0 1 6 0v4" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    </svg>
+
+    <div class="boot" id="boot" aria-hidden="true">
+        <div class="boot__inner">
+            <svg class="boot__mark"><use href="#jt-mark"/></svg>
+            <div class="boot__bar"><i id="bootBar"></i></div>
+            <div class="boot__line mono"><span>JASPERTINT // 正在接入</span><b id="bootPct">000%</b></div>
         </div>
     </div>
 
-    <div class="cursor-glow" id="cursorGlow"></div>
+    <div class="backdrop" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
 
-    <div class="bg-decoration" aria-hidden="true">
-        <div class="tech-grid parallax-layer" data-speed="0.14"></div>
-        <div class="glow-orb glow-orb--1 parallax-layer" data-speed="0.32"></div>
-        <div class="glow-orb glow-orb--2 parallax-layer" data-speed="0.22"></div>
-        <div class="glow-orb glow-orb--3 parallax-layer" data-speed="0.4"></div>
-        <div class="scan-line parallax-layer" data-speed="0.06"></div>
-    </div>
+    <nav class="topbar" aria-label="主导航">
+        <a class="brand" href="#top" aria-label="惊棠工作室 首页">
+            <svg class="brand__mark" aria-hidden="true"><use href="#jt-mark"/></svg>
+            <span class="brand__text">
+                <span class="brand__cn">惊棠</span>
+                <span class="brand__en">JASPERTINT STUDIO</span>
+            </span>
+        </a>
+        <div class="nav">
+            <a href="#works"><small>01</small>作品</a>
+            <a href="#creed"><small>02</small>信条</a>
+            <a href="#contact"><small>03</small>联络</a>
+        </div>
+        <div class="sysclock" aria-hidden="true">
+            <span class="sysclock__dot"></span>
+            <span>ONLINE</span>
+            <time data-clock>--:--:--</time>
+        </div>
+    </nav>
 
-    <div class="particles-container" id="particlesContainer"></div>
+    <main>
+        <header class="hero" id="top">
+            <div class="hero__giant" aria-hidden="true">JASPERTINT</div>
 
-    <div class="container">
-        <div class="logo-section" data-parallax="0.11">
-            <div class="logo-mark">
-                <img src="logo.png?v=3" alt="惊棠工作室 Logo">
+            <div class="hero__slab" aria-hidden="true">
+                <div class="slab-grid"></div>
+                <div class="emblem" id="emblem">
+                    <svg class="emblem__rings" viewBox="0 0 600 600">
+                        <g fill="none" stroke="#141518">
+                            <circle cx="300" cy="300" r="292" stroke-opacity=".18"/>
+                            <g class="spin">
+                                <circle cx="300" cy="300" r="270" stroke-opacity=".5" stroke-width="2" stroke-dasharray="2 10"/>
+                                <path d="M300 18v26M300 556v26M18 300h26M556 300h26" stroke-width="2"/>
+                            </g>
+                            <g class="spin-rev">
+                                <circle cx="300" cy="300" r="236" stroke-opacity=".35" stroke-dasharray="120 18 8 18"/>
+                                <path d="M104 126 A 262 262 0 0 1 196 60" stroke="#ffd100" stroke-width="6"/>
+                                <path d="M496 474 A 262 262 0 0 1 404 540" stroke="#141518" stroke-width="6"/>
+                            </g>
+                            <circle cx="300" cy="300" r="200" stroke-opacity=".12"/>
+                            <path d="M0 300h60M540 300h60M300 0v60M300 540v60" stroke-opacity=".35"/>
+                        </g>
+                        <g font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2" fill="#141518" fill-opacity=".55">
+                            <text x="316" y="40">N-00</text>
+                            <text x="524" y="292">E-90</text>
+                            <text x="316" y="572">S-180</text>
+                            <text x="30" y="292">W-270</text>
+                        </g>
+                    </svg>
+                    <svg class="emblem__mark"><use href="#jt-mark"/></svg>
+                </div>
+                <div class="slab-note slab-note--tl">JT-EMBLEM / REV.03<br>SIGNAL <b>▮▮▮▮▯</b> STABLE</div>
+                <div class="slab-note slab-note--bl">IDENT // <b>JASPERTINT</b><br>INDIE GAME DEVELOPMENT</div>
+                <div class="slab-vert">惊棠工作室 · JASPERTINT STUDIO · 2026</div>
+                <div class="barcode"></div>
+                <div class="slab-hazard hazard"></div>
             </div>
-            <h1 class="studio-name">惊棠</h1>
-            <p class="studio-name-en">JASPERTINT STUDIO</p>
+
+            <div class="shell hero__inner">
+                <div class="hero__copy">
+                    <p class="hero__kicker mono intro" style="--d:.1s"><span class="tag tag--solid">EST. 2026</span>INDEPENDENT GAME STUDIO</p>
+                    <h1 class="hero__title">
+                        <span class="hero__cn intro" style="--d:.2s">惊棠</span>
+                        <span class="hero__en intro" style="--d:.3s">JASPERTINT STUDIO</span>
+                    </h1>
+                    <p class="hero__lead intro" style="--d:.4s">个人独立游戏工作室。<br>做小而直接的游戏，把想法尽快变成能玩的东西。</p>
+                    <div class="hero__actions intro" style="--d:.5s">
+                        <a class="btn" href="#works">查看作品 <span class="btn__en">VIEW FILES</span><svg class="btn__arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+                        <a class="btn btn--ghost" href="#contact">联系我们 <span class="btn__en">CONTACT</span></a>
+                    </div>
+                    <dl class="hero__stats intro" style="--d:.6s">
+                        <div><dt>作品档案</dt><dd>02<small>/10</small></dd></div>
+                        <div><dt>可试玩</dt><dd>01</dd></div>
+                        <div><dt>开发中</dt><dd>01</dd></div>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="hero__scroll mono" aria-hidden="true"><i></i>SCROLL</div>
+        </header>
+
+        <div class="ticker" aria-hidden="true">
+            <div class="ticker__track">
+                <span>JASPERTINT STUDIO</span><span>惊棠工作室</span><span>INDEPENDENT GAME DEVELOPMENT</span><span>FILE 01 · 地域守护者 · PLAYABLE</span><span>FILE 02 · 剑客与权臣 · IN DEVELOPMENT</span><span>MAKE IT · FINISH IT · SHIP IT</span>
+                <span>JASPERTINT STUDIO</span><span>惊棠工作室</span><span>INDEPENDENT GAME DEVELOPMENT</span><span>FILE 01 · 地域守护者 · PLAYABLE</span><span>FILE 02 · 剑客与权臣 · IN DEVELOPMENT</span><span>MAKE IT · FINISH IT · SHIP IT</span>
+            </div>
         </div>
 
-        <div class="divider" data-parallax="0.07"></div>
+        <section class="section" id="works" aria-labelledby="works-title">
+            <div class="shell">
+                <div class="sec-head rv">
+                    <span class="sec-head__num" aria-hidden="true">01</span>
+                    <p class="sec-head__label mono">PROJECT FILES // 作品档案</p>
+                    <h2 class="sec-head__title" id="works-title">拾垃圾项目</h2>
+                </div>
 
-        <section class="junk-section" aria-labelledby="junk-title" data-parallax="0.05">
-            <h2 id="junk-title" class="junk-title">拾垃圾项目</h2>
-            <div class="junk-intro-block">
-                <p class="junk-intro">它们都很无聊，但仍然希望它们能带给你快乐，哪怕只有一分钟；</p>
-                <blockquote class="junk-quote">
-                    <p>「你的前十个游戏都会很烂，所以尽快把它们做完，好把它们从你的系统里清理出去。」</p>
-                    <cite>——Jesse Schell</cite>
-                </blockquote>
+                <div class="works-intro rv">
+                    <p class="works-lead">它们都很无聊，但仍然希望它们能带给你快乐，哪怕只有一分钟。</p>
+                    <p class="works-count mono">FILES ONLINE <b>02</b> / 10<br>LAST UPDATE 2026</p>
+                </div>
+
+                <div class="files">
+                    <a class="file rv rv-wipe" href="territory-guardian/" style="--accent:#f0df00;">
+                        <div class="file__media">
+                            <img src="game-diyu-icon.jpg" width="1024" height="1024" alt="地域守护者：中央的机械守护装置与四散的小人" loading="lazy" decoding="async">
+                        </div>
+                        <div class="file__top">
+                            <span class="file__no">01</span>
+                            <span class="tag tag--ok">PLAYABLE · 可试玩</span>
+                        </div>
+                        <div class="file__body">
+                            <p class="file__class mono">FILE TG-01 // WEBGL · 竖屏 9:16</p>
+                            <h3 class="file__name">地域守护者</h3>
+                            <p class="file__en">TERRITORY GUARDIAN</p>
+                            <span class="file__cta" aria-hidden="true"><svg><use href="#i-arrow"/></svg></span>
+                            <p class="file__desc">选择一处地域，在敌人的包围中守住中央装置。第一个从想法做到可以游玩的成品。</p>
+                            <div class="file__tags"><span class="tag">守护</span><span class="tag">浏览器试玩</span><span class="tag">v1.0.0</span></div>
+                        </div>
+                        <span class="file__edge" aria-hidden="true"></span>
+                    </a>
+
+                    <a class="file file--sas rv rv-wipe" href="strategy-and-sword/" style="--accent:#e62815; --accent-ink:#fff; --d:.12s;">
+                        <div class="file__media">
+                            <img src="strategy-and-sword/art/hero-cover-v12.jpg" width="1672" height="941" alt="剑客与权臣：宣纸上的剑客沿血迹迎向下方的权臣与军阵" loading="lazy" decoding="async">
+                        </div>
+                        <div class="file__top">
+                            <span class="file__no">02</span>
+                            <span class="tag tag--wip">IN DEV · 开发中</span>
+                        </div>
+                        <div class="file__body">
+                            <p class="file__class mono">FILE SS-02 // 水墨武侠 RPG</p>
+                            <h3 class="file__name">剑客与权臣</h3>
+                            <p class="file__en">STRATEGY &amp; SWORD</p>
+                            <span class="file__cta" aria-hidden="true"><svg><use href="#i-arrow"/></svg></span>
+                            <p class="file__desc">在地图中探索江湖。把资源集中给自己成为剑客，或者多招几个打手，靠人数取胜。</p>
+                            <div class="file__tags"><span class="tag">水墨</span><span class="tag">滑动斩击</span><span class="tag">暂无试玩</span></div>
+                        </div>
+                        <span class="file__edge" aria-hidden="true"></span>
+                    </a>
+                </div>
+
+                <p class="slots-head mono rv">LOCKED SLOTS · 待解锁</p>
+                <ul class="slots rv" aria-label="尚未公开的作品位">
+                    <li class="slot"><span class="slot__no">03</span><span class="slot__meta"><span>敬请期待</span><svg aria-hidden="true"><use href="#i-lock"/></svg></span></li>
+                    <li class="slot"><span class="slot__no">04</span><span class="slot__meta"><span>敬请期待</span><svg aria-hidden="true"><use href="#i-lock"/></svg></span></li>
+                    <li class="slot"><span class="slot__no">05</span><span class="slot__meta"><span>敬请期待</span><svg aria-hidden="true"><use href="#i-lock"/></svg></span></li>
+                    <li class="slot"><span class="slot__no">06</span><span class="slot__meta"><span>敬请期待</span><svg aria-hidden="true"><use href="#i-lock"/></svg></span></li>
+                    <li class="slot"><span class="slot__no">07</span><span class="slot__meta"><span>敬请期待</span><svg aria-hidden="true"><use href="#i-lock"/></svg></span></li>
+                    <li class="slot"><span class="slot__no">08</span><span class="slot__meta"><span>敬请期待</span><svg aria-hidden="true"><use href="#i-lock"/></svg></span></li>
+                    <li class="slot"><span class="slot__no">09</span><span class="slot__meta"><span>敬请期待</span><svg aria-hidden="true"><use href="#i-lock"/></svg></span></li>
+                    <li class="slot"><span class="slot__no">10</span><span class="slot__meta"><span>敬请期待</span><svg aria-hidden="true"><use href="#i-lock"/></svg></span></li>
+                </ul>
             </div>
-            <div class="junk-grid">
-                <a href="territory-guardian/" class="junk-card junk-card--live">
-                    <img class="junk-card__icon" src="game-diyu-icon.jpg" width="128" height="128" alt="" decoding="async" loading="lazy">
-                    <span class="junk-card__name">地域守护者</span>
-                </a>
-                <a href="strategy-and-sword/" class="junk-card junk-card--live">
-                    <img class="junk-card__icon" src="game-sas-icon.png" width="128" height="128" alt="" decoding="async" loading="lazy">
-                    <span class="junk-card__name">剑客与权臣</span>
-                </a>
-                <div class="junk-card junk-card--placeholder" aria-disabled="true">
-                    <span class="junk-card__pending">敬请期待</span>
+        </section>
+
+        <section class="creed" id="creed" aria-labelledby="creed-title">
+            <div class="creed__hazard hazard-dark" style="--accent:#ffd100; --accent-ink:#141518;" aria-hidden="true"></div>
+            <div class="shell creed__inner">
+                <div class="creed__side rv">
+                    <p class="creed__label mono" id="creed-title">02 // 信条 CREED</p>
+                    <p>ARCHIVE REF. JS-10<br>SOURCE: THE ART OF<br>GAME DESIGN</p>
                 </div>
-                <div class="junk-card junk-card--placeholder" aria-disabled="true">
-                    <span class="junk-card__pending">敬请期待</span>
-                </div>
-                <div class="junk-card junk-card--placeholder" aria-disabled="true">
-                    <span class="junk-card__pending">敬请期待</span>
-                </div>
-                <div class="junk-card junk-card--placeholder" aria-disabled="true">
-                    <span class="junk-card__pending">敬请期待</span>
-                </div>
-                <div class="junk-card junk-card--placeholder" aria-disabled="true">
-                    <span class="junk-card__pending">敬请期待</span>
-                </div>
-                <div class="junk-card junk-card--placeholder" aria-disabled="true">
-                    <span class="junk-card__pending">敬请期待</span>
-                </div>
-                <div class="junk-card junk-card--placeholder" aria-disabled="true">
-                    <span class="junk-card__pending">敬请期待</span>
-                </div>
-                <div class="junk-card junk-card--placeholder" aria-disabled="true">
-                    <span class="junk-card__pending">敬请期待</span>
+                <div>
+                    <blockquote class="creed__quote rv" style="--d:.1s">
+                        <p>「你的前十个游戏都会很烂，所以<mark>尽快把它们做完</mark>，好把它们从你的系统里清理出去。」</p>
+                        <footer>JESSE SCHELL</footer>
+                    </blockquote>
+                    <div class="meter rv" style="--d:.2s" role="img" aria-label="前十个游戏进度：已完成 1 个，开发中 1 个">
+                        <div class="meter__head"><span>FIRST TEN GAMES · 进度</span><span><b>01</b> 完成 / <b>01</b> 开发中 / 10</span></div>
+                        <div class="meter__cells"><i class="on"></i><i class="wip"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <div class="contact" data-parallax="0.08">
-            <p class="contact-label">联系我们</p>
-            <p class="contact-email">speechlessgorilla@gmail.com</p>
+        <section class="section" id="contact" aria-labelledby="contact-title">
+            <div class="shell">
+                <div class="sec-head rv">
+                    <span class="sec-head__num" aria-hidden="true">03</span>
+                    <p class="sec-head__label mono">CONTACT // 联络</p>
+                    <h2 class="sec-head__title" id="contact-title">联系我们</h2>
+                </div>
+
+                <div class="panel contact rv">
+                    <div>
+                        <p class="contact__meta mono"><span>CHANNEL <b>E-MAIL</b></span><span>STATUS <b class="on">● OPEN</b></span></p>
+                        <a class="contact__mail" href="mailto:speechlessgorilla@gmail.com">speechlessgorilla@gmail.com</a>
+                        <p class="contact__note">合作、反馈、或者只是想聊聊游戏，都欢迎来信。</p>
+                    </div>
+                    <div class="contact__actions">
+                        <button class="btn" type="button" id="copyMail" data-copy="speechlessgorilla@gmail.com">复制邮箱 <span class="btn__en" id="copyState">COPY</span></button>
+                        <a class="btn btn--ghost" href="mailto:speechlessgorilla@gmail.com">发送邮件 <svg class="btn__arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="shell footer__inner">
+            <div class="footer__brand">
+                <svg class="brand__mark" aria-hidden="true"><use href="#jt-mark"/></svg>
+                <p class="footer__copy">© 2026 惊棠工作室 JASPERTINT STUDIO.<br>ALL RIGHTS RESERVED.</p>
+            </div>
+            <a class="footer__top" href="#top">BACK TO TOP <span aria-hidden="true">↑</span></a>
         </div>
+    </footer>
 
-        <div class="footer-divider" data-parallax="0.04"></div>
-
-        <div class="footer" data-parallax="0.03">
-            © 2026 惊棠工作室 JASPERTINT STUDIO. ALL RIGHTS RESERVED.
-        </div>
-    </div>
-
+    <script src="assets/site.js" defer></script>
     <script>
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                document.getElementById('pageLoader').classList.add('hidden');
-                document.body.classList.add('page-loaded');
-            }, 800);
-        });
+        (function () {
+            var body = document.body;
+            var boot = document.getElementById('boot');
+            var bar = document.getElementById('bootBar');
+            var pct = document.getElementById('bootPct');
+            var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var seen = false;
+            try { seen = sessionStorage.getItem('jt-booted') === '1'; } catch (e) {}
 
-        const cursorGlow = document.getElementById('cursorGlow');
-        let mouseX = 0, mouseY = 0;
-        let glowX = 0, glowY = 0;
-
-        const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
-
-        if (!isTouchDevice) {
-            document.addEventListener('mousemove', function(e) {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-            });
-
-            function animateGlow() {
-                glowX += (mouseX - glowX) * 0.1;
-                glowY += (mouseY - glowY) * 0.1;
-                cursorGlow.style.left = glowX + 'px';
-                cursorGlow.style.top = glowY + 'px';
-                requestAnimationFrame(animateGlow);
+            function finish() {
+                boot.classList.add('done');
+                body.classList.add('ready');
+                try { sessionStorage.setItem('jt-booted', '1'); } catch (e) {}
             }
-            animateGlow();
-        } else {
-            cursorGlow.style.display = 'none';
-        }
 
-        const parallaxLayers = document.querySelectorAll('.parallax-layer');
-        const parallaxContent = document.querySelectorAll('[data-parallax]');
-        const particlesContainer = document.getElementById('particlesContainer');
-        let parallaxTicking = false;
+            if (seen || reduce) {
+                boot.classList.add('done');
+                requestAnimationFrame(function () { body.classList.add('ready'); });
+            } else {
+                var start = performance.now();
+                var dur = 900;
+                (function step(now) {
+                    var t = Math.min(1, (now - start) / dur);
+                    var eased = 1 - Math.pow(1 - t, 3);
+                    bar.style.setProperty('--p', eased.toFixed(3));
+                    pct.textContent = ('00' + Math.round(eased * 100)).slice(-3) + '%';
+                    if (t < 1) requestAnimationFrame(step); else setTimeout(finish, 160);
+                })(start);
+            }
 
-        function updateParallax() {
-            const scrolled = window.pageYOffset;
+            // Emblem follows the pointer a little
+            var emblem = document.getElementById('emblem');
+            if (emblem && window.matchMedia('(pointer: fine)').matches && !reduce) {
+                window.addEventListener('pointermove', function (e) {
+                    var x = (e.clientX / window.innerWidth - 0.5) * -18;
+                    var y = (e.clientY / window.innerHeight - 0.5) * -18;
+                    emblem.style.setProperty('--px', x.toFixed(1) + 'px');
+                    emblem.style.setProperty('--py', y.toFixed(1) + 'px');
+                }, { passive: true });
+            }
 
-            parallaxLayers.forEach(function(layer) {
-                const speed = parseFloat(layer.dataset.speed) || 0.2;
-                const y = scrolled * speed;
-                const x = scrolled * speed * 0.15;
-                if (layer.classList.contains('tech-grid')) {
-                    layer.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0)';
+            // Copy e-mail
+            var copyBtn = document.getElementById('copyMail');
+            var copyState = document.getElementById('copyState');
+            copyBtn.addEventListener('click', function () {
+                var text = copyBtn.getAttribute('data-copy');
+                var done = function (ok) {
+                    copyState.textContent = ok ? '已复制 ✓' : '请手动复制';
+                    setTimeout(function () { copyState.textContent = 'COPY'; }, 2000);
+                };
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
                 } else {
-                    layer.style.transform = 'translate3d(0, ' + y + 'px, 0)';
+                    done(false);
                 }
             });
-
-            parallaxContent.forEach(function(el) {
-                const k = parseFloat(el.getAttribute('data-parallax')) || 0;
-                el.style.transform = 'translate3d(0, ' + (scrolled * k) + 'px, 0)';
-            });
-
-            if (particlesContainer) {
-                particlesContainer.style.transform = 'translate3d(0, ' + (scrolled * 0.1) + 'px, 0)';
-            }
-
-            parallaxTicking = false;
-        }
-
-        function requestParallax() {
-            if (!parallaxTicking) {
-                requestAnimationFrame(updateParallax);
-                parallaxTicking = true;
-            }
-        }
-
-        window.addEventListener('scroll', requestParallax, { passive: true });
-        updateParallax();
-
-        const particleCount = isTouchDevice ? 14 : 24;
-        const particles = [];
-
-        class Particle {
-            constructor() {
-                this.element = document.createElement('div');
-                this.element.className = 'particle ' + (Math.random() > 0.45 ? 'accent' : 'muted');
-                this.reset();
-                particlesContainer.appendChild(this.element);
-            }
-
-            reset() {
-                this.x = Math.random() * window.innerWidth;
-                this.y = Math.random() * window.innerHeight;
-                this.size = Math.random() * 2.5 + 1.5;
-                this.speedX = (Math.random() - 0.5) * 0.28;
-                this.speedY = -Math.random() * 0.48 - 0.18;
-                this.opacity = Math.random() * 0.35 + 0.28;
-
-                this.element.style.width = this.size + 'px';
-                this.element.style.height = this.size + 'px';
-                this.element.style.left = this.x + 'px';
-                this.element.style.top = this.y + 'px';
-                this.element.style.opacity = this.opacity;
-            }
-
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                this.x += Math.sin(this.y * 0.01) * 0.18;
-
-                if (this.y < -10) {
-                    this.y = window.innerHeight + 10;
-                    this.x = Math.random() * window.innerWidth;
-                }
-
-                if (this.x < -10) this.x = window.innerWidth + 10;
-                if (this.x > window.innerWidth + 10) this.x = -10;
-
-                this.element.style.transform = 'translate(' + this.x + 'px, ' + this.y + 'px)';
-            }
-        }
-
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
-        }
-
-        let frameCount = 0;
-        function animateParticles() {
-            frameCount++;
-            if (frameCount % 2 === 0) {
-                particles.forEach(function(p) { p.update(); });
-            }
-            requestAnimationFrame(animateParticles);
-        }
-        animateParticles();
-
-        window.addEventListener('resize', function() {
-            particles.forEach(function(p) {
-                if (p.x > window.innerWidth) p.x = Math.random() * window.innerWidth;
-                if (p.y > window.innerHeight) p.y = Math.random() * window.innerHeight;
-            });
-        });
+        })();
     </script>
 </body>
 </html>
-
