@@ -28,7 +28,7 @@
         .boot__mark { width: 72px; height: 72px; --mark-j: var(--fg); --mark-t: var(--accent); }
         .boot__bar { width: 100%; height: 3px; background: var(--ink-3); overflow: hidden; }
         .boot__bar i { display: block; height: 100%; width: 100%; background: var(--accent); transform: scaleX(var(--p, 0)); transform-origin: left; }
-        .boot__line { width: 100%; display: flex; justify-content: space-between; color: var(--fg-3); font-size: 0.64rem; }
+        .boot__line { width: 100%; display: flex; justify-content: space-between; color: var(--fg-3); font-size: 0.72rem; }
         .boot__line b { color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
 
         /* ---------- hero ---------- */
@@ -106,10 +106,10 @@
         .slab-note {
             position: absolute;
             font-family: var(--f-mono);
-            font-size: 0.62rem;
+            font-size: 0.72rem;
             letter-spacing: 0.16em;
             line-height: 1.8;
-            color: rgba(18,19,22,.62);
+            color: rgba(18,19,22,.74);
         }
         .slab-note b { color: var(--slab-ink); font-weight: 600; }
         .slab-note--tl { top: calc(var(--topbar-h) + 32px); right: 40px; text-align: right; }
@@ -121,9 +121,9 @@
             transform: translateY(-50%);
             writing-mode: vertical-rl;
             font-family: var(--f-mono);
-            font-size: 0.62rem;
+            font-size: 0.72rem;
             letter-spacing: 0.4em;
-            color: rgba(18,19,22,.5);
+            color: rgba(18,19,22,.74);
         }
         .barcode {
             position: absolute;
@@ -187,7 +187,7 @@
         }
         .hero__stats div { padding: 14px 32px 0 0; margin-right: 32px; border-right: 1px solid var(--line); }
         .hero__stats div:last-child { border-right: 0; }
-        .hero__stats dt { font-family: var(--f-mono); font-size: 0.62rem; letter-spacing: 0.16em; color: var(--fg-3); }
+        .hero__stats dt { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.16em; color: var(--fg-3); }
         .hero__stats dd {
             font-family: var(--f-display);
             font-weight: 800;
@@ -204,7 +204,7 @@
             align-items: center;
             gap: 12px;
             color: var(--fg-3);
-            font-size: 0.62rem;
+            font-size: 0.72rem;
         }
         .hero__scroll i {
             width: 1px; height: 32px;
@@ -337,7 +337,7 @@
             gap: 4px 20px;
             padding: 22px 26px 26px;
         }
-        .file__class { grid-column: 1 / -1; color: var(--accent); font-size: 0.64rem; margin-bottom: 4px; }
+        .file__class { grid-column: 1 / -1; color: var(--accent); font-size: 0.72rem; margin-bottom: 4px; }
         .file__name {
             font-family: var(--f-heavy);
             font-weight: 900;
@@ -474,7 +474,7 @@
             font-weight: 600;
         }
         .creed__label::before { content: ""; width: 12px; height: 12px; background: var(--slab-ink); }
-        .creed__side p { font-family: var(--f-mono); font-size: 0.64rem; letter-spacing: 0.14em; color: rgba(18,19,22,.55); line-height: 1.9; }
+        .creed__side p { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.14em; color: rgba(18,19,22,.74); line-height: 1.9; }
         .creed__quote p {
             font-family: var(--f-heavy);
             font-weight: 900;
@@ -500,7 +500,7 @@
         .creed__quote footer::before { content: ""; width: 40px; height: 2px; background: var(--slab-ink); }
 
         .meter { margin-top: 44px; max-width: 560px; }
-        .meter__head { display: flex; justify-content: space-between; font-family: var(--f-mono); font-size: 0.64rem; letter-spacing: 0.16em; margin-bottom: 10px; color: rgba(18,19,22,.6); }
+        .meter__head { display: flex; flex-wrap: wrap; gap: 4px 16px; justify-content: space-between; font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.16em; margin-bottom: 10px; color: rgba(18,19,22,.74); }
         .meter__head b { color: var(--slab-ink); font-weight: 600; }
         .meter__cells { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; }
         .meter__cells i {
@@ -620,7 +620,7 @@
                             <circle cx="300" cy="300" r="200" stroke-opacity=".12"/>
                             <path d="M0 300h60M540 300h60M300 0v60M300 540v60" stroke-opacity=".35"/>
                         </g>
-                        <g font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2" fill="#141518" fill-opacity=".55">
+                        <g font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2" fill="#141518" fill-opacity=".7">
                             <text x="316" y="40">N-00</text>
                             <text x="524" y="292">E-90</text>
                             <text x="316" y="572">S-180</text>
