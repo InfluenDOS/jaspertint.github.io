@@ -2406,6 +2406,8 @@ canvas.addEventListener('pointerdown', (ev) => {
 // surf that follows the swash on screen, wind and rain that follow the weather, gulls and their
 // wing beats, footsteps, fries landing, a far-off horn, and a soft generative score underneath.
 // Browsers only allow audio after a gesture, so it starts on the first tap; the corner button mutes.
+// Kept light on purpose: one-shot sounds disconnect themselves when they end, continuous layers
+// only move gains (never filter frequencies), and those are updated a few times a second.
 const sound = (() => {
   const AC = window.AudioContext || window.webkitAudioContext;
   const btn = document.getElementById('sound');
@@ -2419,7 +2421,8 @@ const sound = (() => {
   showState();
   if (!AC) { btn.hidden = true; return { update() {} }; }
 
-  let ctx = null, master, sfxBus, ambBus, musBus, verbIn, noiseBuf, brownBuf, rumble, wind, rain;
+  let ctx = null, master, sfxBus, ambBus, musBus, verbIn, noiseBuf;
+  let rumble, wind, rain;
   let startedAt = -1e9, failed = false;
   const surfVoices = [];
 
@@ -2446,19 +2449,24 @@ const sound = (() => {
     return { p: v - n, size };
   }
 
-  /* ---- building blocks ---- */
-  const gain = (v, to) => { const g = ctx.createGain(); g.gain.value = v; if (to) g.connect(to); return g; };
-  const filter = (type, f, q, to) => {
+  /* ---- building blocks; `own` collects a one-shot's nodes so they can be released together ---- */
+  function gain(v, to, own) { const g = ctx.createGain(); g.gain.value = v; if (to) g.connect(to); if (own) own.push(g); return g; }
+  function filter(type, f, q, to, own) {
     const b = ctx.createBiquadFilter(); b.type = type; b.frequency.value = f;
     if (q !== undefined) b.Q.value = q;
     if (to) b.connect(to);
+    if (own) own.push(b);
     return b;
-  };
+  }
   // stereo placement; falls back to a plain pass-through where StereoPannerNode is missing
-  const panner = (p, to) => {
+  function panner(p, to, own) {
     if (!ctx.createStereoPanner) return to;
-    const s = ctx.createStereoPanner(); s.pan.value = clamp(p, -1, 1); s.connect(to); return s;
-  };
+    const s = ctx.createStereoPanner(); s.pan.value = clamp(p, -1, 1); s.connect(to);
+    if (own) own.push(s);
+    return s;
+  }
+  function release(src, own) { src.onended = () => { for (const n of own) n.disconnect(); }; }
+
   function makeNoise(sec, brown) {
     const len = Math.floor(ctx.sampleRate * sec);
     const buf = ctx.createBuffer(1, len, ctx.sampleRate);
@@ -2479,36 +2487,55 @@ const sound = (() => {
     }
     return buf;
   }
-  function loop(buf, to) {
+  // a few seconds of scattered raindrop ticks, rendered once and looped
+  function makePatter(sec, perSec) {
+    const sr = ctx.sampleRate, len = Math.floor(sr * sec);
+    const buf = ctx.createBuffer(2, len, sr);
+    const L = buf.getChannelData(0), R = buf.getChannelData(1);
+    const dur = Math.floor(sr * 0.02);
+    for (let k = 0; k < sec * perSec; k++) {
+      const at = Math.floor(Math.random() * (len - dur)), f = rand(2500, 5200), amp = rand(0.08, 0.3), pan = Math.random();
+      for (let i = 0; i < dur; i++) {
+        const v = Math.sin(TAU * f * (i / sr) * (1 - 0.3 * i / dur)) * Math.exp(-i / (sr * 0.004)) * amp;
+        L[at + i] += v * (1 - pan); R[at + i] += v * pan;
+      }
+    }
+    return buf;
+  }
+  function loop(buf, ...outs) {
     const s = ctx.createBufferSource(); s.buffer = buf; s.loop = true;
-    s.connect(to); s.start(0, Math.random() * buf.duration);
+    for (const o of outs) s.connect(o);
+    s.start(0, Math.random() * buf.duration);
     return s;
   }
-  // a short burst of filtered noise with a quick envelope: steps, wings, thuds, snatches, drops
+  // a short burst of filtered noise with a quick envelope: steps, wings, thuds, snatches
   function burst(t, dur, type, freq, q, vol, pan, wet) {
     if (vol < 1e-4) return;
-    const src = ctx.createBufferSource(); src.buffer = noiseBuf;
-    const g = gain(0);
-    src.connect(filter(type, freq, q, g));
-    g.connect(panner(pan, sfxBus));
-    if (wet) g.connect(gain(wet, verbIn));
+    const own = [];
+    const src = ctx.createBufferSource(); src.buffer = noiseBuf; own.push(src);
+    const g = gain(0, panner(pan, sfxBus, own), own);
+    if (wet) g.connect(gain(wet, verbIn, own));
+    src.connect(filter(type, freq, q, g, own));
     g.gain.setValueAtTime(0, t);
     g.gain.linearRampToValueAtTime(vol, t + Math.min(0.012, dur * 0.25));
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    release(src, own);
     src.start(t, Math.random() * (noiseBuf.duration - dur - 0.1));
     src.stop(t + dur + 0.02);
   }
   function tone(t, dur, type, f0, f1, vol, pan, wet, to) {
     if (vol < 1e-4) return;
-    const o = ctx.createOscillator(); o.type = type;
+    const own = [];
+    const o = ctx.createOscillator(); o.type = type; own.push(o);
     o.frequency.setValueAtTime(f0, t);
     if (f1 !== f0) o.frequency.exponentialRampToValueAtTime(f1, t + dur);
-    const g = gain(0);
-    o.connect(g); g.connect(panner(pan, to || sfxBus));
-    if (wet) g.connect(gain(wet, verbIn));
+    const g = gain(0, panner(pan, to || sfxBus, own), own);
+    if (wet) g.connect(gain(wet, verbIn, own));
+    o.connect(g);
     g.gain.setValueAtTime(0, t);
     g.gain.linearRampToValueAtTime(vol, t + 0.005);
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    release(o, own);
     o.start(t); o.stop(t + dur + 0.02);
   }
 
@@ -2519,33 +2546,33 @@ const sound = (() => {
 
   /* ---- effects ---- */
   function gullNote(t, dur, f0, fPeak, fEnd, vol, pan, far) {
-    const o = ctx.createOscillator(); o.type = 'sawtooth';
+    const own = [];
+    const o = ctx.createOscillator(); o.type = 'sawtooth'; own.push(o);
     o.frequency.setValueAtTime(f0, t);
     o.frequency.linearRampToValueAtTime(fPeak, t + dur * 0.3);
     o.frequency.linearRampToValueAtTime(fEnd, t + dur);
-    const lfo = ctx.createOscillator(); lfo.frequency.value = rand(22, 34);   // the rasp in the voice
-    const lg = gain(fPeak * 0.025); lfo.connect(lg); lg.connect(o.frequency);
-    const out = gain(0);
-    o.connect(filter('bandpass', 1500, 2.5, out));
-    o.connect(filter('bandpass', 2900, 3.5, gain(0.6, out)));
-    const lp = filter('lowpass', far ? 2200 : 6500, 0.5);
-    out.connect(lp); lp.connect(panner(pan, sfxBus));
-    lp.connect(gain(far ? 0.8 : 0.25, verbIn));
+    const lfo = ctx.createOscillator(); lfo.frequency.value = rand(22, 34); own.push(lfo);   // the rasp in the voice
+    lfo.connect(gain(fPeak * 0.025, o.frequency, own));
+    const lp = filter('lowpass', far ? 2200 : 6500, 0.5, panner(pan, sfxBus, own), own);
+    lp.connect(gain(far ? 0.8 : 0.25, verbIn, own));
+    const out = gain(0, lp, own);
+    o.connect(filter('bandpass', 1500, 2.5, out, own));
+    o.connect(filter('bandpass', 2900, 3.5, gain(0.6, out, own), own));
     out.gain.setValueAtTime(0, t);
     out.gain.linearRampToValueAtTime(vol, t + 0.025);
     out.gain.setValueAtTime(vol, t + dur * 0.6);
     out.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    release(o, own);
     o.start(t); lfo.start(t); o.stop(t + dur + 0.05); lfo.stop(t + dur + 0.05);
   }
-  // 'long' is the two-part "kyow… kyow", 'laugh' the quick ha-ha-ha, 'chirp' a single short note
+  // 'long' is the two-part "kyow… kyow", 'laugh' the quick ha-ha-ha
   function gullCall(pos, kind, far) {
     const t = ctx.currentTime + 0.02;
     const pan = panOf(pos), vol = (far ? 0.45 : 1) * clamp(near(pos) * 2.4, 0.2, 1) * 1.5;
-    const offsets = kind === 'laugh' ? [0, 0.19, 0.37, 0.54].slice(0, 2 + Math.floor(Math.random() * 3))
-                  : kind === 'chirp' ? [0] : [0, rand(0.5, 0.65)];
+    const offsets = kind === 'laugh' ? [0, 0.19, 0.37, 0.54].slice(0, 2 + Math.floor(Math.random() * 3)) : [0, rand(0.5, 0.65)];
     offsets.forEach((d, i) => {
       const dur = kind === 'long' ? rand(0.4, 0.52) : rand(0.13, 0.17);
-      const base = rand(620, 760) * (kind === 'chirp' ? 1.25 : 1);
+      const base = rand(620, 760);
       gullNote(t + d, dur, base, base * 1.55, base * 0.85, vol * (i ? 0.85 : 1), pan, far);
     });
   }
@@ -2554,7 +2581,7 @@ const sound = (() => {
   }
   function step(pos, soft) {
     const wet = W.rain > 0.3;
-    burst(ctx.currentTime + 0.005, 0.09, 'bandpass', wet ? rand(560, 720) : rand(1100, 1500), 0.9, 0.32 * soft * near(pos), panOf(pos), 0.02);
+    burst(ctx.currentTime + 0.005, 0.09, 'bandpass', wet ? rand(560, 720) : rand(1100, 1500), 0.9, 0.32 * soft * near(pos), panOf(pos), 0);
   }
   function thud(pos, s) {
     const t = ctx.currentTime + 0.005, pan = panOf(pos), v = s * near(pos);
@@ -2569,13 +2596,17 @@ const sound = (() => {
   function horn(pos) {
     const t = ctx.currentTime + 0.05, pan = panOf(pos);
     [[0, 2.6], [3.6, 1.6]].forEach(([d, len]) => {
-      const out = gain(0);
-      const lp = filter('lowpass', 460, 0.8, out);
-      out.connect(panner(pan, sfxBus)); out.connect(gain(1.4, verbIn));
+      const own = [];
+      const out = gain(0, panner(pan, sfxBus, own), own);
+      out.connect(gain(1.4, verbIn, own));
+      const lp = filter('lowpass', 460, 0.8, out, own);
+      const oscs = [];
       [98, 123.5].forEach((f) => [-6, 6].forEach((det) => {
         const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; o.detune.value = det;
-        o.connect(lp); o.start(t + d); o.stop(t + d + len + 1.4);
+        o.connect(lp); own.push(o); oscs.push(o);
+        o.start(t + d); o.stop(t + d + len + 1.4);
       }));
+      release(oscs[0], own);
       out.gain.setValueAtTime(0, t + d);
       out.gain.linearRampToValueAtTime(0.06, t + d + 0.4);
       out.gain.setValueAtTime(0.06, t + d + len);
@@ -2595,32 +2626,35 @@ const sound = (() => {
   const STEP = 1.2, STEPS_PER_CHORD = 8;
   let nextStep = 0, stepN = 0, melody = 4;
   function pad(t, chord, dur, bright) {
-    const out = gain(0);
-    const lp = filter('lowpass', bright, 0.4, out);
-    out.connect(musBus); out.connect(gain(0.6, verbIn));
+    const own = [];
+    const out = gain(0, musBus, own);
+    out.connect(gain(0.6, verbIn, own));
+    const lp = filter('lowpass', bright, 0.4, out, own);
     out.gain.setValueAtTime(0, t);
     out.gain.linearRampToValueAtTime(1, t + 3.2);
     out.gain.setValueAtTime(1, t + dur);
     out.gain.linearRampToValueAtTime(0, t + dur + 3.5);
+    const oscs = [];
     chord.forEach((m, i) => [-4, 4].forEach((det) => {
       const o = ctx.createOscillator();
       o.type = i === 0 ? 'sine' : 'triangle';
       o.frequency.value = mtof(m); o.detune.value = det;
-      o.connect(gain(i === 0 ? 0.05 : 0.022, lp));
+      o.connect(gain(i === 0 ? 0.05 : 0.022, lp, own));
+      own.push(o); oscs.push(o);
       o.start(t); o.stop(t + dur + 3.7);
     }));
+    release(oscs[0], own);
   }
   function pluck(t, m, vol) {
     const f = mtof(m), pan = rand(-0.35, 0.35);
     tone(t, 2.2, 'sine', f, f, vol, pan, 0.5, musBus);
-    tone(t, 0.9, 'sine', f * 2, f * 2, vol * 0.25, pan, 0.3, musBus);
-    tone(t, 0.35, 'triangle', f * 3, f * 3, vol * 0.08, pan, 0, musBus);
+    tone(t, 0.9, 'sine', f * 2, f * 2, vol * 0.25, pan, 0, musBus);
   }
   function scheduleMusic() {
     const now = ctx.currentTime;
     if (nextStep < now) nextStep = now + 0.05;
     const dusk = smooth((9 - W.elev) / 4);
-    while (nextStep < now + 0.4) {
+    while (nextStep < now + 0.5) {
       const k = stepN % STEPS_PER_CHORD;
       if (k === 0) {
         const chord = CHORDS[Math.floor(stepN / STEPS_PER_CHORD) % CHORDS.length];
@@ -2643,38 +2677,37 @@ const sound = (() => {
   /* ---- graph ---- */
   function build() {
     ctx = new AC();
-    noiseBuf = makeNoise(3, false);
-    brownBuf = makeNoise(5, true);
+    noiseBuf = makeNoise(2.5, false);
     master = gain(muted ? 0 : 1);
     const comp = ctx.createDynamicsCompressor();
     comp.threshold.value = -16; comp.knee.value = 12; comp.ratio.value = 3;
     master.connect(comp); comp.connect(gain(1.4, ctx.destination));
-    const verb = ctx.createConvolver(); verb.buffer = makeImpulse(3.4, 2.4);
-    verbIn = gain(1, verb); verb.connect(gain(0.55, master));
+    const verb = ctx.createConvolver(); verb.buffer = makeImpulse(2.4, 2.6);
+    verbIn = gain(1, verb); verb.connect(gain(0.6, master));
     sfxBus = gain(1.2, master);
     ambBus = gain(0, master); ambBus.gain.setTargetAtTime(0.85, ctx.currentTime, 1.2);
     musBus = gain(0, master); musBus.gain.setTargetAtTime(0.5, ctx.currentTime + 1.5, 3);
     // low sea rumble under everything
     rumble = gain(0.1, ambBus);
-    loop(brownBuf, filter('lowpass', 260, 0.5, rumble));
-    // three stretches of surf across the beach, each following the swash in front of it
+    loop(makeNoise(3, true), filter('lowpass', 260, 0.5, rumble));
+    // three stretches of surf across the beach, each following the swash in front of it:
+    // a dark body and a bright crash, mixed by gain alone
     [-7, 0, 7].forEach((x, i) => {
-      const g = gain(0);
-      const pn = panner(0, ambBus);
-      g.connect(pn); g.connect(gain(0.25, verbIn));
-      const f = filter('lowpass', 800, 0.6, g);
-      loop(noiseBuf, f);
-      surfVoices.push({ x, g, f, pn, w: i === 1 ? 1 : 0.8 });
+      const pn = panner(i === 0 ? -0.55 : i === 2 ? 0.55 : 0, ambBus);
+      const body = gain(0, pn), crash = gain(0, pn);
+      crash.connect(gain(0.3, verbIn));
+      loop(noiseBuf, filter('lowpass', 420, 0.6, body), filter('highpass', 900, 0.5, crash));
+      surfVoices.push({ x, body, crash, w: i === 1 ? 1 : 0.8 });
     });
-    // wind: a moving band of noise
-    const wg = gain(0), wp = panner(0, ambBus);
-    wg.connect(wp);
-    const wf = filter('bandpass', 500, 1.1, wg);
-    loop(noiseBuf, wf);
-    wind = { g: wg, f: wf, p: wp };
-    // rain: a bright hiss; single drops are added in update()
+    // wind: two fixed bands of noise, the gusts move between them
+    const wp = panner(0, ambBus);
+    const low = gain(0, wp), high = gain(0, wp);
+    loop(noiseBuf, filter('bandpass', 380, 1.1, low), filter('bandpass', 850, 1.1, high));
+    wind = { low, high, p: wp };
+    // rain: a bright hiss and a pre-rendered patter of drops
     const rg = gain(0, ambBus);
     loop(noiseBuf, filter('highpass', 1600, 0.5, filter('lowpass', 7500, 0.5, rg)));
+    loop(makePatter(3, 30), rg);
     rain = { g: rg };
     nextStep = ctx.currentTime + 0.5;
     moodEl.addEventListener('click', () => {
@@ -2711,48 +2744,45 @@ const sound = (() => {
     else if (!muted) ctx.resume();
   });
 
-  /* ---- per frame: follow the weather, and listen for things happening in the scene ---- */
+  /* ---- per frame: listen for things happening; every 1/15 s: follow the weather and the waves ---- */
   const stepSeen = new Map();
   const fryPrev = new WeakMap();
-  let gPrev = 'idle', gCycle = 0, gHadFry = false, farCall = 7, horned = false;
-  function update(dt, T) {
-    if (!ctx || ctx.state !== 'running') return;
+  let gPrev = 'idle', gCycle = 0, gHadFry = false, farCall = 7, horned = false, ctl = 1;
+  function follow(T) {
     const now = ctx.currentTime;
-    const to = (param, v, tc) => param.setTargetAtTime(v, now, tc || 0.1);
-
+    const to = (param, v, tc) => param.setTargetAtTime(v, now, tc);
     const surfK = clamp(W.surf / 0.38, 0.6, 1.6);
     for (const v of surfVoices) {
       const s = swash(v.x, T);
-      let env, cut;
-      if (s.p < 0.06) { env = smooth(s.p / 0.06); cut = 900 + 2400 * env; }
-      else { const q = s.p - 0.06; env = 0.85 * Math.exp(-q * 3.2) + 0.15 * Math.exp(-q * 0.9); cut = 450 + 2600 * Math.exp(-q * 2.6); }
-      to(v.g.gain, (0.03 + 0.24 * env * s.size) * surfK * v.w, 0.04);
-      to(v.f.frequency, cut, 0.05);
-      if (v.pn.pan) to(v.pn.pan, panOf(tmpV.set(v.x, 0, shoreZ(v.x))), 0.5);
+      let body, crash;
+      if (s.p < 0.06) { body = smooth(s.p / 0.06); crash = body; }
+      else { const q = s.p - 0.06; body = 0.85 * Math.exp(-q * 3.2) + 0.15 * Math.exp(-q * 0.9); crash = Math.exp(-q * 5.5); }
+      to(v.body.gain, (0.035 + 0.22 * body * s.size) * surfK * v.w, 0.06);
+      to(v.crash.gain, 0.12 * crash * s.size * surfK * v.w, 0.05);
     }
-    to(rumble.gain, 0.08 + 0.05 * W.wind);
+    to(rumble.gain, 0.08 + 0.05 * W.wind, 0.5);
     const gust = 0.5 + 0.5 * Math.sin(T * 0.37) * Math.sin(T * 0.11 + 1.3);
-    to(wind.g.gain, (0.015 + 0.14 * smooth((W.wind - 0.8) / 0.7)) * (0.55 + 0.45 * gust) + 0.04 * W.rain, 0.3);
-    to(wind.f.frequency, 320 + 520 * gust, 0.4);
+    const wl = (0.015 + 0.14 * smooth((W.wind - 0.8) / 0.7)) * (0.55 + 0.45 * gust) + 0.04 * W.rain;
+    to(wind.low.gain, wl * (1 - 0.6 * gust), 0.4);
+    to(wind.high.gain, wl * 0.8 * gust, 0.4);
     if (wind.p.pan) to(wind.p.pan, 0.5 * Math.sin(T * 0.06), 1);
     to(rain.g.gain, 0.22 * W.rain, 0.5);
-    if (W.rain > 0.02) {
-      const n = Math.floor(W.rain * 28 * dt + Math.random());
-      for (let i = 0; i < n; i++) {
-        tone(now + Math.random() * dt, 0.02, 'sine', rand(2500, 5200), rand(1500, 2500), rand(0.01, 0.03) * W.rain, rand(-0.8, 0.8), 0.1);
-      }
-    }
+  }
+  function update(dt, T) {
+    if (!ctx || ctx.state !== 'running') return;
+    ctl += dt;
+    if (ctl >= 1 / 15) { ctl = 0; follow(T); scheduleMusic(); }
 
     // footsteps: one per half stride
-    const seen = new Set();
     for (const w of walkers) {
-      seen.add(w.id);
       const s = Math.floor(w.phase / Math.PI);
       const prev = stepSeen.get(w.id);
       if (prev !== undefined && s !== prev) step(w.p.root.position, (w.kid ? 0.6 : 1) * w.pace);
       stepSeen.set(w.id, s);
     }
-    for (const id of stepSeen.keys()) if (!seen.has(id)) stepSeen.delete(id);
+    if (stepSeen.size > walkers.length) {
+      for (const id of stepSeen.keys()) if (!walkers.some((w) => w.id === id)) stepSeen.delete(id);
+    }
 
     // fries hitting the sand
     for (const f of fries) {
@@ -2760,8 +2790,8 @@ const sound = (() => {
       if (pr) {
         if (!pr.bounced && f.bounced) thud(f.mesh.position, 1);
         else if (pr.state === 'fall' && f.state === 'settle') thud(f.mesh.position, 0.45);
-      }
-      fryPrev.set(f, { state: f.state, bounced: f.bounced });
+        pr.state = f.state; pr.bounced = f.bounced;
+      } else fryPrev.set(f, { state: f.state, bounced: f.bounced });
     }
 
     // the gull: a call as it comes in, landing, the snatch, a laugh as it leaves, and every wing beat
@@ -2790,8 +2820,6 @@ const sound = (() => {
     // the old liner sounds its horn once as it comes into view
     if (voyage.active && !horned && voyage.x > -420) { horned = true; horn(titanic.position); }
     if (!voyage.active) horned = false;
-
-    scheduleMusic();
   }
   return { update };
 })();
