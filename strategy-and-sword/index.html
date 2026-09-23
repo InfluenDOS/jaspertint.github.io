@@ -171,6 +171,26 @@
         }
         .shot { position: relative; background: var(--ink-2); }
         .shot--wide { grid-column: 1 / -1; }
+        .shot--demo {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: minmax(0, 758px) minmax(0, 1fr);
+            background: #16171a;
+            color: #ecebe6;
+        }
+        .shot--demo .shot__img img { aspect-ratio: 758 / 468; object-fit: contain; background: #e6dfd2; }
+        .shot.shot--demo figcaption {
+            display: grid;
+            align-content: center;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: clamp(20px, 3vw, 36px);
+            border-bottom: 0;
+            border-left: 3px solid var(--accent);
+            color: rgba(236, 235, 230, 0.72);
+        }
+        .shot.shot--demo figcaption b { color: #ecebe6; font-size: 1.35rem; }
+        .shot--demo .tag { color: #ecebe6; border-color: rgba(236, 235, 230, 0.3); justify-self: start; }
         .shot__img { position: relative; overflow: hidden; }
         .shot__img img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; transition: transform 0.9s var(--ease); }
         .shot--wide .shot__img img { aspect-ratio: 21 / 10; }
@@ -207,6 +227,8 @@
         @media (max-width: 760px) {
             .gallery { grid-template-columns: 1fr; }
             .shot--wide { grid-column: auto; }
+            .shot--demo { grid-column: auto; grid-template-columns: 1fr; }
+            .shot.shot--demo figcaption { border-left: 0; border-top: 3px solid var(--accent); }
             .shot--wide .shot__img img { aspect-ratio: 16 / 10; }
             .shot figcaption { grid-template-columns: 1fr; }
         }
@@ -374,6 +396,10 @@
                 </div>
 
                 <div class="gallery">
+                    <figure class="shot shot--demo rv">
+                        <div class="shot__img rv-wipe"><span class="shot__idx">DEMO</span><img src="screenshots/combat-demo.gif" width="758" height="468" alt="战斗粗展示：剑客在蓝色范围圈内，与头顶血条的敌人交手" loading="lazy" decoding="async"></div>
+                        <figcaption><span class="tag tag--wip">WIP · 早期版本</span><b>战斗粗展示</b><span>一段很早期的实机战斗。画面、特效和手感都还会继续调整。</span></figcaption>
+                    </figure>
                     <figure class="shot rv">
                         <div class="shot__img rv-wipe"><span class="shot__idx">SCN-01</span><img src="screenshots/village-rain.jpg" width="1024" height="655" alt="雨中的南郊村" loading="lazy" decoding="async"></div>
                         <figcaption><b>雨落南郊</b><span>屋檐、道路与远处的山色一起暗下来，熟悉的村庄也换了一副模样。</span></figcaption>
