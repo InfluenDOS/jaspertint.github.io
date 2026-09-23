@@ -101,26 +101,31 @@
         .moods {
             list-style: none;
             display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 12px;
         }
         .mood {
             position: relative;
-            padding: 20px 18px 22px;
+            grid-column: span 2;
             background: var(--ink-2);
-            border-top: 3px solid var(--c);
+            border-bottom: 3px solid var(--c);
         }
-        .mood kbd {
-            display: inline-grid;
-            place-items: center;
-            width: 26px;
-            height: 26px;
-            margin-bottom: 18px;
-            border: 1px solid var(--line-2);
+        .mood:nth-child(n+4) { grid-column: span 3; }
+        .mood__img { position: relative; overflow: hidden; }
+        .mood__img img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; transition: transform 0.9s var(--ease); }
+        .mood:hover .mood__img img { transform: scale(1.04); }
+        .mood__idx {
+            position: absolute;
+            left: 0; top: 0;
+            z-index: 2;
+            padding: 6px 10px;
+            background: #111316;
+            color: #ecebe6;
             font-family: var(--f-mono);
-            font-size: 0.8rem;
-            color: var(--fg);
+            font-size: 0.72rem;
+            letter-spacing: 0.16em;
         }
+        .mood__text { padding: 16px 18px 20px; }
         .mood strong {
             display: block;
             font-family: var(--f-heavy);
@@ -166,8 +171,24 @@
         .play-cta .btn:hover { color: #111316; }
         .play-cta .btn::before { background: #ecebe6; }
 
+        .gull {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+            gap: 0;
+            margin-bottom: 16px;
+            background: var(--ink-2);
+        }
+        .gull img { width: 100%; height: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+        .gull .feature { border-left: 0; border-top: 3px solid var(--fry); align-self: stretch; display: grid; align-content: center; }
+        .gull .feature .mono { color: var(--fry); }
+        .features--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
         @media (max-width: 960px) {
             .moods { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .mood, .mood:nth-child(n+4) { grid-column: span 1; }
+            .mood:first-child { grid-column: 1 / -1; }
+            .features--3 { grid-template-columns: 1fr; }
+            .gull { grid-template-columns: 1fr; }
         }
         @media (max-width: 760px) {
             .kv { clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%); }
@@ -245,12 +266,12 @@
                 <div class="about">
                     <div class="rv">
                         <p class="about__lead">路人拿着薯条走过沙滩，偶尔掉下一根。<mark>点一下，海鸥就会飞下来把它叼走。</mark></p>
-                        <p>镜头固定站在沙滩上望向大海。海浪在近岸破碎、冲上沙滩又退回去，云影从海面和沙滩上扫过，阳光在浪尖上一闪一闪。天气会自己慢慢变化，也可以随时手动切换。</p>
+                        <p>镜头固定站在沙滩上望向大海。海浪在近岸破碎、冲上沙滩又退回去，云影从海面和沙滩上扫过，阳光在浪尖上一闪一闪。天气会自己慢慢变化；点一下左上角的天气名称，也可以换一种。</p>
                         <p>没有目标，也没有分数。它只是一个可以打开放着、看一会儿的地方。</p>
                     </div>
                     <dl class="sheet rv" style="--d:.1s">
                         <div class="sheet__row"><dt>TYPE</dt><dd>实时 3D 互动场景</dd></div>
-                        <div class="sheet__row"><dt>CONTROL</dt><dd>点击 / 触摸召唤海鸥；点左上角天气名或按键盘 1–5 切换天气，0 恢复自动</dd></div>
+                        <div class="sheet__row"><dt>CONTROL</dt><dd>点击 / 触摸沙滩召唤海鸥；点左上角的天气名称切换天气，转完一圈回到自动</dd></div>
                         <div class="sheet__row"><dt>PLATFORM</dt><dd>网页浏览器 · WebGL（支持 WebGL2 时有体积云）</dd></div>
                         <div class="sheet__row"><dt>TECH</dt><dd>three.js · 自写着色器</dd></div>
                     </dl>
@@ -267,11 +288,26 @@
                 </div>
 
                 <ol class="moods">
-                    <li class="mood rv" style="--c:#4fb8e6;"><kbd>1</kbd><strong>晴朗</strong><span>碧蓝的浅海，浪尖闪着阳光。</span></li>
-                    <li class="mood rv" style="--c:#8fb8c9; --d:.05s;"><kbd>2</kbd><strong>起风了</strong><span>浪更大，泡沫更多，云跑得更快。</span></li>
-                    <li class="mood rv" style="--c:#7d8a95; --d:.1s;"><kbd>3</kbd><strong>下雨</strong><span>雨丝斜落，海面打出涟漪，路人低头快走，灯塔亮起。</span></li>
-                    <li class="mood rv" style="--c:#ecebe6; --d:.15s;"><kbd>4</kbd><strong>云影掠过</strong><span>光束从云隙间落下，云影扫过沙滩。</span></li>
-                    <li class="mood rv" style="--c:#ffae66; --d:.2s;"><kbd>5</kbd><strong>傍晚</strong><span>暖色的斜阳，远山发紫，灯塔开始闪光。</span></li>
+                    <li class="mood rv" style="--c:#4fb8e6;">
+                        <div class="mood__img"><span class="mood__idx">WX-01</span><img src="shots/sunny.jpg" width="960" height="540" alt="晴朗时的海边" loading="lazy" decoding="async"></div>
+                        <div class="mood__text"><strong>晴朗</strong><span>碧蓝的浅海，浪尖闪着阳光。</span></div>
+                    </li>
+                    <li class="mood rv" style="--c:#8fb8c9; --d:0.05s;">
+                        <div class="mood__img"><span class="mood__idx">WX-02</span><img src="shots/windy.jpg" width="960" height="540" alt="起风了时的海边" loading="lazy" decoding="async"></div>
+                        <div class="mood__text"><strong>起风了</strong><span>浪更大，泡沫更多，云跑得更快。</span></div>
+                    </li>
+                    <li class="mood rv" style="--c:#7d8a95; --d:0.10s;">
+                        <div class="mood__img"><span class="mood__idx">WX-03</span><img src="shots/rain.jpg" width="960" height="540" alt="下雨时的海边" loading="lazy" decoding="async"></div>
+                        <div class="mood__text"><strong>下雨</strong><span>雨丝斜落，海面打出涟漪，路人低头快走，灯塔亮起。</span></div>
+                    </li>
+                    <li class="mood rv" style="--c:#ecebe6; --d:0.15s;">
+                        <div class="mood__img"><span class="mood__idx">WX-04</span><img src="shots/cloudshadow.jpg" width="960" height="540" alt="云影掠过时的海边" loading="lazy" decoding="async"></div>
+                        <div class="mood__text"><strong>云影掠过</strong><span>光束从云隙间落下，云影扫过沙滩。</span></div>
+                    </li>
+                    <li class="mood rv" style="--c:#ffae66; --d:0.20s;">
+                        <div class="mood__img"><span class="mood__idx">WX-05</span><img src="shots/dusk.jpg" width="960" height="540" alt="傍晚时的海边" loading="lazy" decoding="async"></div>
+                        <div class="mood__text"><strong>傍晚</strong><span>暖色的斜阳，远山发紫，灯塔开始闪光。</span></div>
+                    </li>
                 </ol>
             </div>
         </section>
@@ -284,11 +320,15 @@
                     <h2 class="sec-head__title" id="details-title">海边有什么</h2>
                 </div>
 
-                <ul class="features">
-                    <li class="feature rv"><span class="mono">GULL</span><h3>一只真实比例的海鸥</h3><p>按银鸥做的，翼展约 1.4 米。俯冲、放下双脚落地、低头啄起薯条，再扑腾着飞回海上。</p></li>
-                    <li class="feature rv" style="--d:.08s"><span class="mono">PEOPLE</span><h3>掉薯条的路人</h3><p>他们会互相让路，也会给正在降落的海鸥让出位置；下雨时会低着头加快脚步。</p></li>
-                    <li class="feature rv"><span class="mono">SURF</span><h3>会冲上沙滩的浪</h3><p>浪在近岸破碎，冲上沙滩又退回去，留下一片片泡沫和湿亮的沙子。</p></li>
-                    <li class="feature rv" style="--d:.08s"><span class="mono">HORIZON</span><h3>远方</h3><p>远山、帆船、防波堤和灯塔。运气好的话，还能看到一位很少出现的客人从海湾驶过。</p></li>
+                <div class="gull rv">
+                    <img src="shots/gull.jpg" width="640" height="360" alt="海鸥张开翅膀落在沙滩上，旁边有一根掉落的薯条" loading="lazy" decoding="async">
+                    <div class="feature"><span class="mono">GULL</span><h3>一只真实比例的海鸥</h3><p>按银鸥做的，翼展约 1.4 米。俯冲、放下双脚落地、低头啄起薯条，再扑腾着飞回海上。</p></div>
+                </div>
+
+                <ul class="features features--3">
+                    <li class="feature rv"><span class="mono">PEOPLE</span><h3>掉薯条的路人</h3><p>他们会互相让路，也会给正在降落的海鸥让出位置；下雨时会低着头加快脚步。</p></li>
+                    <li class="feature rv" style="--d:.08s"><span class="mono">SURF</span><h3>会冲上沙滩的浪</h3><p>浪在近岸破碎，冲上沙滩又退回去，留下一片片泡沫和湿亮的沙子。</p></li>
+                    <li class="feature rv" style="--d:.16s"><span class="mono">HORIZON</span><h3>远方</h3><p>远山、帆船、防波堤和灯塔。运气好的话，还能看到一位很少出现的客人从海湾驶过。</p></li>
                 </ul>
 
                 <div class="play-cta rv">
