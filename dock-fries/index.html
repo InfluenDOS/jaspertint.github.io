@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="《去码头整点儿薯条》是一片实时渲染的海边。点一下，海鸥会来叼走路人掉在沙滩上的薯条。">
+    <meta name="theme-color" content="#111316">
+    <title>去码头整点儿薯条 | 惊棠工作室</title>
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../assets/site.css">
+    <script>document.documentElement.classList.add('js');</script>
+    <style>
+        :root { --accent: #4fb8e6; --accent-ink: #0a1a24; --fry: #f1b847; }
+
+        .hero { padding: calc(var(--topbar-h) + clamp(24px, 4vw, 48px)) 0 0; }
+        .kv {
+            position: relative;
+            display: block;
+            clip-path: polygon(0 0, calc(100% - 48px) 0, 100% 48px, 100% 100%, 0 100%);
+            background: #9cc7dc;
+        }
+        .kv img { width: 100%; aspect-ratio: 1280 / 550; object-fit: cover; transition: transform 0.9s var(--ease); }
+        .kv:hover img { transform: scale(1.02); }
+        .kv__file { position: absolute; left: 0; bottom: 0; display: flex; }
+        .kv__file span {
+            display: grid;
+            place-items: center;
+            height: 44px;
+            padding: 0 16px;
+            background: #111316;
+            color: #ecebe6;
+            font-family: var(--f-mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.18em;
+        }
+        .kv__file span:first-child {
+            background: var(--accent);
+            color: var(--accent-ink);
+            font-family: var(--f-display);
+            font-weight: 800;
+            font-size: 1.6rem;
+            letter-spacing: 0;
+        }
+        .kv__play {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+        }
+
+        .ident {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: end;
+            gap: 20px 40px;
+            padding: 28px 0;
+            border-bottom: 1px solid var(--line-2);
+        }
+        .ident__name {
+            font-family: var(--f-heavy);
+            font-weight: 900;
+            font-size: clamp(2.2rem, 6vw, 4.6rem);
+            line-height: 1.05;
+            letter-spacing: 0.04em;
+        }
+        .ident__name span { color: var(--fry); }
+        .ident__en {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 14px;
+            font-family: var(--f-display);
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 0.4em;
+            color: var(--accent);
+        }
+        .ident__en::before { content: ""; width: 32px; height: 3px; background: var(--accent); flex: none; }
+        .ident__tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+
+        .about {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+            gap: 40px clamp(32px, 6vw, 80px);
+            align-items: start;
+        }
+        .about__lead {
+            font-family: var(--f-heavy);
+            font-weight: 900;
+            font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+            line-height: 1.6;
+            letter-spacing: 0.04em;
+            margin-bottom: 20px;
+        }
+        .about__lead mark {
+            background: linear-gradient(transparent 60%, var(--fry) 60%, var(--fry) 92%, transparent 92%);
+            color: inherit;
+        }
+        .about p:not(.about__lead) { color: var(--fg-2); letter-spacing: 0.03em; }
+        .about p + p { margin-top: 14px; }
+
+        .moods {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 10px;
+        }
+        .mood {
+            position: relative;
+            padding: 20px 18px 22px;
+            background: var(--ink-2);
+            border-top: 3px solid var(--c);
+        }
+        .mood kbd {
+            display: inline-grid;
+            place-items: center;
+            width: 26px;
+            height: 26px;
+            margin-bottom: 18px;
+            border: 1px solid var(--line-2);
+            font-family: var(--f-mono);
+            font-size: 0.8rem;
+            color: var(--fg);
+        }
+        .mood strong {
+            display: block;
+            font-family: var(--f-heavy);
+            font-weight: 900;
+            font-size: 1.3rem;
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+        }
+        .mood span { font-size: 0.88rem; color: var(--fg-2); }
+
+        .features {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+        .feature { padding: clamp(22px, 3vw, 30px); background: var(--ink-2); border-left: 3px solid var(--accent); }
+        .feature .mono { display: block; color: var(--accent); margin-bottom: 12px; }
+        .feature h3 {
+            font-family: var(--f-heavy);
+            font-weight: 900;
+            font-size: 1.3rem;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+        .feature p { font-size: 0.92rem; color: var(--fg-2); }
+
+        .play-cta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px 40px;
+            margin-top: 48px;
+            padding: clamp(22px, 4vw, 36px);
+            background: var(--accent);
+            color: var(--accent-ink);
+            clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%);
+        }
+        .play-cta p { font-family: var(--f-heavy); font-weight: 900; font-size: clamp(1.2rem, 2.4vw, 1.6rem); letter-spacing: 0.06em; }
+        .play-cta small { display: block; font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.14em; font-weight: 400; margin-top: 4px; opacity: 0.75; }
+        .play-cta .btn { --btn-bg: #111316; --btn-fg: #ecebe6; }
+        .play-cta .btn:hover { color: #111316; }
+        .play-cta .btn::before { background: #ecebe6; }
+
+        @media (max-width: 960px) {
+            .moods { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 760px) {
+            .kv { clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%); }
+            .kv img { aspect-ratio: 4 / 3; }
+            .kv__play { display: none; }
+            .ident { grid-template-columns: 1fr; }
+            .ident__tags { justify-content: flex-start; }
+            .about, .features { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <symbol id="jt-mark" viewBox="425 150 712 755">
+            <g style="fill: var(--mark-j, #fff)">
+                <rect x="648" y="163" width="189" height="164" rx="14"/>
+                <rect x="648" y="345" width="189" height="160" rx="14"/>
+                <rect x="437" y="498" width="264" height="159" rx="14"/>
+            </g>
+            <g style="fill: var(--mark-t, #111)">
+                <rect x="705" y="490" width="418" height="161" rx="14"/>
+                <rect x="833" y="640" width="134" height="252" rx="14"/>
+            </g>
+        </symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></symbol>
+        <symbol id="i-back" viewBox="0 0 24 24"><path d="M20 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></symbol>
+    </svg>
+
+    <div class="backdrop" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <nav class="topbar" aria-label="页面导航">
+        <a class="brand" href="../" aria-label="返回惊棠工作室首页">
+            <svg class="brand__mark" aria-hidden="true"><use href="#jt-mark"/></svg>
+            <span class="brand__text">
+                <span class="brand__cn">惊棠</span>
+                <span class="brand__en">JASPERTINT STUDIO</span>
+            </span>
+        </a>
+        <p class="crumbs">/ PROJECT FILES / <b>DF-03 去码头整点儿薯条</b></p>
+        <a class="backlink" href="../"><svg aria-hidden="true"><use href="#i-back"/></svg>返回</a>
+    </nav>
+
+    <main>
+        <header class="hero">
+            <div class="shell">
+                <a class="kv rv rv-wipe" href="play/" aria-label="进入码头（打开实时场景）">
+                    <img src="cover.jpg" width="1280" height="550" alt="晴天的海边：碧蓝的浅海、白色浪花，两个路人拿着薯条走过沙滩，远处有灯塔和帆船">
+                    <div class="kv__file" aria-hidden="true"><span>03</span><span>REALTIME · WEBGL</span></div>
+                    <span class="kv__play btn" aria-hidden="true">进入码头 <span class="btn__en">ENTER</span><svg class="btn__arrow"><use href="#i-arrow"/></svg></span>
+                </a>
+
+                <div class="ident rv" style="--d:.1s">
+                    <div>
+                        <h1 class="ident__name">去码头<br>整点儿<span>薯条</span></h1>
+                        <p class="ident__en">FRIES BY THE PIER</p>
+                    </div>
+                    <div class="ident__tags">
+                        <span class="tag tag--ok">PLAYABLE · 可游玩</span>
+                        <span class="tag">实时 3D 场景</span>
+                        <span class="tag">WEBGL</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="section" id="about" aria-labelledby="about-title">
+            <div class="shell">
+                <div class="sec-head rv">
+                    <span class="sec-head__num" aria-hidden="true">01</span>
+                    <p class="sec-head__label mono">ABOUT // 关于</p>
+                    <h2 class="sec-head__title" id="about-title">一片会自己过日子的海边</h2>
+                </div>
+
+                <div class="about">
+                    <div class="rv">
+                        <p class="about__lead">路人拿着薯条走过沙滩，偶尔掉下一根。<mark>点一下，海鸥就会飞下来把它叼走。</mark></p>
+                        <p>镜头固定站在沙滩上望向大海。海浪在近岸破碎、冲上沙滩又退回去，云影从海面和沙滩上扫过，阳光在浪尖上一闪一闪。天气会自己慢慢变化，也可以随时手动切换。</p>
+                        <p>没有目标，也没有分数。它只是一个可以打开放着、看一会儿的地方。</p>
+                    </div>
+                    <dl class="sheet rv" style="--d:.1s">
+                        <div class="sheet__row"><dt>TYPE</dt><dd>实时 3D 互动场景</dd></div>
+                        <div class="sheet__row"><dt>CONTROL</dt><dd>点击 / 触摸召唤海鸥；点左上角天气名或按键盘 1–5 切换天气，0 恢复自动</dd></div>
+                        <div class="sheet__row"><dt>PLATFORM</dt><dd>网页浏览器 · WebGL（支持 WebGL2 时有体积云）</dd></div>
+                        <div class="sheet__row"><dt>TECH</dt><dd>three.js · 自写着色器</dd></div>
+                    </dl>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="weather" aria-labelledby="weather-title" style="padding-top: 0;">
+            <div class="shell">
+                <div class="sec-head rv">
+                    <span class="sec-head__num" aria-hidden="true">02</span>
+                    <p class="sec-head__label mono">WEATHER // 天气</p>
+                    <h2 class="sec-head__title" id="weather-title">五种天气</h2>
+                </div>
+
+                <ol class="moods">
+                    <li class="mood rv" style="--c:#4fb8e6;"><kbd>1</kbd><strong>晴朗</strong><span>碧蓝的浅海，浪尖闪着阳光。</span></li>
+                    <li class="mood rv" style="--c:#8fb8c9; --d:.05s;"><kbd>2</kbd><strong>起风了</strong><span>浪更大，泡沫更多，云跑得更快。</span></li>
+                    <li class="mood rv" style="--c:#7d8a95; --d:.1s;"><kbd>3</kbd><strong>下雨</strong><span>雨丝斜落，海面打出涟漪，路人低头快走，灯塔亮起。</span></li>
+                    <li class="mood rv" style="--c:#ecebe6; --d:.15s;"><kbd>4</kbd><strong>云影掠过</strong><span>光束从云隙间落下，云影扫过沙滩。</span></li>
+                    <li class="mood rv" style="--c:#ffae66; --d:.2s;"><kbd>5</kbd><strong>傍晚</strong><span>暖色的斜阳，远山发紫，灯塔开始闪光。</span></li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="section" id="details" aria-labelledby="details-title" style="padding-top: 0;">
+            <div class="shell">
+                <div class="sec-head rv">
+                    <span class="sec-head__num" aria-hidden="true">03</span>
+                    <p class="sec-head__label mono">DETAILS // 细节</p>
+                    <h2 class="sec-head__title" id="details-title">海边有什么</h2>
+                </div>
+
+                <ul class="features">
+                    <li class="feature rv"><span class="mono">GULL</span><h3>一只真实比例的海鸥</h3><p>按银鸥做的，翼展约 1.4 米。俯冲、放下双脚落地、低头啄起薯条，再扑腾着飞回海上。</p></li>
+                    <li class="feature rv" style="--d:.08s"><span class="mono">PEOPLE</span><h3>掉薯条的路人</h3><p>他们会互相让路，也会给正在降落的海鸥让出位置；下雨时会低着头加快脚步。</p></li>
+                    <li class="feature rv"><span class="mono">SURF</span><h3>会冲上沙滩的浪</h3><p>浪在近岸破碎，冲上沙滩又退回去，留下一片片泡沫和湿亮的沙子。</p></li>
+                    <li class="feature rv" style="--d:.08s"><span class="mono">HORIZON</span><h3>远方</h3><p>远山、帆船、防波堤和灯塔。运气好的话，还能看到一位很少出现的客人从海湾驶过。</p></li>
+                </ul>
+
+                <div class="play-cta rv">
+                    <p>去码头整点儿薯条<small>首次加载需要一点时间 · 建议使用较新的浏览器</small></p>
+                    <a class="btn" href="play/">进入码头 <span class="btn__en">ENTER</span><svg class="btn__arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="shell footer__inner">
+            <div class="footer__brand">
+                <svg class="brand__mark" aria-hidden="true"><use href="#jt-mark"/></svg>
+                <p class="footer__copy">© 2026 惊棠工作室 · 个人开发项目<br>去码头整点儿薯条</p>
+            </div>
+            <a class="footer__top" href="../">BACK TO STUDIO <span aria-hidden="true">←</span></a>
+        </div>
+    </footer>
+
+    <script src="../assets/site.js" defer></script>
+</body>
+</html>

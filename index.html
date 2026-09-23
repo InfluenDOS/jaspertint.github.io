@@ -268,7 +268,7 @@
 
         .files {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 20px;
         }
         .file {
@@ -402,7 +402,7 @@
         .slots {
             list-style: none;
             display: grid;
-            grid-template-columns: repeat(8, minmax(0, 1fr));
+            grid-template-columns: repeat(7, minmax(0, 1fr));
             gap: 8px;
         }
         .slot {
@@ -427,8 +427,14 @@
         .slot__meta span:first-child { font-size: 0.74rem; letter-spacing: 0.12em; }
         .slot svg { width: 14px; height: 14px; opacity: 0.6; flex: none; }
 
+        @media (max-width: 1100px) {
+            .files { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .file--df { grid-column: 1 / -1; }
+            .file--df .file__media { aspect-ratio: 21 / 9; }
+        }
         @media (max-width: 900px) {
             .files { grid-template-columns: 1fr; }
+            .file--df .file__media { aspect-ratio: 16 / 10; }
             .works-intro { grid-template-columns: 1fr; }
             .works-count { text-align: left; }
             .slots { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -649,8 +655,8 @@
                         <a class="btn btn--ghost" href="#contact">联系我们 <span class="btn__en">CONTACT</span></a>
                     </div>
                     <dl class="hero__stats intro" style="--d:.6s">
-                        <div><dt>作品档案</dt><dd>02<small>/10</small></dd></div>
-                        <div><dt>可试玩</dt><dd>01</dd></div>
+                        <div><dt>作品档案</dt><dd>03<small>/10</small></dd></div>
+                        <div><dt>可试玩</dt><dd>02</dd></div>
                         <div><dt>开发中</dt><dd>01</dd></div>
                     </dl>
                 </div>
@@ -661,8 +667,8 @@
 
         <div class="ticker" aria-hidden="true">
             <div class="ticker__track">
-                <span>JASPERTINT STUDIO</span><span>惊棠工作室</span><span>INDEPENDENT GAME DEVELOPMENT</span><span>FILE 01 · 地域守护者 · PLAYABLE</span><span>FILE 02 · 剑客与权臣 · IN DEVELOPMENT</span><span>MAKE IT · FINISH IT · SHIP IT</span>
-                <span>JASPERTINT STUDIO</span><span>惊棠工作室</span><span>INDEPENDENT GAME DEVELOPMENT</span><span>FILE 01 · 地域守护者 · PLAYABLE</span><span>FILE 02 · 剑客与权臣 · IN DEVELOPMENT</span><span>MAKE IT · FINISH IT · SHIP IT</span>
+                <span>JASPERTINT STUDIO</span><span>惊棠工作室</span><span>INDEPENDENT GAME DEVELOPMENT</span><span>FILE 01 · 地域守护者 · PLAYABLE</span><span>FILE 02 · 剑客与权臣 · IN DEVELOPMENT</span><span>FILE 03 · 去码头整点儿薯条 · PLAYABLE</span><span>MAKE IT · FINISH IT · SHIP IT</span>
+                <span>JASPERTINT STUDIO</span><span>惊棠工作室</span><span>INDEPENDENT GAME DEVELOPMENT</span><span>FILE 01 · 地域守护者 · PLAYABLE</span><span>FILE 02 · 剑客与权臣 · IN DEVELOPMENT</span><span>FILE 03 · 去码头整点儿薯条 · PLAYABLE</span><span>MAKE IT · FINISH IT · SHIP IT</span>
             </div>
         </div>
 
@@ -676,7 +682,7 @@
 
                 <div class="works-intro rv">
                     <p class="works-lead">它们都很无聊，但仍然希望它们能带给你快乐，哪怕只有一分钟。</p>
-                    <p class="works-count mono">FILES ONLINE <b>02</b> / 10<br>LAST UPDATE 2026</p>
+                    <p class="works-count mono">FILES ONLINE <b>03</b> / 10<br>LAST UPDATE 2026</p>
                 </div>
 
                 <div class="files">
@@ -717,11 +723,29 @@
                         </div>
                         <span class="file__edge" aria-hidden="true"></span>
                     </a>
+
+                    <a class="file file--df rv rv-wipe" href="dock-fries/" style="--accent:#4fb8e6; --accent-ink:#0a1a24; --d:.24s;">
+                        <div class="file__media">
+                            <img src="dock-fries/cover.jpg" width="1280" height="550" alt="去码头整点儿薯条：晴天的海边，路人拿着薯条走过沙滩" loading="lazy" decoding="async">
+                        </div>
+                        <div class="file__top">
+                            <span class="file__no">03</span>
+                            <span class="tag tag--ok">PLAYABLE · 可游玩</span>
+                        </div>
+                        <div class="file__body">
+                            <p class="file__class mono">FILE DF-03 // 实时 3D 场景</p>
+                            <h3 class="file__name">去码头整点儿薯条</h3>
+                            <p class="file__en">FRIES BY THE PIER</p>
+                            <span class="file__cta" aria-hidden="true"><svg><use href="#i-arrow"/></svg></span>
+                            <p class="file__desc">一片实时渲染的海边。路人掉了薯条，点一下，海鸥就会飞下来把它叼走。</p>
+                            <div class="file__tags"><span class="tag">WebGL</span><span class="tag">五种天气</span><span class="tag">海鸥</span></div>
+                        </div>
+                        <span class="file__edge" aria-hidden="true"></span>
+                    </a>
                 </div>
 
                 <p class="slots-head mono rv">LOCKED SLOTS · 待解锁</p>
                 <ul class="slots rv" aria-label="尚未公开的作品位">
-                    <li class="slot"><span class="slot__no">03</span><span class="slot__meta"><span>敬请期待</span><svg aria-hidden="true"><use href="#i-lock"/></svg></span></li>
                     <li class="slot"><span class="slot__no">04</span><span class="slot__meta"><span>敬请期待</span><svg aria-hidden="true"><use href="#i-lock"/></svg></span></li>
                     <li class="slot"><span class="slot__no">05</span><span class="slot__meta"><span>敬请期待</span><svg aria-hidden="true"><use href="#i-lock"/></svg></span></li>
                     <li class="slot"><span class="slot__no">06</span><span class="slot__meta"><span>敬请期待</span><svg aria-hidden="true"><use href="#i-lock"/></svg></span></li>
@@ -745,9 +769,9 @@
                         <p>「你的前十个游戏都会很烂，所以<mark>尽快把它们做完</mark>，好把它们从你的系统里清理出去。」</p>
                         <footer>JESSE SCHELL</footer>
                     </blockquote>
-                    <div class="meter rv" style="--d:.2s" role="img" aria-label="前十个游戏进度：已完成 1 个，开发中 1 个">
-                        <div class="meter__head"><span>FIRST TEN GAMES · 进度</span><span><b>01</b> 完成 / <b>01</b> 开发中 / 10</span></div>
-                        <div class="meter__cells"><i class="on"></i><i class="wip"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                    <div class="meter rv" style="--d:.2s" role="img" aria-label="前十个游戏进度：已完成 2 个，开发中 1 个">
+                        <div class="meter__head"><span>FIRST TEN GAMES · 进度</span><span><b>02</b> 完成 / <b>01</b> 开发中 / 10</span></div>
+                        <div class="meter__cells"><i class="on"></i><i class="on"></i><i class="wip"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
                     </div>
                 </div>
             </div>
