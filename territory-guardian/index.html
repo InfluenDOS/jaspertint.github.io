@@ -8,7 +8,7 @@
     <title>地域守护者 | 惊棠工作室</title>
     <link rel="icon" href="../favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site.css">
-    <script>document.documentElement.classList.add('js');</script>
+    <script>(function(d){d.classList.add('js');try{var q=new URLSearchParams(location.search).get('lang'),s=localStorage.getItem('jt-lang'),l=q==='en'||q==='zh'?q:s==='en'||s==='zh'?s:(/^zh/i.test(navigator.language||'')?'zh':'en');if(l==='en'){d.lang='en';d.classList.add('lang-en','lang-pending');setTimeout(function(){d.classList.remove('lang-pending')},2000)}}catch(e){}})(document.documentElement);</script>
     <style>
         :root { --accent: #f0df00; --teal: #2dc499; }
 
@@ -76,6 +76,7 @@
             letter-spacing: 0.03em;
         }
         .hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+        .lang-en .hero__lead { margin-top: 26px; }
 
         .cover { position: relative; justify-self: end; width: min(100%, 440px); }
         .cover__frame {
@@ -288,6 +289,7 @@
         </a>
         <p class="crumbs">/ PROJECT FILES / <b>TG-01 地域守护者</b></p>
         <a class="backlink" href="../"><svg aria-hidden="true"><use href="#i-back"/></svg>返回</a>
+        <button class="langbtn" type="button" data-lang-toggle data-i18n-skip aria-label="Switch to English"><span class="langbtn__zh">中</span><i aria-hidden="true">/</i><span class="langbtn__en">EN</span></button>
     </nav>
 
     <main>
@@ -297,7 +299,7 @@
                 <div class="hero__copy">
                     <p class="hero__file mono rv"><span class="tag tag--solid">FILE No.01</span><span class="tag tag--ok">PLAYABLE · 可试玩</span>我的第一个游戏 · WEBGL</p>
                     <h1 class="hero__title rv" style="--d:.08s"><span>地域</span><span>守护者</span></h1>
-                    <p class="hero__en rv" style="--d:.16s">TERRITORY GUARDIAN</p>
+                    <p class="hero__en rv" data-zh-only style="--d:.16s">TERRITORY GUARDIAN</p>
                     <p class="hero__lead rv" style="--d:.22s">选择一处地域，在敌人的包围中守住中央装置。这是我第一次把一个游戏从想法做到可以打开、可以游玩的成品。</p>
                     <div class="hero__actions rv" style="--d:.28s">
                         <a class="btn" href="#play">开始试玩 <span class="btn__en">PLAY</span><svg class="btn__arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
@@ -392,6 +394,7 @@
         </div>
     </footer>
 
+    <script src="../assets/i18n.js" defer></script>
     <script src="../assets/site.js" defer></script>
     <script>
         const button = document.getElementById('load-button');
@@ -400,7 +403,7 @@
         const state = document.getElementById('session-state');
         button.addEventListener('click', () => {
             button.disabled = true;
-            button.textContent = '正在加载…';
+            button.textContent = (window.jtT || String)('正在加载…');
             state.textContent = 'LOADING';
             frame.src = '../game/?embed=1';
             frame.addEventListener('load', () => {

@@ -48,6 +48,7 @@
     text-shadow: 0 1px 8px var(--shade); transition: color 0.3s ease;
   }
   .mood:hover { color: var(--ink); }
+  html[lang="en"] body { font-family: Georgia, "Times New Roman", "Noto Serif SC", serif; }
   .mood:focus-visible { outline: 1px solid var(--ink-soft); outline-offset: 4px; border-radius: 4px; }
   .sound {
     position: fixed; top: calc(env(safe-area-inset-top, 0px) + 18px); right: 20px;
@@ -862,6 +863,39 @@ void main(){
 <script>
 (function () {
 'use strict';
+
+/* ---------- language: follows the choice made on the studio pages ---------- */
+const EN = (() => {
+  try {
+    const q = new URLSearchParams(location.search).get('lang');
+    if (q === 'en' || q === 'zh') return q === 'en';
+    const saved = localStorage.getItem('jt-lang');
+    if (saved === 'en' || saved === 'zh') return saved === 'en';
+  } catch (e) {}
+  return !/^zh/i.test(navigator.language || '');
+})();
+const EN_TEXT = {
+  '晴朗': 'Clear', '起风了': 'Windy', '下雨': 'Rain', '云影掠过': 'Passing clouds', '傍晚': 'Dusk',
+  '手动': 'manual',
+  '点一下，海鸥会来叼走薯条。': 'Tap, and a gull will come for the fries.',
+  '地上暂时没有薯条了，等路人再掉一根。': 'No fries on the sand right now. Wait for someone to drop one.',
+  '声音 开': 'Sound on', '声音 关': 'Sound off',
+};
+const tr = (s) => (EN && EN_TEXT[s]) || s;
+if (EN) {
+  const $ = (sel) => document.querySelector(sel);
+  document.documentElement.lang = 'en';
+  document.title = 'Fries by the Pier | Jaspertint Studio';
+  $('meta[name="description"]').setAttribute('content', 'Fries by the Pier: a beach rendered in real time. Tap, and a gull comes down to snatch the fries people drop on the sand.');
+  $('#scene').setAttribute('aria-label', 'A real-time 3D beach: waves, sand, people walking by and gulls');
+  $('#sound').setAttribute('aria-label', 'Sound on or off');
+  $('#mood').setAttribute('aria-label', 'Change the weather');
+  $('#moodName').textContent = tr('晴朗');
+  $('.mood-tip').textContent = 'tap to change · back to auto after a full cycle';
+  $('.back').textContent = '← Jaspertint Studio';
+  $('#hint').textContent = tr('点一下，海鸥会来叼走薯条。');
+  $('#fallback').innerHTML = 'This sea needs WebGL to show up.<br>Try another browser, or turn on hardware acceleration.';
+}
 
 /* ---------- helpers ---------- */
 const TAU = Math.PI * 2;
@@ -2300,7 +2334,7 @@ function renderFrame(T) {
 /* ======================= Weather → scene ======================= */
 const moodEl = document.getElementById('mood');
 const hintEl = document.getElementById('hint');
-const HINT = '点一下，海鸥会来叼走薯条。';
+const HINT = tr('点一下，海鸥会来叼走薯条。');
 let moodShown = '';
 function applyWeather(dt) {
   const e = W.elev * Math.PI / 180;
@@ -2334,7 +2368,7 @@ function applyWeather(dt) {
   if (shownName !== moodShown) {
     moodShown = shownName;
     moodNameEl.style.opacity = '0';
-    setTimeout(() => { moodNameEl.textContent = moodShown; moodNameEl.style.opacity = '1'; }, 600);
+    setTimeout(() => { moodNameEl.textContent = tr(moodShown); moodNameEl.style.opacity = '1'; }, 600);
   }
 }
 
@@ -2350,10 +2384,10 @@ function setWeather(i) {
   manual.k = 0;
   manual.on = true;
   manual.release = false;
-  moodModeEl.textContent = '手动';
+  moodModeEl.textContent = tr('手动');
   // show the destination right away rather than waiting for the blend midpoint
   moodShown = STATES[manual.target].name;
-  moodNameEl.textContent = moodShown;
+  moodNameEl.textContent = tr(moodShown);
   moodNameEl.style.opacity = '1';
 }
 function autoWeather() {
@@ -2392,7 +2426,7 @@ canvas.addEventListener('pointerdown', (ev) => {
   const p = groundHit(ev.clientX, ev.clientY);
   const hasFry = fries.some((f) => f.state === 'rest');
   if (!hasFry) {
-    hintEl.textContent = '地上暂时没有薯条了，等路人再掉一根。';
+    hintEl.textContent = tr('地上暂时没有薯条了，等路人再掉一根。');
     clearTimeout(hintTimer);
     hintTimer = setTimeout(() => { hintEl.textContent = HINT; }, 3200);
     return;
@@ -2415,7 +2449,7 @@ const sound = (() => {
   let muted = false;
   try { muted = localStorage.getItem('dockFriesMuted') === '1'; } catch (e) {}
   function showState() {
-    btnLabel.textContent = muted ? '声音 关' : '声音 开';
+    btnLabel.textContent = tr(muted ? '声音 关' : '声音 开');
     btn.setAttribute('aria-pressed', muted ? 'false' : 'true');
   }
   showState();

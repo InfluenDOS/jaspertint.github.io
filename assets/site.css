@@ -422,6 +422,49 @@ button { font: inherit; color: inherit; }
     .nav a::after { left: 8px; right: 8px; }
 }
 
+/* ---------- language ---------- */
+
+.langbtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex: none;
+    height: 34px;
+    padding: 0 12px;
+    border: 1px solid var(--line-2);
+    background: transparent;
+    color: var(--fg-3);
+    font-family: var(--f-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+}
+.langbtn:hover { border-color: var(--accent); }
+.langbtn i { font-style: normal; opacity: 0.5; }
+.langbtn__zh, .lang-en .langbtn__en { color: var(--fg); }
+.lang-en .langbtn__zh { color: inherit; }
+.nav + .sysclock + .langbtn { margin-left: 16px; }
+.backlink + .langbtn { margin-left: 8px; }
+
+/* English: condensed Latin for the heavy headings, and hide labels that only repeat the English name */
+.lang-en {
+    --f-heavy: "Barlow Condensed", "JT Hei", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+}
+.lang-en [data-zh-only],
+.lang-en .btn__en:not([id]) { display: none !important; }
+@media (max-width: 520px) {
+    .langbtn { padding: 0 8px; gap: 4px; }
+    .nav + .sysclock + .langbtn { margin-left: 6px; }
+    .lang-en .nav a { padding: 0 6px; letter-spacing: 0.04em; }
+    .lang-en .nav a::after { left: 6px; right: 6px; }
+}
+@media (max-width: 420px) {
+    .lang-en .topbar .brand__text { display: none; }
+}
+/* set before first paint when English is expected, so Chinese does not flash first */
+.lang-pending body { visibility: hidden; }
+
 /* ---------- layout ---------- */
 
 .shell {

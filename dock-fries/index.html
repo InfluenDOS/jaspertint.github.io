@@ -8,7 +8,7 @@
     <title>去码头整点儿薯条 | 惊棠工作室</title>
     <link rel="icon" href="../favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site.css">
-    <script>document.documentElement.classList.add('js');</script>
+    <script>(function(d){d.classList.add('js');try{var q=new URLSearchParams(location.search).get('lang'),s=localStorage.getItem('jt-lang'),l=q==='en'||q==='zh'?q:s==='en'||s==='zh'?s:(/^zh/i.test(navigator.language||'')?'zh':'en');if(l==='en'){d.lang='en';d.classList.add('lang-en','lang-pending');setTimeout(function(){d.classList.remove('lang-pending')},2000)}}catch(e){}})(document.documentElement);</script>
     <style>
         :root { --accent: #4fb8e6; --accent-ink: #0a1a24; --fry: #f1b847; }
 
@@ -230,6 +230,7 @@
         </a>
         <p class="crumbs">/ PROJECT FILES / <b>DF-03 去码头整点儿薯条</b></p>
         <a class="backlink" href="../"><svg aria-hidden="true"><use href="#i-back"/></svg>返回</a>
+        <button class="langbtn" type="button" data-lang-toggle data-i18n-skip aria-label="Switch to English"><span class="langbtn__zh">中</span><i aria-hidden="true">/</i><span class="langbtn__en">EN</span></button>
     </nav>
 
     <main>
@@ -244,7 +245,7 @@
                 <div class="ident rv" style="--d:.1s">
                     <div>
                         <h1 class="ident__name">去码头<br>整点儿<span>薯条</span></h1>
-                        <p class="ident__en">FRIES BY THE PIER</p>
+                        <p class="ident__en" data-zh-only>FRIES BY THE PIER</p>
                     </div>
                     <div class="ident__tags">
                         <span class="tag tag--ok">PLAYABLE · 可游玩</span>
@@ -350,6 +351,7 @@
         </div>
     </footer>
 
+    <script src="../assets/i18n.js" defer></script>
     <script src="../assets/site.js" defer></script>
 </body>
 </html>
