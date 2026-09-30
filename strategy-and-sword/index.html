@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#e7e3da">
     <title>剑客与权臣 | 惊棠工作室</title>
     <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../assets/site.css?v=5c79dfa62e">
+    <link rel="stylesheet" href="../assets/site.css?v=18a8df9532">
     <script>(function(d){d.classList.add('js');try{var q=new URLSearchParams(location.search).get('lang'),s=localStorage.getItem('jt-lang'),l=q==='en'||q==='zh'?q:s==='en'||s==='zh'?s:(/^zh/i.test(navigator.language||'')?'zh':'en');if(l==='en'){d.lang='en';d.classList.add('lang-en','lang-pending');setTimeout(function(){d.classList.remove('lang-pending')},2000)}}catch(e){}})(document.documentElement);</script>
     <style>
         :root { --accent: #c62a1a; --accent-ink: #fff; }
@@ -371,6 +371,51 @@
         }
         .news__item--sword > :not(img) { grid-column: 1; }
         .news__item--sword img { grid-column: 2; grid-row: 1 / span 3; align-self: center; width: 30px; height: auto; filter: drop-shadow(0 6px 14px rgba(0,0,0,.5)); }
+        /* ---------- gameplay recordings ---------- */
+        .clip { margin: 0 0 20px; }
+        .clip__frame { position: relative; background: #000; border: 1px solid var(--line); }
+        video.clip__video, .shot__img video { display: block; width: 100%; height: auto; aspect-ratio: 854 / 432; object-fit: cover; background: #111; }
+        .clip__tag {
+            position: absolute;
+            left: 0; top: 0;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            background: var(--accent);
+            color: #fff;
+            font-family: var(--f-mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.16em;
+        }
+        .clip__tag::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #fff; animation: blink 1.6s steps(1) infinite; }
+        .clip__sound {
+            position: absolute;
+            right: 12px; top: 12px;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            height: 36px;
+            padding: 0 14px;
+            background: rgba(10, 11, 13, 0.72);
+            color: #ecebe6;
+            border: 1px solid rgba(236, 235, 230, 0.3);
+            font-family: var(--f-mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .clip__sound:hover { border-color: #ecebe6; }
+        .clip__sound[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .clip figcaption { display: grid; gap: 4px; margin-top: 12px; }
+        .clip figcaption b { font-family: var(--f-heavy); font-weight: 900; font-size: 1.1rem; letter-spacing: 0.06em; }
+        .clip figcaption span { font-size: 0.86rem; color: var(--fg-3); }
+
         .news__note {
             display: flex;
             align-items: center;
@@ -456,6 +501,15 @@
                     <h2 class="sec-head__title" id="latest-title">对刀，要踩在拍子上</h2>
                 </div>
                 <p class="latest__lead rv">这一版把对刀改成了一问一答：敌人先报出节奏，再按同样的节奏砍过来。跟着战斗音乐的拍子弹反，刀就接得下来。</p>
+
+                <figure class="clip rv">
+                    <div class="clip__frame">
+                        <span class="clip__tag">REC · 实机录屏</span>
+                        <video class="clip__video" src="video/combat-rhythm.mp4" poster="video/combat-rhythm.jpg" width="854" height="432" muted loop playsinline preload="none" data-autoplay aria-label="实机录屏：主角在敌人包围中跟着节拍对刀"></video>
+                        <button class="clip__sound" type="button" data-sound aria-pressed="false"><span aria-hidden="true">♪</span><span data-sound-label>打开声音</span></button>
+                    </div>
+                    <figcaption><b>实机录屏：音游式对刀</b><span>2026.09.29 开发版本。敌人头顶冒出的金点就是报拍；这套对刀跟着音乐的节拍走，建议打开声音看。</span></figcaption>
+                </figure>
 
                 <figure class="rhythm rv">
                     <div class="rhythm__scroll">
@@ -560,6 +614,14 @@
                 </div>
 
                 <div class="gallery">
+                    <figure class="shot shot--wide rv">
+                        <div class="shot__img rv-wipe">
+                            <span class="shot__idx">REC</span>
+                            <video src="video/village-rain.mp4" poster="video/village-rain.jpg" width="854" height="432" muted loop playsinline preload="none" data-autoplay aria-label="实机录屏：下雨的南郊村"></video>
+                            <button class="clip__sound" type="button" data-sound aria-pressed="false"><span aria-hidden="true">♪</span><span data-sound-label>打开声音</span></button>
+                        </div>
+                        <figcaption><b>雨中南郊 · 实机</b><span>下雨时的南郊村实机录屏，雨声和画面一起。</span></figcaption>
+                    </figure>
                     <figure class="shot shot--demo rv">
                         <div class="shot__img rv-wipe"><span class="shot__idx">DEMO</span><img src="screenshots/combat-demo.gif" width="758" height="468" alt="战斗粗展示：剑客在蓝色范围圈内，与头顶血条的敌人交手" loading="lazy" decoding="async"></div>
                         <figcaption><span class="tag tag--wip">WIP · 早期版本</span><b>战斗粗展示</b><span>一段很早期的实机战斗。画面、特效和手感都还会继续调整。</span></figcaption>
@@ -637,7 +699,44 @@
         </div>
     </footer>
 
-    <script src="../assets/i18n.js?v=b27a9763d7" defer></script>
+    <script src="../assets/i18n.js?v=a8e1769a9a" defer></script>
     <script src="../assets/site.js?v=8ba334ad2e" defer></script>
+    <script>
+        // Recordings: play muted while on screen, pause when scrolled away; one clip has sound at a time.
+        (function () {
+            var videos = [].slice.call(document.querySelectorAll('video[data-autoplay]'));
+            var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var play = function (v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); };
+            if (reduce || !('IntersectionObserver' in window)) {
+                videos.forEach(function (v) { v.controls = true; v.preload = 'metadata'; });
+            } else {
+                var io = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (e) {
+                        if (e.isIntersecting) { e.target.preload = 'auto'; play(e.target); }
+                        else e.target.pause();
+                    });
+                }, { threshold: 0.35 });
+                videos.forEach(function (v) { io.observe(v); });
+            }
+            document.querySelectorAll('[data-sound]').forEach(function (btn) {
+                var v = btn.parentNode.querySelector('video');
+                var label = btn.querySelector('[data-sound-label]');
+                var show = function () {
+                    btn.setAttribute('aria-pressed', v.muted ? 'false' : 'true');
+                    label.textContent = (window.jtT || String)(v.muted ? '打开声音' : '关闭声音');
+                };
+                v.addEventListener('volumechange', show);
+                btn.addEventListener('click', function () {
+                    if (v.muted) {
+                        videos.forEach(function (o) { if (o !== v) o.muted = true; });
+                        v.muted = false;
+                        play(v);
+                    } else {
+                        v.muted = true;
+                    }
+                });
+            });
+        })();
+    </script>
 </body>
 </html>

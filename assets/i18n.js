@@ -230,5 +230,14 @@ window.JT_I18N = {
   "一对一的对手": "A one-on-one rival",
   "训练场现在只放剑客大师一个人，先把一对一的对刀打磨好。它的架势更厚，要崩三次架势、处决三次才打得完。": "The training ground now holds only the Sword Master, so the one-on-one duel can be polished first. Its posture runs deep: it takes three posture breaks and three executions to finish it.",
   "以上都是开发中的新玩法，还没在实机上充分打磨，节奏、判定窗口和各项数值都会继续调整。": "All of this is new and still in development, not yet fully tuned in real play. The rhythm, the judgment windows and the numbers will keep changing.",
-  "音游对刀": "Rhythm duels"
+  "音游对刀": "Rhythm duels",
+  "REC · 实机录屏": "REC · GAMEPLAY",
+  "实机录屏：主角在敌人包围中跟着节拍对刀": "Gameplay recording: the hero, surrounded, trading blows on the beat",
+  "打开声音": "Sound on",
+  "关闭声音": "Sound off",
+  "实机录屏：音游式对刀": "Gameplay: rhythm-game duels",
+  "2026.09.29 开发版本。敌人头顶冒出的金点就是报拍；这套对刀跟着音乐的节拍走，建议打开声音看。": "Development build, 2026.09.29. The golden dots over the enemies are the call; the duels follow the beat of the music, so it's best watched with sound on.",
+  "实机录屏：下雨的南郊村": "Gameplay recording: Nanjiao village in the rain",
+  "雨中南郊 · 实机": "Nanjiao in the rain · gameplay",
+  "下雨时的南郊村实机录屏，雨声和画面一起。": "Nanjiao village in the rain, recorded in game — rain sound included."
 };
