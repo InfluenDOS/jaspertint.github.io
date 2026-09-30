@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#e7e3da">
     <title>剑客与权臣 | 惊棠工作室</title>
     <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../assets/site.css?v=18a8df9532">
+    <link rel="stylesheet" href="../assets/site.css?v=3a9beed31f">
     <script>(function(d){d.classList.add('js');try{var q=new URLSearchParams(location.search).get('lang'),s=localStorage.getItem('jt-lang'),l=q==='en'||q==='zh'?q:s==='en'||s==='zh'?s:(/^zh/i.test(navigator.language||'')?'zh':'en');if(l==='en'){d.lang='en';d.classList.add('lang-en','lang-pending');setTimeout(function(){d.classList.remove('lang-pending')},2000)}}catch(e){}})(document.documentElement);</script>
     <style>
         :root { --accent: #c62a1a; --accent-ink: #fff; }
@@ -128,36 +128,6 @@
         }
         .about__body p { color: var(--fg-2); letter-spacing: 0.03em; }
         .about__body p + p { margin-top: 14px; }
-        .about__quote {
-            position: relative;
-            margin-top: 32px;
-            padding: 22px 24px 22px 28px;
-            background: #16171a;
-            color: #ecebe6;
-            font-family: var(--f-heavy);
-            font-weight: 900;
-            font-size: clamp(1.05rem, 2vw, 1.3rem);
-            letter-spacing: 0.06em;
-            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%);
-        }
-        .about__quote::before {
-            content: "";
-            position: absolute;
-            left: 0; top: 0; bottom: 0;
-            width: 5px;
-            background: var(--accent);
-        }
-        .about__side { display: grid; gap: 24px; }
-        .seal {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px;
-            border: 1px solid var(--line-2);
-        }
-        .seal img { width: 64px; height: auto; flex: none; }
-        .seal p { font-size: 0.86rem; color: var(--fg-2); }
-        .seal .mono { display: block; color: var(--accent); font-size: 0.72rem; margin-bottom: 2px; }
 
         @media (max-width: 860px) {
             .about { grid-template-columns: 1fr; }
@@ -171,26 +141,6 @@
         }
         .shot { position: relative; background: var(--ink-2); }
         .shot--wide { grid-column: 1 / -1; }
-        .shot--demo {
-            grid-column: 1 / -1;
-            display: grid;
-            grid-template-columns: minmax(0, 758px) minmax(0, 1fr);
-            background: #16171a;
-            color: #ecebe6;
-        }
-        .shot--demo .shot__img img { aspect-ratio: 758 / 468; object-fit: contain; background: #e6dfd2; }
-        .shot.shot--demo figcaption {
-            display: grid;
-            align-content: center;
-            grid-template-columns: 1fr;
-            gap: 10px;
-            padding: clamp(20px, 3vw, 36px);
-            border-bottom: 0;
-            border-left: 3px solid var(--accent);
-            color: rgba(236, 235, 230, 0.72);
-        }
-        .shot.shot--demo figcaption b { color: #ecebe6; font-size: 1.35rem; }
-        .shot--demo .tag { color: #ecebe6; border-color: rgba(236, 235, 230, 0.3); justify-self: start; }
         .shot__img { position: relative; overflow: hidden; }
         .shot__img img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; transition: transform 0.9s var(--ease); }
         .shot--wide .shot__img img { aspect-ratio: 21 / 10; }
@@ -227,73 +177,9 @@
         @media (max-width: 760px) {
             .gallery { grid-template-columns: 1fr; }
             .shot--wide { grid-column: auto; }
-            .shot--demo { grid-column: auto; grid-template-columns: 1fr; }
-            .shot.shot--demo figcaption { border-left: 0; border-top: 3px solid var(--accent); }
             .shot--wide .shot__img img { aspect-ratio: 16 / 10; }
             .shot figcaption { grid-template-columns: 1fr; }
         }
-
-        /* ---------- features ---------- */
-        .features {
-            list-style: none;
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 16px;
-        }
-        .feature {
-            position: relative;
-            padding: clamp(22px, 3vw, 32px);
-            background: var(--ink-2);
-            border: 1px solid var(--line);
-            overflow: hidden;
-        }
-        .feature__no {
-            position: absolute;
-            right: 12px;
-            top: -6px;
-            font-family: var(--f-display);
-            font-weight: 800;
-            font-size: 6rem;
-            line-height: 1;
-            color: transparent;
-            -webkit-text-stroke: 1px var(--line-2);
-        }
-        .feature .mono { color: var(--accent); margin-bottom: 14px; display: block; }
-        .feature h3 {
-            font-family: var(--f-heavy);
-            font-weight: 900;
-            font-size: 1.35rem;
-            letter-spacing: 0.08em;
-            margin-bottom: 10px;
-        }
-        .feature p { font-size: 0.92rem; color: var(--fg-2); max-width: 28em; }
-        .feature::after {
-            content: "";
-            position: absolute;
-            left: 0; bottom: 0;
-            width: 100%; height: 3px;
-            background: var(--accent);
-            transform: scaleX(0.12);
-            transform-origin: left;
-            transition: transform 0.5s var(--ease);
-        }
-        .feature:hover::after { transform: scaleX(1); }
-
-        @media (max-width: 760px) {
-            .features { grid-template-columns: 1fr; }
-        }
-
-        .dev-note {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-top: 48px;
-            padding: 16px 20px;
-            background: #16171a;
-            color: #ecebe6;
-        }
-        .dev-note .hazard { width: 48px; height: 18px; flex: none; }
-        .dev-note p { font-size: 0.88rem; letter-spacing: 0.04em; }
 
         /* ---------- latest: dark band inside the paper page ---------- */
         .latest {
@@ -343,17 +229,15 @@
         .news {
             list-style: none;
             display: grid;
-            grid-template-columns: repeat(6, minmax(0, 1fr));
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 14px;
         }
         .news__item {
-            grid-column: span 2;
             position: relative;
             padding: clamp(20px, 2.6vw, 28px);
             background: #1d1f23;
             border-top: 3px solid var(--c, var(--accent));
         }
-        .news__item--wide { grid-column: span 3; }
         .news__item .mono { display: block; color: var(--c, var(--accent)); margin-bottom: 12px; }
         .news__item h3 {
             font-family: var(--f-heavy);
@@ -426,11 +310,6 @@
         }
         .news__note .hazard { width: 40px; height: 14px; flex: none; }
 
-        @media (max-width: 960px) {
-            .news { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-            .news__item, .news__item--wide { grid-column: span 1; }
-            .news__item:first-child { grid-column: 1 / -1; }
-        }
         @media (max-width: 640px) {
             .news { grid-template-columns: 1fr; }
         }
@@ -500,7 +379,7 @@
                     <p class="sec-head__label mono">LATEST // 最新进展 · <span class="latest__date">2026.09.29</span></p>
                     <h2 class="sec-head__title" id="latest-title">对刀，要踩在拍子上</h2>
                 </div>
-                <p class="latest__lead rv">这一版把对刀改成了一问一答：敌人先报出节奏，再按同样的节奏砍过来。跟着战斗音乐的拍子弹反，刀就接得下来。</p>
+                <p class="latest__lead rv">这一版把对刀改成了一问一答：敌人先报出节奏，再按同样的节奏砍过来。跟着战斗音乐的拍子弹反，贴着拍点是「完美」，稍早稍晚算「好」，一整句全接住就是「破势」。</p>
 
                 <figure class="clip rv">
                     <div class="clip__frame">
@@ -539,34 +418,29 @@
                 </figure>
 
                 <ul class="news">
-                    <li class="news__item news__item--wide rv" style="--c:#e2b04a;">
-                        <span class="mono">RHYTHM · 连拍</span>
-                        <h3>音游式对刀</h3>
-                        <p>敌人头顶按节奏一个个冒出金点，每冒一个响一声木梆；空一拍后，按同样的节奏连砍过来。每一刀都能单独弹反：贴着拍点是「完美」，稍早稍晚算「好」，一整句全接住就是「破势」。杂兵只出单拍，精英和 Boss 会出二连、三连、四连。</p>
-                    </li>
-                    <li class="news__item news__item--wide news__item--sword rv" style="--d:.06s;">
+                    <li class="news__item news__item--sword rv">
                         <span class="mono">SWORD · 护身剑</span>
                         <img src="art/sword-guard.png" width="82" height="512" alt="护身剑" loading="lazy" decoding="async">
                         <h3>悬在身边的护身剑</h3>
                         <p>一把剑守在主角身边的一侧。砍中敌人时，剑飞过去斩一刀再回来；弹反成功时挽个剑花；刀落在剑守着的那一侧，剑会横过来挡下，扣的是剑的耐久而不是血。剑可以找铁匠修。</p>
                     </li>
-                    <li class="news__item rv" style="--c:#8fb8c9;">
+                    <li class="news__item rv" style="--c:#8fb8c9; --d:.06s;">
                         <span class="mono">ARCHER · 弓手</span>
                         <h3>踩着拍子的箭</h3>
                         <p>报拍的每一个点射出一支箭，箭落下的那一拍挥刀就能挡住。挡下的箭会掉头飞回去，扎中射手。</p>
                     </li>
-                    <li class="news__item rv" style="--d:.06s;">
+                    <li class="news__item rv">
                         <span class="mono">SKILL · 技能预警</span>
                         <h3>先画后放</h3>
                         <p>敌人放技能前，先把技能的笔画画出来，五芒斩就画一个五角星。笔画画到最后变红，这时逆着方向划过去，整招都能格挡掉。</p>
                     </li>
-                    <li class="news__item rv" style="--c:#ecebe6; --d:.12s;">
+                    <li class="news__item rv" style="--c:#ecebe6; --d:.06s;">
                         <span class="mono">BOSS · 剑客大师</span>
                         <h3>一对一的对手</h3>
                         <p>训练场现在只放剑客大师一个人，先把一对一的对刀打磨好。它的架势更厚，要崩三次架势、处决三次才打得完。</p>
                     </li>
                 </ul>
-                <p class="news__note rv"><span class="hazard" style="--accent:#ffd100;" aria-hidden="true"></span>以上都是开发中的新玩法，还没在实机上充分打磨，节奏、判定窗口和各项数值都会继续调整。</p>
+                <p class="news__note rv"><span class="hazard" style="--accent:#ffd100;" aria-hidden="true"></span>以上都是开发中的新玩法，节奏、判定和数值都还会继续调整。</p>
             </div>
         </section>
 
@@ -582,25 +456,15 @@
                     <div class="rv">
                         <p class="about__lead">在地图上寻找道路与线索。把有限的资源集中给自己，或者换成更多帮手，是旅途中最重要的选择。</p>
                         <div class="about__body">
-                            <p>《剑客与权臣》是一款水墨风武侠 RPG。探索方式受到《废都物语》的启发：你会在地图中查看地点、触发事件、与人交谈，并一点点发现新的去处。如果选择亲自战斗，则通过类似《水果忍者》的滑动操作直接挥刀斩击。</p>
-                            <p>但成为剑客并不是必选项。你可以把资源集中在自己身上，慢慢养成一个能独当一面的强大战力；也可以用这些资源招募更多打手，让人数弥补单人的不足。一个强者或一群帮手，都是简单直接的成长路线。</p>
-                            <p>这是一个由我独立制作、仍在慢慢完善的项目。目前雨天氛围与战斗中的血迹表现相对完整，其他内容也会随着开发继续调整。</p>
-                        </div>
-                        <blockquote class="about__quote">「是把自己练得更强，还是再多找几个人？」</blockquote>
-                    </div>
-                    <div class="about__side rv" style="--d:.1s">
-                        <dl class="sheet">
-                            <div class="sheet__row"><dt>GENRE</dt><dd>水墨风武侠 RPG</dd></div>
-                            <div class="sheet__row"><dt>EXPLORE</dt><dd>地图交互：查看地点、触发事件、与人交谈</dd></div>
-                            <div class="sheet__row"><dt>COMBAT</dt><dd>滑动操作，直接挥刀斩击</dd></div>
-                            <div class="sheet__row"><dt>GROWTH</dt><dd>强化自身 / 招募打手</dd></div>
-                            <div class="sheet__row"><dt>STATUS</dt><dd>开发中 · 暂无公开试玩</dd></div>
-                        </dl>
-                        <div class="seal">
-                            <img src="../game-sas-icon.png" width="295" height="312" alt="" loading="lazy" decoding="async">
-                            <p><span class="mono">OPERATOR // 剑客</span>系头巾、看不清面目的剑客。要不要亲自出刀，由你决定。</p>
+                            <p>《剑客与权臣》是一款水墨风武侠 RPG。探索方式受到《废都物语》的启发：在地图中查看地点、触发事件、与人交谈，一点点发现新的去处。想亲自出刀，就把资源集中在自己身上，练成能独当一面的剑客；不想，就拿去招募打手，靠人数取胜。</p>
                         </div>
                     </div>
+                    <dl class="sheet rv" style="--d:.1s">
+                        <div class="sheet__row"><dt>GENRE</dt><dd>水墨风武侠 RPG</dd></div>
+                        <div class="sheet__row"><dt>EXPLORE</dt><dd>地图交互：查看地点、触发事件、与人交谈</dd></div>
+                        <div class="sheet__row"><dt>COMBAT</dt><dd>滑动出刀，跟着节拍弹反</dd></div>
+                        <div class="sheet__row"><dt>GROWTH</dt><dd>强化自身 / 招募打手</dd></div>
+                    </dl>
                 </div>
             </div>
         </section>
@@ -610,7 +474,7 @@
                 <div class="sec-head rv">
                     <span class="sec-head__num" aria-hidden="true">03</span>
                     <p class="sec-head__label mono">GALLERY // 画面</p>
-                    <h2 class="sec-head__title" id="gallery-title">雨与血</h2>
+                    <h2 class="sec-head__title" id="gallery-title">村里村外</h2>
                 </div>
 
                 <div class="gallery">
@@ -622,71 +486,18 @@
                         </div>
                         <figcaption><b>雨中南郊 · 实机</b><span>下雨时的南郊村实机录屏，雨声和画面一起。</span></figcaption>
                     </figure>
-                    <figure class="shot shot--demo rv">
-                        <div class="shot__img rv-wipe"><span class="shot__idx">DEMO</span><img src="screenshots/combat-demo.gif" width="758" height="468" alt="战斗粗展示：剑客在蓝色范围圈内，与头顶血条的敌人交手" loading="lazy" decoding="async"></div>
-                        <figcaption><span class="tag tag--wip">WIP · 早期版本</span><b>战斗粗展示</b><span>一段很早期的实机战斗。画面、特效和手感都还会继续调整。</span></figcaption>
-                    </figure>
                     <figure class="shot rv">
-                        <div class="shot__img rv-wipe"><span class="shot__idx">SCN-01</span><img src="screenshots/village-rain.jpg" width="1024" height="655" alt="雨中的南郊村" loading="lazy" decoding="async"></div>
-                        <figcaption><b>雨落南郊</b><span>屋檐、道路与远处的山色一起暗下来，熟悉的村庄也换了一副模样。</span></figcaption>
-                    </figure>
-                    <figure class="shot rv" style="--d:.08s">
-                        <div class="shot__img rv-wipe" style="--d:.08s"><span class="shot__idx">SCN-02</span><img src="screenshots/overworld-day.jpg" width="1024" height="652" alt="晴日大地图" loading="lazy" decoding="async"></div>
+                        <div class="shot__img rv-wipe"><span class="shot__idx">SCN-01</span><img src="screenshots/overworld-day.jpg" width="1024" height="652" alt="晴日大地图" loading="lazy" decoding="async"></div>
                         <figcaption><b>走出村庄</b><span>过桥、穿竹林、越过山峡。路上也许有麻烦，也有值得停下来的风景。</span></figcaption>
                     </figure>
-                    <figure class="shot shot--wide rv">
-                        <div class="shot__img rv-wipe"><span class="shot__idx">SCN-03</span><img src="screenshots/overworld-rain.jpg" width="1024" height="651" alt="雨中大地图" loading="lazy" decoding="async"></div>
+                    <figure class="shot rv" style="--d:.08s">
+                        <div class="shot__img rv-wipe" style="--d:.08s"><span class="shot__idx">SCN-02</span><img src="screenshots/overworld-rain.jpg" width="1024" height="651" alt="雨中大地图" loading="lazy" decoding="async"></div>
                         <figcaption><b>雨中赶路</b><span>雨天不是简单的颜色滤镜。雨线、地面与整体光线共同构成旅途中的另一种氛围。</span></figcaption>
                     </figure>
-                    <figure class="shot shot--wide rv">
-                        <div class="shot__img rv-wipe"><span class="shot__idx">SCN-04</span><img src="screenshots/combat.jpg" width="1024" height="651" alt="战斗场面" loading="lazy" decoding="async"></div>
-                        <figcaption><b>滑动出刀</b><span>血迹会留在战场上。每一次斩击都尽量给出清楚、直接的反馈。</span></figcaption>
-                    </figure>
                 </div>
             </div>
         </section>
 
-        <section class="section" id="features" aria-labelledby="features-title" style="padding-top: 0;">
-            <div class="shell">
-                <div class="sec-head rv">
-                    <span class="sec-head__num" aria-hidden="true">04</span>
-                    <p class="sec-head__label mono">FEATURES // 你会经历什么</p>
-                    <h2 class="sec-head__title" id="features-title">江湖路线</h2>
-                </div>
-
-                <ul class="features">
-                    <li class="feature rv">
-                        <span class="feature__no" aria-hidden="true">01</span>
-                        <span class="mono">EXPLORE</span>
-                        <h3>在地图中探索</h3>
-                        <p>查看地点、触发事件、寻找线索。通过简洁的地图交互，一步步打开村庄与村外的道路。</p>
-                    </li>
-                    <li class="feature rv" style="--d:.08s">
-                        <span class="feature__no" aria-hidden="true">02</span>
-                        <span class="mono">SWORD</span>
-                        <h3>想出刀，就亲自出刀</h3>
-                        <p>选择成为剑客后，不需要记复杂的招式表。看准敌人，用滑动操作挥刀斩击，直接感受命中与血迹反馈。</p>
-                    </li>
-                    <li class="feature rv">
-                        <span class="feature__no" aria-hidden="true">03</span>
-                        <span class="mono">RECRUIT</span>
-                        <h3>不想出刀，就多带几个人</h3>
-                        <p>同样的资源也可以拿去招募打手。单个人不够强，就靠人数补上；你不必亲自成为那个最能打的人。</p>
-                    </li>
-                    <li class="feature rv" style="--d:.08s">
-                        <span class="feature__no" aria-hidden="true">04</span>
-                        <span class="mono">ATMOSPHERE</span>
-                        <h3>在雨与血中赶路</h3>
-                        <p>雨天改变村庄和野外的气氛，血迹记录刚刚发生的战斗。这两部分也是目前美术表现较完整的内容。</p>
-                    </li>
-                </ul>
-
-                <div class="dev-note rv">
-                    <span class="hazard" style="--accent:#ffd100;" aria-hidden="true"></span>
-                    <p>开发中版本 · 暂无公开试玩 · 页面内容与截图均为开发中版本</p>
-                </div>
-            </div>
-        </section>
     </main>
 
     <footer class="footer">
@@ -699,7 +510,7 @@
         </div>
     </footer>
 
-    <script src="../assets/i18n.js?v=a8e1769a9a" defer></script>
+    <script src="../assets/i18n.js?v=db065d2e7f" defer></script>
     <script src="../assets/site.js?v=8ba334ad2e" defer></script>
     <script>
         // Recordings: play muted while on screen, pause when scrolled away; one clip has sound at a time.
