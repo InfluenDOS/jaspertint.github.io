@@ -7,25 +7,25 @@
     font-family: "Barlow Condensed";
     font-weight: 500;
     font-display: swap;
-    src: url("fonts/barlow-condensed-500.woff2") format("woff2");
+    src: url("fonts/barlow-condensed-500.woff2?v=24f826a7cf") format("woff2");
 }
 @font-face {
     font-family: "Barlow Condensed";
     font-weight: 700;
     font-display: swap;
-    src: url("fonts/barlow-condensed-700.woff2") format("woff2");
+    src: url("fonts/barlow-condensed-700.woff2?v=e1180918b8") format("woff2");
 }
 @font-face {
     font-family: "Barlow Condensed";
     font-weight: 800;
     font-display: swap;
-    src: url("fonts/barlow-condensed-800.woff2") format("woff2");
+    src: url("fonts/barlow-condensed-800.woff2?v=b1b7dd5dbc") format("woff2");
 }
 @font-face {
     font-family: "JetBrains Mono";
     font-weight: 100 800;
     font-display: swap;
-    src: url("fonts/jetbrains-mono.woff2") format("woff2");
+    src: url("fonts/jetbrains-mono.woff2?v=b636a65da4") format("woff2");
 }
 /* Heavy CJK display face, subset to the characters used on this site.
    Regenerate with tools/subset-cjk-font.sh after changing headings. */
@@ -33,7 +33,7 @@
     font-family: "JT Hei";
     font-weight: 900;
     font-display: swap;
-    src: url("fonts/noto-sans-sc-900-subset.woff2") format("woff2");
+    src: url("fonts/noto-sans-sc-900-subset.woff2?v=9034e5a722") format("woff2");
 }
 
 :root {

@@ -32,3 +32,4 @@ fetch_subset "Noto+Sans+SC" 900 "$studio" assets/fonts/noto-sans-sc-900-subset.w
 scene=$(chars_of dock-fries/play/index.html)
 fetch_subset "Noto+Serif+SC" 500 "$scene" assets/fonts/noto-serif-sc-500-subset.woff2
 fetch_subset "Noto+Serif+SC" 700 "$scene" assets/fonts/noto-serif-sc-700-subset.woff2
+python3 "$(dirname "$0")/stamp-assets.py"
