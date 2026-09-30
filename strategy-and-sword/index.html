@@ -294,6 +294,101 @@
         }
         .dev-note .hazard { width: 48px; height: 18px; flex: none; }
         .dev-note p { font-size: 0.88rem; letter-spacing: 0.04em; }
+
+        /* ---------- latest: dark band inside the paper page ---------- */
+        .latest {
+            --fg: #ecebe6;
+            --fg-2: rgba(236, 235, 230, 0.72);
+            --fg-3: rgba(236, 235, 230, 0.56);
+            --fg-4: rgba(236, 235, 230, 0.16);
+            --line: rgba(236, 235, 230, 0.12);
+            --line-2: rgba(236, 235, 230, 0.24);
+            --gold: #e2b04a;
+            margin-top: clamp(56px, 8vw, 96px);
+            padding-top: clamp(56px, 7vw, 96px);
+            background: #16171a;
+            color: var(--fg);
+            position: relative;
+        }
+        .latest::before {
+            content: "";
+            position: absolute;
+            left: 0; right: 0; top: 0;
+            height: 4px;
+            background: var(--accent);
+        }
+        .latest__date { color: var(--gold); }
+        .latest__lead {
+            max-width: 36em;
+            font-family: var(--f-heavy);
+            font-weight: 900;
+            font-size: clamp(1.2rem, 2.3vw, 1.6rem);
+            line-height: 1.6;
+            letter-spacing: 0.04em;
+            margin: -12px 0 36px;
+        }
+        .rhythm {
+            margin-bottom: 20px;
+            padding: clamp(16px, 3vw, 28px);
+            background: #1d1f23;
+            border: 1px solid var(--line);
+        }
+        .rhythm__scroll { overflow-x: auto; }
+        .rhythm svg { display: block; width: 100%; min-width: 640px; height: auto; }
+        .rhythm svg text { font-family: var(--f-body); }
+        .rhythm svg .t-mono { font-family: var(--f-mono); letter-spacing: 0.12em; }
+        .lang-en .rhythm .t-dup { display: none; }
+        .rhythm figcaption { margin-top: 12px; font-size: 0.84rem; color: var(--fg-3); }
+
+        .news {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 14px;
+        }
+        .news__item {
+            grid-column: span 2;
+            position: relative;
+            padding: clamp(20px, 2.6vw, 28px);
+            background: #1d1f23;
+            border-top: 3px solid var(--c, var(--accent));
+        }
+        .news__item--wide { grid-column: span 3; }
+        .news__item .mono { display: block; color: var(--c, var(--accent)); margin-bottom: 12px; }
+        .news__item h3 {
+            font-family: var(--f-heavy);
+            font-weight: 900;
+            font-size: 1.3rem;
+            letter-spacing: 0.06em;
+            margin-bottom: 10px;
+        }
+        .news__item p { font-size: 0.92rem; color: var(--fg-2); }
+        .news__item--sword {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-content: start;
+            gap: 0 24px;
+        }
+        .news__item--sword > :not(img) { grid-column: 1; }
+        .news__item--sword img { grid-column: 2; grid-row: 1 / span 3; align-self: center; width: 30px; height: auto; filter: drop-shadow(0 6px 14px rgba(0,0,0,.5)); }
+        .news__note {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 20px;
+            font-size: 0.86rem;
+            color: var(--fg-3);
+        }
+        .news__note .hazard { width: 40px; height: 14px; flex: none; }
+
+        @media (max-width: 960px) {
+            .news { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .news__item, .news__item--wide { grid-column: span 1; }
+            .news__item:first-child { grid-column: 1 / -1; }
+        }
+        @media (max-width: 640px) {
+            .news { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body class="theme-paper">
@@ -353,10 +448,78 @@
             </div>
         </header>
 
-        <section class="section" id="about" aria-labelledby="about-title">
+        <section class="section latest" id="latest" aria-labelledby="latest-title">
             <div class="shell">
                 <div class="sec-head rv">
                     <span class="sec-head__num" aria-hidden="true">01</span>
+                    <p class="sec-head__label mono">LATEST // 最新进展 · <span class="latest__date">2026.09.29</span></p>
+                    <h2 class="sec-head__title" id="latest-title">对刀，要踩在拍子上</h2>
+                </div>
+                <p class="latest__lead rv">这一版把对刀改成了一问一答：敌人先报出节奏，再按同样的节奏砍过来。跟着战斗音乐的拍子弹反，刀就接得下来。</p>
+
+                <figure class="rhythm rv">
+                    <div class="rhythm__scroll">
+                    <svg viewBox="0 0 1000 300" role="img" aria-label="节拍示意：敌人先按节奏报拍，隔一句后按同样的节奏连砍；每一刀在拍点附近有完美与好的判定窗口">
+                        <text x="120" y="42" font-size="15" fill="#ecebe6">报拍一句<tspan class="t-mono t-dup" dx="10" font-size="11" fill="rgba(236,235,230,.5)">CALL</tspan></text>
+                        <text x="540" y="42" dx="10" font-size="15" fill="#ecebe6">连砍一句<tspan class="t-mono t-dup" dx="10" font-size="11" fill="rgba(236,235,230,.5)">RESPONSE</tspan></text>
+                        <line x1="120" y1="62" x2="120" y2="196" stroke="rgba(236,235,230,0.45)" stroke-width="2"/><line x1="172.5" y1="62" x2="172.5" y2="196" stroke="rgba(236,235,230,0.07)" stroke-width="1"/><line x1="225" y1="62" x2="225" y2="196" stroke="rgba(236,235,230,0.16)" stroke-width="1"/><line x1="277.5" y1="62" x2="277.5" y2="196" stroke="rgba(236,235,230,0.07)" stroke-width="1"/><line x1="330" y1="62" x2="330" y2="196" stroke="rgba(236,235,230,0.16)" stroke-width="1"/><line x1="382.5" y1="62" x2="382.5" y2="196" stroke="rgba(236,235,230,0.07)" stroke-width="1"/><line x1="435" y1="62" x2="435" y2="196" stroke="rgba(236,235,230,0.16)" stroke-width="1"/><line x1="487.5" y1="62" x2="487.5" y2="196" stroke="rgba(236,235,230,0.07)" stroke-width="1"/><line x1="540" y1="62" x2="540" y2="196" stroke="rgba(236,235,230,0.45)" stroke-width="2"/><line x1="592.5" y1="62" x2="592.5" y2="196" stroke="rgba(236,235,230,0.07)" stroke-width="1"/><line x1="645" y1="62" x2="645" y2="196" stroke="rgba(236,235,230,0.16)" stroke-width="1"/><line x1="697.5" y1="62" x2="697.5" y2="196" stroke="rgba(236,235,230,0.07)" stroke-width="1"/><line x1="750" y1="62" x2="750" y2="196" stroke="rgba(236,235,230,0.16)" stroke-width="1"/><line x1="802.5" y1="62" x2="802.5" y2="196" stroke="rgba(236,235,230,0.07)" stroke-width="1"/><line x1="855" y1="62" x2="855" y2="196" stroke="rgba(236,235,230,0.16)" stroke-width="1"/><line x1="907.5" y1="62" x2="907.5" y2="196" stroke="rgba(236,235,230,0.07)" stroke-width="1"/><line x1="960" y1="62" x2="960" y2="196" stroke="rgba(236,235,230,0.45)" stroke-width="2"/>
+                        <text x="90" y="101" text-anchor="end" font-size="13" fill="#e2b04a">木梆</text>
+                        <text x="90" y="176" text-anchor="end" font-size="13" fill="#e06a5a">出刀</text>
+                        <line x1="134" y1="104" x2="530" y2="160" stroke="rgba(236,235,230,.3)" stroke-dasharray="4 5"/><line x1="239" y1="104" x2="635" y2="160" stroke="rgba(236,235,230,.3)" stroke-dasharray="4 5"/><line x1="291.5" y1="104" x2="687.5" y2="160" stroke="rgba(236,235,230,.3)" stroke-dasharray="4 5"/>
+                        <circle cx="120" cy="96" r="18" fill="none" stroke="#e2b04a" stroke-opacity=".35"/><circle cx="120" cy="96" r="11" fill="#e2b04a"/><circle cx="225" cy="96" r="18" fill="none" stroke="#e2b04a" stroke-opacity=".35"/><circle cx="225" cy="96" r="11" fill="#e2b04a"/><circle cx="277.5" cy="96" r="18" fill="none" stroke="#e2b04a" stroke-opacity=".35"/><circle cx="277.5" cy="96" r="11" fill="#e2b04a"/>
+                        <path d="M528 188 L552 152" stroke="#c62a1a" stroke-width="5" stroke-linecap="round"/><path d="M633 188 L657 152" stroke="#c62a1a" stroke-width="5" stroke-linecap="round"/><path d="M685.5 188 L709.5 152" stroke="#c62a1a" stroke-width="5" stroke-linecap="round"/>
+                        <text x="330" y="236" text-anchor="middle" font-size="13" fill="rgba(236,235,230,.55)">同样的节奏，隔一句再来一遍</text>
+                        <line x1="697.5" y1="192" x2="757.5" y2="234" stroke="rgba(236,235,230,.3)" stroke-dasharray="2 4"/>
+                        <rect x="553.5" y="236" width="340" height="26" fill="#e2b04a" fill-opacity=".22" stroke="#e2b04a" stroke-opacity=".6"/>
+                        <rect x="689.5" y="236" width="136" height="26" fill="#c62a1a" fill-opacity=".85"/>
+                        <line x1="757.5" y1="226" x2="757.5" y2="236" stroke="#ecebe6" stroke-width="2"/><line x1="757.5" y1="262" x2="757.5" y2="272" stroke="#ecebe6" stroke-width="2"/>
+                        <text x="757.5" y="254" text-anchor="middle" font-size="13" fill="#fff">完美 ±40ms</text>
+                        <text x="561.5" y="254" font-size="12" fill="#e2b04a">好</text>
+                        <text x="885.5" y="254" text-anchor="end" font-size="12" fill="#e2b04a">好</text>
+                        <text x="553.5" y="286" font-size="12" class="t-mono" fill="rgba(236,235,230,.6)">−120ms</text>
+                        <text x="893.5" y="286" text-anchor="end" font-size="12" class="t-mono" fill="rgba(236,235,230,.6)">+80ms</text>
+                        <text x="757.5" y="286" text-anchor="middle" font-size="12" fill="rgba(236,235,230,.6)">拍点</text>
+                    </svg>
+                    </div>
+                    <figcaption>示意图，不是游戏截图。节奏型和判定窗口按当前开发版本的参数绘制，之后还会调整。</figcaption>
+                </figure>
+
+                <ul class="news">
+                    <li class="news__item news__item--wide rv" style="--c:#e2b04a;">
+                        <span class="mono">RHYTHM · 连拍</span>
+                        <h3>音游式对刀</h3>
+                        <p>敌人头顶按节奏一个个冒出金点，每冒一个响一声木梆；空一拍后，按同样的节奏连砍过来。每一刀都能单独弹反：贴着拍点是「完美」，稍早稍晚算「好」，一整句全接住就是「破势」。杂兵只出单拍，精英和 Boss 会出二连、三连、四连。</p>
+                    </li>
+                    <li class="news__item news__item--wide news__item--sword rv" style="--d:.06s;">
+                        <span class="mono">SWORD · 护身剑</span>
+                        <img src="art/sword-guard.png" width="82" height="512" alt="护身剑" loading="lazy" decoding="async">
+                        <h3>悬在身边的护身剑</h3>
+                        <p>一把剑守在主角身边的一侧。砍中敌人时，剑飞过去斩一刀再回来；弹反成功时挽个剑花；刀落在剑守着的那一侧，剑会横过来挡下，扣的是剑的耐久而不是血。剑可以找铁匠修。</p>
+                    </li>
+                    <li class="news__item rv" style="--c:#8fb8c9;">
+                        <span class="mono">ARCHER · 弓手</span>
+                        <h3>踩着拍子的箭</h3>
+                        <p>报拍的每一个点射出一支箭，箭落下的那一拍挥刀就能挡住。挡下的箭会掉头飞回去，扎中射手。</p>
+                    </li>
+                    <li class="news__item rv" style="--d:.06s;">
+                        <span class="mono">SKILL · 技能预警</span>
+                        <h3>先画后放</h3>
+                        <p>敌人放技能前，先把技能的笔画画出来，五芒斩就画一个五角星。笔画画到最后变红，这时逆着方向划过去，整招都能格挡掉。</p>
+                    </li>
+                    <li class="news__item rv" style="--c:#ecebe6; --d:.12s;">
+                        <span class="mono">BOSS · 剑客大师</span>
+                        <h3>一对一的对手</h3>
+                        <p>训练场现在只放剑客大师一个人，先把一对一的对刀打磨好。它的架势更厚，要崩三次架势、处决三次才打得完。</p>
+                    </li>
+                </ul>
+                <p class="news__note rv"><span class="hazard" style="--accent:#ffd100;" aria-hidden="true"></span>以上都是开发中的新玩法，还没在实机上充分打磨，节奏、判定窗口和各项数值都会继续调整。</p>
+            </div>
+        </section>
+
+        <section class="section" id="about" aria-labelledby="about-title">
+            <div class="shell">
+                <div class="sec-head rv">
+                    <span class="sec-head__num" aria-hidden="true">02</span>
                     <p class="sec-head__label mono">ABOUT // 关于这款游戏</p>
                     <h2 class="sec-head__title" id="about-title">一个强者，或一群帮手</h2>
                 </div>
@@ -391,7 +554,7 @@
         <section class="section" id="gallery" aria-labelledby="gallery-title" style="padding-top: 0;">
             <div class="shell">
                 <div class="sec-head rv">
-                    <span class="sec-head__num" aria-hidden="true">02</span>
+                    <span class="sec-head__num" aria-hidden="true">03</span>
                     <p class="sec-head__label mono">GALLERY // 画面</p>
                     <h2 class="sec-head__title" id="gallery-title">雨与血</h2>
                 </div>
@@ -424,7 +587,7 @@
         <section class="section" id="features" aria-labelledby="features-title" style="padding-top: 0;">
             <div class="shell">
                 <div class="sec-head rv">
-                    <span class="sec-head__num" aria-hidden="true">03</span>
+                    <span class="sec-head__num" aria-hidden="true">04</span>
                     <p class="sec-head__label mono">FEATURES // 你会经历什么</p>
                     <h2 class="sec-head__title" id="features-title">江湖路线</h2>
                 </div>
