@@ -144,11 +144,12 @@
         .then((v) => {
           v = (v || "").trim();
           if (/^\d+$/.test(v)) {
-            var q = "?v=" + v;
-            script.src = buildUrl + "/PrismWebGL.loader.js?v=20261022013325" + q;
-            config.dataUrl = buildUrl + "/PrismWebGL.data.unityweb?v=20261022013325" + q;
-            config.frameworkUrl = buildUrl + "/PrismWebGL.framework.js.unityweb?v=20261022013325" + q;
-            config.codeUrl = buildUrl + "/PrismWebGL.wasm.unityweb?v=20261022013325" + q;
+            // 文件名分两半拼：推网站脚本按完整文件名 + 引号找要改版本号的地方，这里别被它改到
+            var base = buildUrl + "/PrismWebGL.", q = "?v=" + v;
+            script.src = base + "loader.js" + q;
+            config.dataUrl = base + "data.unityweb" + q;
+            config.frameworkUrl = base + "framework.js.unityweb" + q;
+            config.codeUrl = base + "wasm.unityweb" + q;
           }
           document.body.appendChild(script);
         });
