@@ -59,11 +59,11 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/PrismWebGL.loader.js?v=20261022013249";
+      var loaderUrl = buildUrl + "/PrismWebGL.loader.js?v=20261022013325";
       var config = {
-        dataUrl: buildUrl + "/PrismWebGL.data.unityweb?v=20261022013249",
-        frameworkUrl: buildUrl + "/PrismWebGL.framework.js.unityweb?v=20261022013249",
-        codeUrl: buildUrl + "/PrismWebGL.wasm.unityweb?v=20261022013249",
+        dataUrl: buildUrl + "/PrismWebGL.data.unityweb?v=20261022013325",
+        frameworkUrl: buildUrl + "/PrismWebGL.framework.js.unityweb?v=20261022013325",
+        codeUrl: buildUrl + "/PrismWebGL.wasm.unityweb?v=20261022013325",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "惊棠Studio",
         productName: "地域守护者",
@@ -136,7 +136,22 @@
               });
             };
 
-      document.body.appendChild(script);
+      // 先不走缓存读 Build/version.txt（推网站脚本每次更新时写入），再按这个版本号去拿 4 个游戏文件：
+      // 页面本身也会被缓存 10 分钟，只靠上面写死的 ?v= 时，刚更新完可能新旧文件混着用，直接崩
+      fetch(buildUrl + "/version.txt", { cache: "no-store" })
+        .then((r) => (r.ok ? r.text() : ""))
+        .catch(() => "")
+        .then((v) => {
+          v = (v || "").trim();
+          if (/^\d+$/.test(v)) {
+            var q = "?v=" + v;
+            script.src = buildUrl + "/PrismWebGL.loader.js?v=20261022013325" + q;
+            config.dataUrl = buildUrl + "/PrismWebGL.data.unityweb?v=20261022013325" + q;
+            config.frameworkUrl = buildUrl + "/PrismWebGL.framework.js.unityweb?v=20261022013325" + q;
+            config.codeUrl = buildUrl + "/PrismWebGL.wasm.unityweb?v=20261022013325" + q;
+          }
+          document.body.appendChild(script);
+        });
 
     </script>
   </body>
