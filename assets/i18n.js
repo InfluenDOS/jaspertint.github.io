@@ -97,6 +97,8 @@ window.JT_I18N = {
   "游戏原生分辨率为 1080 × 1920，右侧的游玩框始终保持 9:16。首次加载 WebGL 文件需要一点时间。": "The game runs natively at 1080 × 1920, and the play frame always stays 9:16. The first WebGL load takes a moment.",
   "建议使用较新的桌面或手机浏览器；移动设备横竖屏切换时，游戏会自动重新适配。": "A recent desktop or mobile browser is recommended; on mobile the game re-fits itself when you rotate the screen.",
   "加载并开始游戏": "Load and play",
+  "全屏": "Fullscreen",
+  "加载后点游玩框右上角的「全屏」，整屏玩更带劲。": "Once it loads, hit Fullscreen at the top right of the frame — it plays better big.",
   "点击后才会加载游戏内容": "Nothing loads until you click",
   "地域守护者竖屏试玩": "Territory Guardian, portrait play",
   "地域守护者 v1.0.0": "Territory Guardian v1.0.0",

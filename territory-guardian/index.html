@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#111316">
     <title>地域守护者 | 惊棠工作室</title>
     <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../assets/site.css?v=3a9beed31f">
+    <link rel="stylesheet" href="../assets/site.css?v=d53cda5fca">
     <script>(function(d){d.classList.add('js');try{var q=new URLSearchParams(location.search).get('lang'),s=localStorage.getItem('jt-lang'),l=q==='en'||q==='zh'?q:s==='en'||s==='zh'?s:(/^zh/i.test(navigator.language||'')?'zh':'en');if(l==='en'){d.lang='en';d.classList.add('lang-en','lang-pending');setTimeout(function(){d.classList.remove('lang-pending')},2000)}}catch(e){}})(document.documentElement);</script>
     <style>
         :root { --accent: #f0df00; --teal: #2dc499; }
@@ -207,7 +207,10 @@
 
         .device {
             position: relative;
-            width: min(100%, 420px);
+            width: min(540px, calc((100vh - 150px) * 9 / 16 + 24px));
+            width: min(540px, calc((100svh - 150px) * 9 / 16 + 24px));
+            min-width: 300px;
+            max-width: 100%;
             padding: 34px 12px 12px;
             background: var(--ink-0);
             border: 1px solid var(--line-2);
@@ -225,7 +228,21 @@
             font-size: 0.72rem;
         }
         .device__bar b { color: var(--accent); font-weight: 600; }
+        .device__bar-right { display: flex; align-items: center; gap: 12px; }
+        .device__fs {
+            font: inherit;
+            color: var(--ink-0);
+            background: var(--accent);
+            border: 0;
+            padding: 3px 10px;
+            cursor: pointer;
+            letter-spacing: 0.08em;
+        }
+        .device__fs:hover { filter: brightness(1.1); }
+        .device__fs[hidden] { display: none; }
         .screen { position: relative; aspect-ratio: 9 / 16; overflow: hidden; background: #1c2825; }
+        .screen:fullscreen { aspect-ratio: auto; width: 100vw; height: 100vh; background: #000; }
+        .screen:-webkit-full-screen { aspect-ratio: auto; width: 100vw; height: 100vh; background: #000; }
         .screen iframe { display: block; width: 100%; height: 100%; border: 0; background: #231f20; }
         .load-game {
             position: absolute;
@@ -255,7 +272,7 @@
 
         @media (max-width: 860px) {
             .play { grid-template-columns: 1fr; }
-            .device { justify-self: center; }
+            .device { justify-self: center; width: 100%; min-width: 0; max-width: 540px; }
         }
     </style>
 </head>
@@ -365,11 +382,12 @@
                     <div class="play__copy rv">
                         <p class="play__ratio" aria-hidden="true">9<span>:</span>16</p>
                         <p>游戏原生分辨率为 1080 × 1920，右侧的游玩框始终保持 9:16。首次加载 WebGL 文件需要一点时间。</p>
+                        <p>加载后点游玩框右上角的「全屏」，整屏玩更带劲。</p>
                         <p class="play__note">建议使用较新的桌面或手机浏览器；移动设备横竖屏切换时，游戏会自动重新适配。</p>
                         <div class="play__hazard hazard" aria-hidden="true"></div>
                     </div>
                     <div class="device brackets rv" style="--d:.1s">
-                        <div class="device__bar mono"><span>TG-01 // WEBGL SESSION</span><b id="session-state">STANDBY</b></div>
+                        <div class="device__bar mono"><span>TG-01 // WEBGL SESSION</span><span class="device__bar-right"><button class="device__fs mono" id="fullscreen-button" type="button" hidden>全屏</button><b id="session-state">STANDBY</b></span></div>
                         <div class="screen">
                             <div class="load-game" id="load-game">
                                 <p class="mono">READY TO DEPLOY</p>
@@ -394,8 +412,8 @@
         </div>
     </footer>
 
-    <script src="../assets/i18n.js?v=db065d2e7f" defer></script>
-    <script src="../assets/site.js?v=8ba334ad2e" defer></script>
+    <script src="../assets/i18n.js?v=d037cea3fb" defer></script>
+    <script src="../assets/site.js?v=54d4c32248" defer></script>
     <script>
         const button = document.getElementById('load-button');
         const overlay = document.getElementById('load-game');
@@ -409,7 +427,27 @@
             frame.addEventListener('load', () => {
                 overlay.hidden = true;
                 state.textContent = 'ONLINE';
+                fsButton.hidden = false;
             }, { once: true });
+        });
+
+        // 全屏：整个游玩框铺满屏幕（游戏页会自己按 9:16 适配）；iPhone Safari 不支持元素全屏，就直接打开游戏单页
+        const fsButton = document.getElementById('fullscreen-button');
+        const screenBox = document.querySelector('.screen');
+        fsButton.addEventListener('click', () => {
+            const req = screenBox.requestFullscreen || screenBox.webkitRequestFullscreen;
+            if (!req) {
+                window.location.href = '../game/';
+                return;
+            }
+            const p = req.call(screenBox);
+            if (p && p.then) {
+                p.then(() => {
+                    if (screen.orientation && screen.orientation.lock)
+                        screen.orientation.lock('portrait').catch(() => {});
+                    frame.focus();
+                }).catch(() => { window.location.href = '../game/'; });
+            }
         });
     </script>
 </body>
