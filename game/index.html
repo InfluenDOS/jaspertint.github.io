@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity WebGL Player | 地域守护者</title>
+    <title>地域守护者</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
@@ -31,8 +31,6 @@
       var progressBarFull = document.querySelector("#unity-progress-bar-full");
       var fullscreenButton = document.querySelector("#unity-fullscreen-button");
       var warningBanner = document.querySelector("#unity-warning");
-      var footer = document.querySelector("#unity-footer");
-      var isEmbedded = new URLSearchParams(window.location.search).get("embed") === "1";
 
       // Shows a temporary message banner/ribbon for a few seconds, or
       // a permanent error message on top of the canvas if type=='error'.
@@ -97,26 +95,23 @@
         container.className = "unity-mobile";
         canvas.className = "unity-mobile";
 
-        // 手机最多按 2 倍像素渲染（iPhone 原生 3 倍，像素多 2.25 倍，画面几乎看不出差别）
-        config.devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+        // To lower canvas resolution on mobile devices to gain some
+        // performance, uncomment the following line:
+        // config.devicePixelRatio = 1;
 
 
       } else {
-        // Keep the native 9:16 game visible inside both the standalone page and a narrow iframe.
-        function fitDesktopCanvas() {
-          var footerHeight = isEmbedded ? 0 : 38;
-          var availableHeight = Math.max(320, window.innerHeight - footerHeight);
-          var displayWidth = Math.min(window.innerWidth, availableHeight * 9 / 16);
-          var displayHeight = displayWidth * 16 / 9;
-          canvas.style.width = displayWidth + "px";
-          canvas.style.height = displayHeight + "px";
-          container.style.width = displayWidth + "px";
-          container.style.height = (displayHeight + footerHeight) + "px";
-        }
+        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
 
-        if (isEmbedded) footer.style.display = "none";
-        fitDesktopCanvas();
-        window.addEventListener("resize", fitDesktopCanvas);
+        // 竖屏 9:16，按窗口高度缩放，留出底栏
+        function fitCanvas() {
+          var h = window.innerHeight - 70, w = h * 9 / 16;
+          if (w > window.innerWidth - 20) { w = window.innerWidth - 20; h = w * 16 / 9; }
+          canvas.style.width = Math.floor(w) + "px";
+          canvas.style.height = Math.floor(h) + "px";
+        }
+        fitCanvas();
+        window.addEventListener("resize", fitCanvas);
       }
 
       loadingBar.style.display = "block";
@@ -126,7 +121,7 @@
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
           progressBarFull.style.width = 100 * progress + "%";
-              }).then((unityInstance) => {
+              }).then((unityInstance) => { window.unityInstance = unityInstance; window.unityInstance = unityInstance; window.unityInstance = unityInstance; window.unityInstance = unityInstance; window.unityInstance = unityInstance; window.unityInstance = unityInstance; window.unityInstance = unityInstance;
                 loadingBar.style.display = "none";
                 fullscreenButton.onclick = () => {
                   unityInstance.SetFullscreen(1);
@@ -141,4 +136,3 @@
     </script>
   </body>
 </html>
-
