@@ -11,7 +11,7 @@ import hashlib, pathlib, re
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 # site.css first: stamping its font URLs changes its own hash, which the pages then pick up
 PAGES = ['assets/site.css', 'index.html', 'territory-guardian/index.html', 'strategy-and-sword/index.html',
-         'dock-fries/index.html', 'dock-fries/play/index.html']
+         'dock-fries/index.html', 'dock-fries/play/index.html', 'aftermath/index.html']
 REF = re.compile(r'''((?:\.\./)*(?:assets/)?(?:fonts|vendor)?/?[\w./-]+\.(?:css|js|woff2))(\?v=[0-9a-f]+)?(?=["')])''')
 
 def digest(path):

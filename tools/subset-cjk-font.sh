@@ -26,7 +26,7 @@ fetch_subset() { # family weight chars out
     ls -l "$4"
 }
 
-studio=$(chars_of index.html territory-guardian/index.html strategy-and-sword/index.html dock-fries/index.html)
+studio=$(chars_of index.html territory-guardian/index.html strategy-and-sword/index.html dock-fries/index.html aftermath/index.html)
 fetch_subset "Noto+Sans+SC" 900 "$studio" assets/fonts/noto-sans-sc-900-subset.woff2
 
 scene=$(chars_of dock-fries/play/index.html)

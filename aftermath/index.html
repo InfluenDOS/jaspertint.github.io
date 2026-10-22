@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="《余波》是一个被拆散的小方块机器人，在雾气和霓虹里的城市翻垃圾桶，把自己一块块拼回来的像素游戏。Windows / 安卓试玩版免费下载。">
+    <meta name="theme-color" content="#111316">
+    <title>余波 AfterMath | 惊棠工作室</title>
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../assets/site.css?v=66075f3430">
+    <script>(function(d){d.classList.add('js');try{var q=new URLSearchParams(location.search).get('lang'),s=localStorage.getItem('jt-lang'),l=q==='en'||q==='zh'?q:s==='en'||s==='zh'?s:(/^zh/i.test(navigator.language||'')?'zh':'en');if(l==='en'){d.lang='en';d.classList.add('lang-en','lang-pending');setTimeout(function(){d.classList.remove('lang-pending')},2000)}}catch(e){}})(document.documentElement);</script>
+    <style>
+        :root { --accent: #6fd6c4; --accent-ink: #0a1a18; --neon: #e86ab8; }
+
+        .hero { padding: calc(var(--topbar-h) + clamp(24px, 4vw, 48px)) 0 0; }
+        .kv {
+            position: relative;
+            display: block;
+            clip-path: polygon(0 0, calc(100% - 48px) 0, 100% 48px, 100% 100%, 0 100%);
+            background: #2a2c4a;
+        }
+        .kv img { width: 100%; aspect-ratio: 21 / 9; object-fit: cover; object-position: 50% 45%; transition: transform 0.9s var(--ease); }
+        .kv:hover img { transform: scale(1.02); }
+        .kv__file { position: absolute; left: 0; bottom: 0; display: flex; }
+        .kv__file span {
+            display: grid;
+            place-items: center;
+            height: 44px;
+            padding: 0 16px;
+            background: #111316;
+            color: #ecebe6;
+            font-family: var(--f-mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.18em;
+        }
+        .kv__file span:first-child {
+            background: var(--accent);
+            color: var(--accent-ink);
+            font-family: var(--f-display);
+            font-weight: 800;
+            font-size: 1.6rem;
+            letter-spacing: 0;
+        }
+        .kv__play { position: absolute; right: 20px; bottom: 20px; }
+
+        .ident {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: end;
+            gap: 20px 40px;
+            padding: 28px 0;
+            border-bottom: 1px solid var(--line-2);
+        }
+        .ident__name {
+            font-family: var(--f-heavy);
+            font-weight: 900;
+            font-size: clamp(2.6rem, 7vw, 5.2rem);
+            line-height: 1.05;
+            letter-spacing: 0.08em;
+        }
+        .ident__name span { color: var(--neon); }
+        .ident__en {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 14px;
+            font-family: var(--f-display);
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 0.4em;
+            color: var(--accent);
+        }
+        .ident__en::before { content: ""; width: 32px; height: 3px; background: var(--accent); flex: none; }
+        .ident__tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+
+        .about {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+            gap: 40px clamp(32px, 6vw, 80px);
+            align-items: start;
+        }
+        .about__lead {
+            font-family: var(--f-heavy);
+            font-weight: 900;
+            font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+            line-height: 1.6;
+            letter-spacing: 0.04em;
+            margin-bottom: 20px;
+        }
+        .about__lead mark {
+            background: linear-gradient(transparent 60%, var(--neon) 60%, var(--neon) 92%, transparent 92%);
+            color: inherit;
+        }
+        .about p:not(.about__lead) { color: var(--fg-2); letter-spacing: 0.03em; }
+        .about p + p { margin-top: 14px; }
+        .about ul { list-style: none; margin-top: 18px; display: grid; gap: 8px; }
+        .about li { color: var(--fg-2); padding-left: 18px; position: relative; }
+        .about li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: 8px; height: 3px; background: var(--accent); }
+        .quote { margin-top: 18px; padding-left: 16px; border-left: 3px solid var(--neon); font-family: var(--f-heavy); font-weight: 900; letter-spacing: 0.06em; }
+        .quote span { display: block; }
+
+        .shots {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+        }
+        .shot { position: relative; background: var(--ink-2); border-bottom: 3px solid var(--c, var(--accent)); }
+        .shot__img { position: relative; overflow: hidden; }
+        .shot__img img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; transition: transform 0.9s var(--ease); }
+        .shot:hover .shot__img img { transform: scale(1.04); }
+        .shot__idx {
+            position: absolute; left: 0; top: 0; z-index: 2;
+            padding: 6px 10px; background: #111316; color: #ecebe6;
+            font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.16em;
+        }
+        .shot__text { padding: 12px 14px 16px; font-size: 0.88rem; color: var(--fg-2); }
+        .shot__text strong { display: block; font-family: var(--f-heavy); font-weight: 900; font-size: 1.05rem; letter-spacing: 0.06em; color: var(--fg); margin-bottom: 4px; }
+
+        .dl {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+        .dl__card {
+            padding: clamp(22px, 3vw, 32px);
+            background: var(--ink-2);
+            border-left: 3px solid var(--accent);
+            display: grid;
+            gap: 14px;
+            align-content: start;
+        }
+        .dl__card .mono { color: var(--accent); }
+        .dl__card h3 { font-family: var(--f-heavy); font-weight: 900; font-size: 1.5rem; letter-spacing: 0.06em; }
+        .dl__card p { font-size: 0.9rem; color: var(--fg-2); }
+        .dl__card .btn { justify-self: start; }
+        .dl__note {
+            margin-top: 16px;
+            padding: clamp(18px, 3vw, 26px);
+            background: var(--accent);
+            color: var(--accent-ink);
+            clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%);
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px;
+        }
+        .dl__note p { font-family: var(--f-heavy); font-weight: 900; font-size: clamp(1.05rem, 2vw, 1.3rem); letter-spacing: 0.04em; }
+        .dl__note small { display: block; font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.1em; font-weight: 400; margin-top: 4px; opacity: 0.75; }
+        .dl__note .btn { --btn-bg: #111316; --btn-fg: #ecebe6; }
+        .dl__note .btn:hover { color: #111316; }
+        .dl__note .btn::before { background: #ecebe6; }
+
+        @media (max-width: 960px) {
+            .shots { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 760px) {
+            .kv { clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%); }
+            .kv img { aspect-ratio: 4 / 3; }
+            .kv__play { display: none; }
+            .ident { grid-template-columns: 1fr; }
+            .ident__tags { justify-content: flex-start; }
+            .about, .dl { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <symbol id="jt-mark" viewBox="425 150 712 755">
+            <g style="fill: var(--mark-j, #fff)">
+                <rect x="648" y="163" width="189" height="164" rx="14"/>
+                <rect x="648" y="345" width="189" height="160" rx="14"/>
+                <rect x="437" y="498" width="264" height="159" rx="14"/>
+            </g>
+            <g style="fill: var(--mark-t, #111)">
+                <rect x="705" y="490" width="418" height="161" rx="14"/>
+                <rect x="833" y="640" width="134" height="252" rx="14"/>
+            </g>
+        </symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></symbol>
+        <symbol id="i-back" viewBox="0 0 24 24"><path d="M20 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></symbol>
+    </svg>
+
+    <div class="backdrop" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <nav class="topbar" aria-label="页面导航">
+        <a class="brand" href="../" aria-label="返回惊棠工作室首页">
+            <svg class="brand__mark" aria-hidden="true"><use href="#jt-mark"/></svg>
+            <span class="brand__text">
+                <span class="brand__cn">惊棠</span>
+                <span class="brand__en">JASPERTINT STUDIO</span>
+            </span>
+        </a>
+        <p class="crumbs">/ PROJECT FILES / <b>AM-04 余波</b></p>
+        <a class="backlink" href="../"><svg aria-hidden="true"><use href="#i-back"/></svg>返回</a>
+        <button class="langbtn" type="button" data-lang-toggle data-i18n-skip aria-label="Switch to English"><span class="langbtn__zh">中</span><i aria-hidden="true">/</i><span class="langbtn__en">EN</span></button>
+    </nav>
+
+    <main>
+        <header class="hero">
+            <div class="shell">
+                <a class="kv rv rv-wipe" href="#download" aria-label="跳到下载">
+                    <img src="kv.jpg" width="2400" height="775" alt="夜色里的海港城市：山脚下的高楼灯火倒映在海面上">
+                    <div class="kv__file" aria-hidden="true"><span>04</span><span>PC · ANDROID</span></div>
+                    <span class="kv__play btn" aria-hidden="true">免费下载 <span class="btn__en">DOWNLOAD</span><svg class="btn__arrow"><use href="#i-arrow"/></svg></span>
+                </a>
+
+                <div class="ident rv" style="--d:.1s">
+                    <div>
+                        <h1 class="ident__name">余<span>波</span></h1>
+                        <p class="ident__en" data-zh-only>AFTERMATH</p>
+                    </div>
+                    <div class="ident__tags">
+                        <span class="tag tag--ok">PLAYABLE · 可游玩</span>
+                        <span class="tag">像素</span>
+                        <span class="tag">试玩版 0.2.2</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="section" id="about" aria-labelledby="about-title">
+            <div class="shell">
+                <div class="sec-head rv">
+                    <span class="sec-head__num" aria-hidden="true">01</span>
+                    <p class="sec-head__label mono">ABOUT // 关于</p>
+                    <h2 class="sec-head__title" id="about-title">把自己一块块拼回来</h2>
+                </div>
+
+                <div class="about">
+                    <div class="rv">
+                        <p class="about__lead">一个被拆散的小方块机器人，掉进一座浸在雾气和霓虹里的城市。<mark>它只能去翻垃圾桶，把捡来的零件装回自己身上。</mark></p>
+                        <p>它叫 C.T.，没有眼睛，没有耳朵，听不懂人说话。它要把捡来的眼睛、耳朵、手和腿一块块装回去——然后去找那个在电话里喊它的人。</p>
+                        <div class="quote"><span>「没时间了，记住，这一切只是个测试！」</span><span>「我是 Feb！」</span><span>「来找我！C……」</span></div>
+                        <ul>
+                            <li>翻垃圾桶：按住一格往下翻，越值钱的翻得越久，松手就白翻了。</li>
+                            <li>拼身体：眼睛、耳朵、嘴、手、腿、躯干，各管一样本事。装上什么，才看得清、听得懂、开得了口、搬得动。</li>
+                            <li>在城里活下去：吃东西换能量，没电了零件会一件件掉下来。</li>
+                            <li>骑上踏板车和摩托，送货，上山。</li>
+                            <li>遇见这座城市里的人，还有一只黑猫。</li>
+                        </ul>
+                    </div>
+                    <dl class="sheet rv" style="--d:.1s">
+                        <div class="sheet__row"><dt>TYPE</dt><dd>2D 像素 · 剧情冒险</dd></div>
+                        <div class="sheet__row"><dt>CONTROL</dt><dd>电脑：A / D 移动，W / S 上下、进出，E 互动，Tab 身体面板，Shift 跑，M 地图，Esc 菜单；手机：触屏按键</dd></div>
+                        <div class="sheet__row"><dt>PLATFORM</dt><dd>Windows 64 位 · 安卓手机</dd></div>
+                        <div class="sheet__row"><dt>VERSION</dt><dd>0.2.2 试玩版（第三届 TapTap 聚光灯 GameJam 参赛 Demo）</dd></div>
+                        <div class="sheet__row"><dt>PRICE</dt><dd>免费</dd></div>
+                    </dl>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="shots" aria-labelledby="shots-title" style="padding-top: 0;">
+            <div class="shell">
+                <div class="sec-head rv">
+                    <span class="sec-head__num" aria-hidden="true">02</span>
+                    <p class="sec-head__label mono">SCREENS // 画面</p>
+                    <h2 class="sec-head__title" id="shots-title">雾气和霓虹里的城</h2>
+                </div>
+
+                <ol class="shots">
+                    <li class="shot rv"><div class="shot__img"><span class="shot__idx">SC-01</span><img src="shots/bin.jpg" width="1280" height="720" alt="在街边翻垃圾桶" loading="lazy" decoding="async"></div><div class="shot__text"><strong>翻垃圾桶</strong>一层一层往下翻。</div></li>
+                    <li class="shot rv" style="--d:.04s"><div class="shot__img"><span class="shot__idx">SC-02</span><img src="shots/body.jpg" width="1280" height="720" alt="身体面板：把零件装到身上" loading="lazy" decoding="async"></div><div class="shot__text"><strong>拼身体</strong>捡到什么，装什么。</div></li>
+                    <li class="shot rv" style="--d:.08s"><div class="shot__img"><span class="shot__idx">SC-03</span><img src="shots/labor.jpg" width="1280" height="720" alt="夜里的街道和招牌" loading="lazy" decoding="async"></div><div class="shot__text"><strong>夜街</strong>招牌一盏一盏亮起来。</div></li>
+                    <li class="shot rv" style="--d:.12s"><div class="shot__img"><span class="shot__idx">SC-04</span><img src="shots/theatre.jpg" width="1280" height="720" alt="戏院门口的演唱会海报" loading="lazy" decoding="async"></div><div class="shot__text"><strong>戏院</strong>周六有一场演唱会。</div></li>
+                    <li class="shot rv"><div class="shot__img"><span class="shot__idx">SC-05</span><img src="shots/ride.jpg" width="1280" height="720" alt="骑车穿过城市" loading="lazy" decoding="async"></div><div class="shot__text"><strong>骑车</strong>踏板车、摩托，还有公交。</div></li>
+                    <li class="shot rv" style="--d:.04s"><div class="shot__img"><span class="shot__idx">SC-06</span><img src="shots/pass.jpg" width="1280" height="720" alt="盘山道上看海" loading="lazy" decoding="async"></div><div class="shot__text"><strong>盘山道</strong>停下来看一会儿海。</div></li>
+                    <li class="shot rv" style="--d:.08s"><div class="shot__img"><span class="shot__idx">SC-07</span><img src="shots/concert.jpg" width="1280" height="720" alt="演唱会舞台的灯光" loading="lazy" decoding="async"></div><div class="shot__text"><strong>演唱会</strong>台下站满了人。</div></li>
+                    <li class="shot rv" style="--d:.12s"><div class="shot__img"><span class="shot__idx">SC-08</span><img src="shots/central.jpg" width="1280" height="720" alt="夜里的中环" loading="lazy" decoding="async"></div><div class="shot__text"><strong>中环</strong>住得越高，越有钱。</div></li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="section" id="download" aria-labelledby="download-title" style="padding-top: 0;">
+            <div class="shell">
+                <div class="sec-head rv">
+                    <span class="sec-head__num" aria-hidden="true">03</span>
+                    <p class="sec-head__label mono">DOWNLOAD // 下载</p>
+                    <h2 class="sec-head__title" id="download-title">免费下载试玩版</h2>
+                </div>
+
+                <div class="dl">
+                    <div class="dl__card rv">
+                        <span class="mono">WINDOWS · 64-BIT · 100 MB</span>
+                        <h3>电脑版</h3>
+                        <p>下载后解压，运行文件夹里的 ScrapCore.exe。如果 Windows 提示「已保护你的电脑」，点「更多信息」→「仍要运行」。</p>
+                        <a class="btn" href="https://github.com/InfluenDOS/jaspertint.github.io/releases/download/aftermath-v0.2.2/AfterMath_0.2.2_Windows.zip">下载 Windows 版 <span class="btn__en">ZIP</span><svg class="btn__arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+                    </div>
+                    <div class="dl__card rv" style="--d:.08s">
+                        <span class="mono">ANDROID · APK · 102 MB</span>
+                        <h3>安卓版</h3>
+                        <p>下载后点开安装。手机如果提示「未知来源」，在弹出的设置里允许这次安装即可。</p>
+                        <a class="btn" href="https://github.com/InfluenDOS/jaspertint.github.io/releases/download/aftermath-v0.2.2/AfterMath_0.2.2_Android.apk">下载安卓版 <span class="btn__en">APK</span><svg class="btn__arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+                    </div>
+                </div>
+
+                <div class="dl__note rv">
+                    <p>下载慢？也可以在 TapTap 上玩<small>国内网络从 TapTap 下载更快 · 评论区欢迎反馈</small></p>
+                    <a class="btn" href="https://www.taptap.cn/app/976565" target="_blank" rel="noopener">去 TapTap <span class="btn__en">TAPTAP</span><svg class="btn__arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="shell footer__inner">
+            <div class="footer__brand">
+                <svg class="brand__mark" aria-hidden="true"><use href="#jt-mark"/></svg>
+                <p class="footer__copy">© 2026 惊棠工作室 · 个人开发项目<br>余波</p>
+            </div>
+            <a class="footer__top" href="../">BACK TO STUDIO <span aria-hidden="true">←</span></a>
+        </div>
+    </footer>
+
+    <script src="../assets/i18n.js?v=5052b5f987" defer></script>
+    <script src="../assets/site.js?v=54d4c32248" defer></script>
+</body>
+</html>
